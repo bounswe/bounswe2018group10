@@ -1,0 +1,176 @@
+{
+    "mockup": {
+        "controls": {
+            "control": [
+                {
+                    "ID": "0",
+                    "typeID": "BrowserWindow",
+                    "zOrder": "0",
+                    "w": "731",
+                    "h": "464",
+                    "measuredW": "450",
+                    "measuredH": "400",
+                    "x": "161",
+                    "y": "0",
+                    "properties": {
+                        "text": "Login to continue\nhttps://url/to/login/\n"
+                    }
+                },
+                {
+                    "ID": "2",
+                    "typeID": "Title",
+                    "zOrder": "1",
+                    "w": "677",
+                    "measuredW": "96",
+                    "measuredH": "44",
+                    "x": "198",
+                    "y": "93",
+                    "properties": {
+                        "text": "Login"
+                    }
+                },
+                {
+                    "ID": "30",
+                    "typeID": "TextInput",
+                    "zOrder": "2",
+                    "w": "111",
+                    "measuredW": "73",
+                    "measuredH": "27",
+                    "x": "231",
+                    "y": "196",
+                    "properties": {
+                        "text": "username"
+                    }
+                },
+                {
+                    "ID": "31",
+                    "typeID": "Icon",
+                    "zOrder": "3",
+                    "measuredW": "24",
+                    "measuredH": "24",
+                    "x": "198",
+                    "y": "198",
+                    "properties": {
+                        "icon": {
+                            "ID": "user",
+                            "size": "small"
+                        }
+                    }
+                },
+                {
+                    "ID": "32",
+                    "typeID": "TextInput",
+                    "zOrder": "4",
+                    "w": "111",
+                    "measuredW": "43",
+                    "measuredH": "27",
+                    "x": "231",
+                    "y": "230",
+                    "properties": {
+                        "text": "pass"
+                    }
+                },
+                {
+                    "ID": "33",
+                    "typeID": "Icon",
+                    "zOrder": "5",
+                    "measuredW": "24",
+                    "measuredH": "24",
+                    "x": "198",
+                    "y": "232",
+                    "properties": {
+                        "icon": {
+                            "ID": "key",
+                            "size": "small"
+                        }
+                    }
+                },
+                {
+                    "ID": "34",
+                    "typeID": "Button",
+                    "zOrder": "6",
+                    "w": "69",
+                    "h": "27",
+                    "measuredW": "55",
+                    "measuredH": "27",
+                    "x": "273",
+                    "y": "272",
+                    "properties": {
+                        "text": "Login"
+                    }
+                },
+                {
+                    "ID": "36",
+                    "typeID": "Button",
+                    "zOrder": "7",
+                    "w": "171",
+                    "h": "46",
+                    "measuredW": "81",
+                    "measuredH": "27",
+                    "x": "398",
+                    "y": "212",
+                    "properties": {
+                        "text": "Facebook"
+                    }
+                },
+                {
+                    "ID": "37",
+                    "typeID": "Label",
+                    "zOrder": "8",
+                    "measuredW": "140",
+                    "measuredH": "21",
+                    "x": "198",
+                    "y": "167",
+                    "properties": {
+                        "text": "Login with your account"
+                    }
+                },
+                {
+                    "ID": "39",
+                    "typeID": "SubTitle",
+                    "zOrder": "9",
+                    "measuredW": "446",
+                    "measuredH": "28",
+                    "x": "398",
+                    "y": "167",
+                    "properties": {
+                        "text": "Not registered? Use your other accounts"
+                    }
+                },
+                {
+                    "ID": "40",
+                    "typeID": "Button",
+                    "zOrder": "10",
+                    "w": "171",
+                    "h": "46",
+                    "measuredW": "66",
+                    "measuredH": "27",
+                    "x": "398",
+                    "y": "265",
+                    "properties": {
+                        "text": "Twitter"
+                    }
+                },
+                {
+                    "ID": "41",
+                    "typeID": "Button",
+                    "zOrder": "11",
+                    "w": "171",
+                    "h": "46",
+                    "measuredW": "66",
+                    "measuredH": "27",
+                    "x": "398",
+                    "y": "319",
+                    "properties": {
+                        "text": "Google"
+                    }
+                }
+            ]
+        },
+        "mockupH": "464",
+        "mockupW": "731",
+        "measuredW": "892",
+        "measuredH": "464",
+        "version": "1.0"
+    }
+}
