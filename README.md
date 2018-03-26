@@ -12,7 +12,7 @@ This project is providing an environment for clients and freelancers to collabor
 
 * Clients post project draft which requires proficiency on programming, writing, design, or development to find a fitting freelancer.
 * Freelancers are free to bid on these projects until a certain deadline determined by the client. After collecting these bids, the client may agree with one of these freelancers.
-* Agreements includes information such as job completion deadline, total fee to be paid, and payment options.
+* Agreements include information such as job completion deadline, total fee to be paid, and payment options.
 
 For further information, please see our [Wiki](https://github.com/bounswe/bounswe2018group10/wiki) page.
 
