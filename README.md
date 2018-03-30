@@ -8,7 +8,7 @@
 ## :rocket: Freelancer | Collaboration Platform
 
 
-This project is providing an environment for clients and freelancers to collaborate in a single platform. The platform works as follows:
+This project provides an environment for clients and freelancers to collaborate in a single platform. The platform works as follows:
 
 * Clients post project draft which requires proficiency on programming, writing, design, or development to find a fitting freelancer.
 * Freelancers are free to bid on these projects until a certain deadline determined by the client. After collecting these bids, the client may agree with one of these freelancers.
