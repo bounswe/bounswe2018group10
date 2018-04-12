@@ -28,6 +28,13 @@ def home():
     })
 
 
+@application.route('/follow/<user_id>/<screen_name>')
+def follow_user(user_id, screen_name):
+    api = get_api()
+    api.create_friendship(user_id=user_id, follow=True)
+    return render_template('follow.html', screen_name=screen_name)
+
+
 @application.route('/search_job', methods=['POST'])
 def search_job():
     api = get_api()
