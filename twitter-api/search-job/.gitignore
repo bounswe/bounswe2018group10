@@ -1,0 +1,4 @@
+.idea/
+venv/
+.secrets.yaml
+__pycache__/

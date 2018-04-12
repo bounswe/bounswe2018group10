@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Twitter App</title>
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='style.css') }}">
+
+</head>
+<body class="center-content">
+<div class="container">
+    <p>Hello, {{ bag.name }},<br>
+        Or should I say @{{ bag.screen_name }}?</p>
+    <p>This is the app. It does nothing. <br>
+        Sorry to disappoint you.</p>
+    <p><a href="{{ url_for('logout') }}">Log out</a></p>
+</div>
+</body>
+</html>
