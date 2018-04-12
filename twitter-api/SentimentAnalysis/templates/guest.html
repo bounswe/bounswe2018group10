@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Twitter App</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        .center-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            padding: 2rem;
+        }
+    </style>
+</head>
+<body class="center-content">
+<div class="container">
+    Hello, stranger<br>
+    {# get the url for auth routine. Could have just written /auth, too #}
+    You need to <a href="{{ url_for('auth') }}">sign in</a> before we can continue
+</div>
+</body>
+</html>
