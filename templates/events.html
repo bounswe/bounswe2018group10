@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Twitter App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="center-content">
+<div class="container">
+    {% if bag.is_a_user %}
+        <div class="message">
+            <p>Hello, <span>{{ bag.name }}</span>
+                a.k.a
+                <span class="screen-name">@{{ bag.screen_name }}</span><br>
+
+                You created your Twitter account at {{ bag.created_day }}.</p>
+        </div>
+    {% else %}
+        <div class="message">
+        <p>Sorry, no such user exists on Twitter 😕</p>
+        </div>
+    {% endif %}
+</div>
+</body>
+</html>

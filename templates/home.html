@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Twitter App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="center-content">
+<div class="container">
+    <p>Hello, fellow interwebz user ✌</p>
+    <p>With this super cool app you can learn what happened in history <br>
+        the day you've created your Twitter account</p>
+    <form method="POST" action="{{ url_for('events') }}">
+        <input type="text"
+               name="twitter_handle"
+               placeholder="@username"
+               required>
+        <button class="button" type="submit">Submit</button>
+    </form>
+</div>
+</body>
+</html>
