@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Analysis Results for {{ bag.screen_name }}</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
+    <script>
+        window.chartColors = {
+            red: 'rgb(255, 99, 132)',
+            orange: 'rgb(255, 159, 64)',
+            yellow: 'rgb(255, 205, 86)',
+            green: 'rgb(75, 192, 192)',
+            blue: 'rgb(54, 162, 235)',
+            purple: 'rgb(153, 102, 255)',
+            grey: 'rgb(201, 203, 207)'
+        };
+        window.addEventListener('DOMContentLoaded', () => {
+            let analysisResults = {{ analysis_json | safe }};
+            const chartLabel = document.querySelector('title').textContent;
+            dataValues = Object.values(analysisResults).map(val => val.toFixed(1));
+            dataLabels = Object.keys(analysisResults).map((label, i) => `${label.toUpperCase()} (${dataValues[i]}%)`);
+
+            var ctx = document.getElementById('analysisPiechart').getContext('2d');
+            var config = {
+                type: 'doughnut',
+                data: {
+                    datasets: [{
+                        data: dataValues,
+                        label: chartLabel,
+                        backgroundColor: [
+                            window.chartColors.red,
+                            window.chartColors.orange,
+                            window.chartColors.green,
+                            window.chartColors.blue,
+                        ],
+                    }],
+                    labels: dataLabels
+                },
+                options: {
+                    scaleLabel: {
+                        display: true
+                    },
+                    responsive: true,
+                    cutoutPercentage: 30,
+                    legend: {
+                        position: 'bottom',
+                    },
+                    animation: {
+                        animateScale: true,
+                        animateRotate: true
+                    }
+                }
+            };
+
+            window.myDoughnut = new Chart(ctx, config);
+        });
+    </script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="container">
+    <div class="grid">
+        <img class="image" src="  https://twitter.com/{{ bag.screen_name }}/profile_image?size=original"
+             alt="profile image for @{{ bag.screen_name }}">
+        <div class="info">
+            <h1>Sentiment Analysis Results</h1>
+            <span class="ornament">for</span><br>
+            <a class="profile-link highlight" href="{{ bag.profile_url }}">@{{ bag.screen_name }}</a>
+        </div>
+        <div class="chart-container">
+            <canvas class="pie-chart" id="analysisPiechart"></canvas>
+        </div>
+    </div>
+</div>
+</body>
+</html>

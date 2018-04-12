@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Twitter App</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        .center-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            padding: 2rem;
+        }
+    </style>
+
+</head>
+<body class="center-content">
+<div class="container">
+    <form action="{{ url_for('analysis') }}" method="post">
+        <input type="text" required name="twitter_handle" placeholder="@username">
+        <button type="submit">Analyze</button>
+    </form>
+    <p><a href="{{ url_for('logout') }}">Log out</a></p>
+</div>
+</body>
+</html>

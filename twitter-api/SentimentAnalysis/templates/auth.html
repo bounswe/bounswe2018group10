@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Authorize your account</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        .center-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            padding: 2rem;
+        }
+    </style>
+</head>
+<body class="center-content">
+<div class="container">
+    {# target=_blank opens the link in a new tab #}
+    <a target="_blank" href="{{ auth_url }}">Click here</a> to authorize your Twitter account
+    <form method="POST">
+        <input type="text" name="pin_code" placeholder="paste your PIN here">
+        <button type="submit">Authorize</button>
+    </form>
+</div>
+</body>
+</html>
