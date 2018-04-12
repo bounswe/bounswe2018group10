@@ -12,6 +12,10 @@
         Or should I say @{{ bag.screen_name }}?</p>
     <p>This is the app. It does nothing. <br>
         Sorry to disappoint you.</p>
+    <form action="{{ url_for('search_job') }}" method="POST">
+        <input type="text" name="job" placeholder="enter a skill example:python">
+        <button type="submit">Search</button>
+    </form>
     <p><a href="{{ url_for('logout') }}">Log out</a></p>
 </div>
 </body>

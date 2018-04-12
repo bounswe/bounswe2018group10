@@ -28,6 +28,21 @@ def home():
     })
 
 
+@application.route('/search_job', methods=['POST'])
+def search_job():
+    api = get_api()
+    job_name = request.values['job'].strip()
+    #TODO query job name
+    query = 'python AND (JOB OR JOBS OR CAREER OR CAREERS OR LOOKING OR SEEK OR SEEKING OR HIRE OR HIRING' \
+            ' OR RECRUIT OR RECRUITING OR EMPLOY OR EMPLOYING OR EMPLOYMENT OR CV OR OPPORTUNITY OR' \
+            ' OPPORTUNITIES OR ROLE OR ROLES OR POSITION OR SKILLED OR CONTRACT OR WANTED OR NEEDED OR SALARY)'
+    max_tweets = 20
+    #, lang='en' ,include_entities=True  result_type='popular'
+    searchResult = tweepy.Cursor(api.search, q=query).items(max_tweets)
+    #searchResult = api.search(q=query, lang='en',include_entities=True)
+    return render_template('search_job.html', searchResult=searchResult)
+
+
 def is_authorized():
     return 'access_token' in session
 

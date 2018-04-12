@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search Results</title>
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='style.css') }}">
+
+</head>
+<body class="center-content">
+<div class="container">
+    <ul class=entries>
+        {% for tweet in searchResult %}
+            <li><h2>{{ tweet.author.name }}</h2>
+                <h3>{{ tweet.author.screen_name }}</h3>
+                {{ tweet.text }}
+                <p>
+                    {{ tweet.created_at }}
+                </p>
+                <a href="https://twitter.com/i/web/status/{{ tweet.id_str }}" target="_blank">Go to tweet</a>
+                <form action="{{ url_for('follow_user', user_id=tweet.author.id, screen_name=tweet.author.screen_name) }}">
+                    <button type="submit">Follow</button>
+                </form>
+                <img src={{ tweet.author.profile_image_url }}>
+        {% else %}
+            <li><em>Could not find any jobs for you.</em>
+        {% endfor %}
+    </ul>
+</div>
+</body>
+</html>
