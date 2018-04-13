@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='ress.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,700" rel="stylesheet">
+
 
     {% block head %}
         <title>{% block title %}{% endblock %}</title>
@@ -12,14 +15,22 @@
 <body>
 <main>
     <div class="site grid">
+
         <div class="site__top">
+            <div class="site__title">
+                <h1>So, What Happened?</h1>
+                <p class="text--muted">A Twitter Experiment</p>
+            </div>
             {% block top %}{% endblock %}
         </div>
-        <div class="site__sidebar">
+        <div class="site__side">
             {% block sidebar %}{% endblock %}
         </div>
         <div class="site__content">
             {% block content %}{% endblock %}
+        </div>
+        <div class="site__foot">
+            {% block foot %}{% endblock %}
         </div>
     </div>
 </main>

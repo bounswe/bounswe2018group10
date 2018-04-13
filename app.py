@@ -1,5 +1,6 @@
 from flask import Flask, request, render_template, jsonify, url_for, redirect, escape
 from twapi import api
+import datetime
 
 app = Flask(__name__)
 
@@ -22,15 +23,37 @@ def events():
             'screen_name': twitter_handle
         })
 
-    created = user.created_at
-    created_day_of_year = created.strftime('%d %B')
+    created: datetime.datetime = user.created_at
 
+    (url_day, url_year) = get_api_urls_for_day(created)
     return render_template('events.html', bag={
         'is_a_user': True,
         'name': user.name,
         'screen_name': user.screen_name,
-        'created_day': created_day_of_year
+        'created': {
+            'day': created.day,
+            'month': created.strftime('%B'),
+            'year': created.year,
+            'url_day': url_day,
+            'url_year': url_year
+        }
     })
+
+
+@app.route('/events/<int:month>/<int:day>', methods=['GET'])
+def api_events_day(month, day):
+    return "{}".format(month)
+
+
+@app.route('/events/<int:year>', methods=['GET'])
+def api_events_year(year):
+    return "{}".format(year)
+
+
+def get_api_urls_for_day(created: datetime.datetime):
+    url_day = url_for('api_events_day', month=created.month, day=created.day)
+    url_year = url_for('api_events_year', year=created.year)
+    return url_day, url_year
 
 
 if __name__ == '__main__':

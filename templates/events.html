@@ -1,18 +1,41 @@
 {% extends "_main.html" %}
 {% block title %}Here's what happened{% endblock %}
 
-{% block content %}
+{% block sidebar %}
     {% if bag.is_a_user %}
         <div class="message">
-            <p>Hello, <span>{{ bag.name }}</span>
-                a.k.a
-                <span class="screen-name">@{{ bag.screen_name }}</span><br>
-
-                You created your Twitter account at {{ bag.created_day }}.</p>
+            <p class="greetings">
+                Hello, <span class="twitter__name text--bold">{{ bag.name }}</span>
+                <span class="text--muted">a.k.a</span>
+                <span class="twitter__screen-name">@{{ bag.screen_name }}</span><br>
+                You created your Twitter account at:</p>
+            <p class="twitter__created">
+                <a class="created__component" href="{{ bag.created.url_day }}" title="events of the day" data-note>
+                    <span class="created__day">{{ bag.created.day }}</span>
+                    <span class="created__month">{{ bag.created.month }}</span></a>
+                <a class="created__component" href="{{ bag.created.url_year }}" title="events of the year" data-note>
+                    <span class="created__year">{{ bag.created.year }}</span>
+                </a>
+            </p>
         </div>
     {% else %}
         <div class="message">
             <p>Sorry, no such user exists on Twitter 😕</p>
         </div>
     {% endif %}
+{% endblock %}
+
+{% block scripts %}
+    <script>
+    window.addEventListener('DOMContentLoaded', () => {
+        let annotatables = [].slice.call(document.querySelectorAll('[data-note]'))
+
+        annotatables.forEach(an => {
+            let note = document.createElement('span')
+            note.className = 'note';
+            note.innerText = an.title;
+            an.appendChild(note)
+        });
+    });
+    </script>
 {% endblock %}

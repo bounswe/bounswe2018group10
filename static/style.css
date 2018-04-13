@@ -1,16 +1,173 @@
-html {
-    box-sizing: border-box;
+/*region GLOBAL STYLES */
+:root {
+    --c-primary: tomato;
+    --c-accent: dodgerblue;
+    --c-white: #fefefe;
+    --w-large: 700px;
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-    margin: 0;
-    padding: 0;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 18px;
+    line-height: 1.5;
+}
+
+a {
+    color: var(--c-primary);
+    text-decoration: none;
+}
+
+p {
+    margin: 0 0 1rem;
+}
+
+h1 {
+    font-size: 2rem;
+    line-height: 1.05;
+}
+
+input {
+    padding: 0.25em 0.5em;
+    border-bottom: 2px solid var(--c-accent);
+    color: var(--c-accent);
+}
+
+button {
+    padding: 0.5em 1em;
+    background-color: var(--c-accent);
+    color: var(--c-white);
+    font-weight: bold;
+}
+
+button[disabled] {
+    opacity: 0.5;
+}
+
+.emoji {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";;
+}
+
+/*endregion*/
+
+/*region UTILITIES */
+.text--medium {
+    font-size: 1.25em;
+}
+
+.text--muted {
+    opacity: 0.25;
+}
+
+.text--bold {
+    font-weight: bold;
+}
+
+.text--small-title {
+    font-size: 0.75em;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+/*endregion*/
+
+/*region LAYOUT */
+.grid {
+    display: grid;
+}
+
+.site {
+    padding: 2rem 1rem 1rem;
+    border: 0.5rem solid var(--c-primary);
     min-height: 100vh;
 }
 
-.center-content {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.site__title {
+    font-size: 1.5rem;
+    text-align: center;
 }
+
+.site__title h1 {
+    margin-bottom: 0.5rem;
+}
+
+.site__title .text--muted {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    display: block;
+}
+
+@media all and (min-width: 700px) {
+    .grid {
+        grid-template-rows: 5rem 1fr 10rem;
+        grid-template-columns: 1fr 2fr;
+        grid-template-areas: "top top top" "side content content" "foot foot foot";
+        grid-column-gap: 4rem;
+    }
+
+    .site__top {
+        grid-area: top;
+    }
+
+    .site__side {
+        grid-area: side;
+    }
+
+    .site__content {
+        grid-area: content;
+    }
+
+    .site__foot {
+        grid-area: foot;
+    }
+
+    .site {
+        padding: 4rem;
+    }
+}
+/*endregion*/
+
+/*region COMPONENTS */
+.twitter__created {
+    font-weight: bold;
+    font-size: 2rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.created__component {
+    display: inline-block;
+    padding: 0.25rem 0;
+    border-bottom: 0.2rem solid;
+}
+
+[data-note] {
+    position: relative;
+}
+
+.note {
+    opacity: 0;
+    font-size: 0.75rem;
+    letter-spacing: 0;
+    position: absolute;
+    top: calc(100% + 1rem);
+    left: 50%;
+    transform: translateX(-50%) translateY(0.5rem);
+    width: 100%;
+    text-align: center;
+    transition: opacity 0.2s, transform 0.2s;
+
+}
+
+[data-note]:hover .note {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+@media all and (max-width: 700px) {
+    .note {
+        display: none;
+    }
+}
+
+/*endregion*/
