@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    {% block head %}
+        <title>{% block title %}{% endblock %}</title>
+    {% endblock %}
+</head>
+<body>
+<main>
+    <div class="site grid">
+        <div class="site__top">
+            {% block top %}{% endblock %}
+        </div>
+        <div class="site__sidebar">
+            {% block sidebar %}{% endblock %}
+        </div>
+        <div class="site__content">
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+</main>
+{% block scripts %}
+{% endblock %}
+</body>
+</html>

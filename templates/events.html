@@ -1,12 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Twitter App</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body class="center-content">
-<div class="container">
+{% extends "_main.html" %}
+{% block title %}Here's what happened{% endblock %}
+
+{% block content %}
     {% if bag.is_a_user %}
         <div class="message">
             <p>Hello, <span>{{ bag.name }}</span>
@@ -17,9 +12,7 @@
         </div>
     {% else %}
         <div class="message">
-        <p>Sorry, no such user exists on Twitter 😕</p>
+            <p>Sorry, no such user exists on Twitter 😕</p>
         </div>
     {% endif %}
-</div>
-</body>
-</html>
+{% endblock %}

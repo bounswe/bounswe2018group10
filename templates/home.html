@@ -1,12 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Twitter App</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body class="center-content">
-<div class="container">
+{% extends "_main.html" %}
+{% block title %}So, what happened then? - A Twitter Experiment{% endblock %}
+
+{% block content %}
     <p>Hello, fellow interwebz user ✌</p>
     <p>With this super cool app you can learn what happened in history <br>
         the day you've created your Twitter account</p>
@@ -17,6 +12,4 @@
                required>
         <button class="button" type="submit">Submit</button>
     </form>
-</div>
-</body>
-</html>
+{% endblock %}
