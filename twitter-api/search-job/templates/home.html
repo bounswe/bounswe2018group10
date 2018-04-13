@@ -2,19 +2,19 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Twitter App</title>
     <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='style.css') }}">
 
 </head>
 <body class="center-content">
 <div class="container">
-    <p>Hello, {{ bag.name }},<br>
-        Or should I say @{{ bag.screen_name }}?</p>
-    <p>This is the app. It does nothing. <br>
-        Sorry to disappoint you.</p>
+    <h1>Find Me A Job Twitter!</h1>
+    <p>Hello, {{ bag.name }}</p>
+    <p>Please enter a skill</p>
     <form action="{{ url_for('search_job') }}" method="POST">
-        <input type="text" name="job" placeholder="enter a skill example:python">
-        <button type="submit">Search</button>
+        <input type="text" name="job" placeholder="example:python" required>
+        <button type="submit">Find a job</button>
     </form>
     <p><a href="{{ url_for('logout') }}">Log out</a></p>
 </div>

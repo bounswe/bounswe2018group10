@@ -1,3 +1,6 @@
+
+# author: Baran Kılıç
+
 from flask import Flask, jsonify, render_template, request, session, redirect, url_for
 import yaml
 import tweepy
@@ -10,7 +13,6 @@ application = Flask(__name__)
 application.secret_key = 'super secret key'
 application.config['SESSION_TYPE'] = 'filesystem'
 
-#TODO add author
 
 @application.route('/')
 def home():
@@ -18,7 +20,6 @@ def home():
     if not is_authorized():
         return render_template('guest.html')
 
-    # TODO: do something useful with the API
     api = get_api()
     me = api.me()
 
@@ -39,14 +40,13 @@ def follow_user(user_id, screen_name):
 def search_job():
     api = get_api()
     job_name = request.values['job'].strip()
-    #TODO query job name
-    query = 'python AND (JOB OR JOBS OR CAREER OR CAREERS OR LOOKING OR SEEK OR SEEKING OR HIRE OR HIRING' \
+    query = job_name + ' AND (JOB OR JOBS OR CAREER OR CAREERS OR LOOKING OR SEEK OR SEEKING OR HIRE OR HIRING' \
             ' OR RECRUIT OR RECRUITING OR EMPLOY OR EMPLOYING OR EMPLOYMENT OR CV OR OPPORTUNITY OR' \
             ' OPPORTUNITIES OR ROLE OR ROLES OR POSITION OR SKILLED OR CONTRACT OR WANTED OR NEEDED OR SALARY)'
     max_tweets = 20
-    #, lang='en' ,include_entities=True  result_type='popular'
+    # lang='en' ,include_entities=True  result_type='popular'
     searchResult = tweepy.Cursor(api.search, q=query).items(max_tweets)
-    #searchResult = api.search(q=query, lang='en',include_entities=True)
+    # searchResult = api.search(q=query, lang='en',include_entities=True)
     return render_template('search_job.html', searchResult=searchResult)
 
 
@@ -106,4 +106,4 @@ def get_auth():
 
 if __name__ == '__main__':
     # TODO: turn off debugging on production
-    application.run(debug=True)
+    application.run(debug=False)
