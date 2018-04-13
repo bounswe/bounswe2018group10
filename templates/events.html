@@ -9,6 +9,7 @@
                 <span class="text--muted">a.k.a</span>
                 <span class="twitter__screen-name">@{{ bag.screen_name }}</span><br>
                 You created your Twitter account at:</p>
+            <p class="hint text--small-title">Click one to see the list of events</p>
             <p class="twitter__created">
                 <a class="created__component" href="#events__day" title="events of the day" data-note>
                     <span class="created__day">{{ bag.created.day }}</span>
@@ -28,9 +29,11 @@
 {% block content %}
     <div class="events">
         <div id="events__day" class="events__day">
+            <h2>These happened on <span class="created-date text--bold">{{ bag.created.month }} {{ bag.created.day }}</span></h2>
             {% include "_events.day.html" %}
         </div>
         <div id="events__year" class="events__year">
+            <h2>These happened in <span class="created-date text--bold">{{ bag.created.year }}</span></h2>
             {% include "_events.year.html" %}
         </div>
     </div>

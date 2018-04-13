@@ -76,7 +76,7 @@ button[disabled] {
 }
 
 .site {
-    padding: 2rem 1rem 1rem;
+    padding: 4rem 2rem 2rem;
     border: 0.5rem solid var(--c-primary);
     min-height: 100vh;
 }
@@ -125,9 +125,32 @@ button[disabled] {
         padding: 4rem;
     }
 }
+
 /*endregion*/
 
 /*region COMPONENTS */
+@keyframes showup {
+    0% {
+        opacity: 0;
+    }
+    25% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.25;
+    }
+    75% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+.hint {
+    animation: showup 3s 1s both 1;
+}
+
 .twitter__created {
     font-weight: bold;
     font-size: 2rem;
@@ -162,6 +185,37 @@ button[disabled] {
 [data-note]:hover .note {
     opacity: 1;
     transform: translateX(-50%) translateY(0);
+}
+
+#events__day, #events__year {
+    display: none;
+}
+
+#events__day:target {
+    display: block;
+}
+
+#events__year:target {
+    display: block;
+}
+
+.event__month + .event__month {
+    margin-top: 2rem;
+}
+
+.event__month-name {
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 1rem;
+    color: var(--c-accent);
+}
+
+.event__day {
+    color: var(--c-accent);
+}
+
+.separator {
+    opacity: 0.5;
 }
 
 @media all and (max-width: 700px) {
