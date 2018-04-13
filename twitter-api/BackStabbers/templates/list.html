@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+            margin: 0;
+            padding: 2rem;
+        }
+
+        .user-name {
+            font-weight: bold;
+        }
+
+        .user-screen-name {
+            opacity: 0.75;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <img src="{{ user_info.profile_image_url }}" alt="Profile Picture">
+    <p>Hello, <span class="user-name">{{ user_info.name }}</span> <span
+            class="user-screen-name">(@{{ user_info.screen_name }})</span></p>
+    <p>Here are your "friends" that stabbed you in the back:</p>
+    <ul>
+        {% for nonfriend in nonfollowers %}
+            <li>
+                <a href="{{ nonfriend.url }}">
+                    <span class="user-name">{{ nonfriend.name }}</span>
+                    <span class="user-screen-name">(@{{ nonfriend.screen_name }})</span>
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+</body>
+</html>
