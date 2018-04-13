@@ -1,5 +1,6 @@
 from flask import Flask, request, render_template, jsonify, url_for, redirect, escape
 from twapi import api
+from eventsapi import get_events_of_day
 import datetime
 
 app = Flask(__name__)
@@ -30,6 +31,7 @@ def events():
         'is_a_user': True,
         'name': user.name,
         'screen_name': user.screen_name,
+        'profile_image_url': 'https://twitter.com/{}/profile_image?size=original'.format(user.screen_name),
         'created': {
             'day': created.day,
             'month': created.strftime('%B'),
@@ -42,12 +44,10 @@ def events():
 
 @app.route('/events/<int:month>/<int:day>', methods=['GET'])
 def api_events_day(month, day):
-    return "{}".format(month)
+    events = get_events_of_day(month, day)
 
-
-@app.route('/events/<int:year>', methods=['GET'])
-def api_events_year(year):
-    return "{}".format(year)
+    if request.is_json:
+        return jsonify(events)
 
 
 def get_api_urls_for_day(created: datetime.datetime):
