@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, jsonify, url_for, redirect, escape
+from flask import Flask, request, render_template, jsonify, url_for, redirect, escape, abort
 from twapi import api
 from eventsapi import get_events_of_day, get_events_of_year
 import datetime
@@ -24,7 +24,7 @@ def events():
 
     created = user.created_at
     events_year = get_events_of_year(created.year)
-    events_day = get_events_of_day(created.month, created.day)
+    events_day = get_events_of_day(created.month, created.day)[::-1]
 
     bag = {
         'name': user.name,
@@ -44,16 +44,32 @@ def events():
 def api_events_day(month, day):
     events = get_events_of_day(month, day)
 
-    if request.is_json:
-        return jsonify(events)
+    return jsonify(events)
 
 
 @app.route('/events/<int:year>', methods=['GET'])
 def api_events_year(year):
     events = get_events_of_year(year)
 
-    if request.is_json:
-        return jsonify(events)
+    return jsonify(events)
+
+
+@app.route('/events/<string:screen_name>')
+def api_events_user(screen_name):
+    user = api.get_user(screen_name=screen_name)
+    if not user:
+        return abort(404)
+
+    created = user.created_at
+    return jsonify({
+        'created': {
+            'day': created.day,
+            'month': created.month,
+            'year': created.year
+        },
+        'day': get_events_of_day(created.month, created.day),
+        'year': get_events_of_year(created.year)
+    })
 
 
 def get_api_urls_for_day(created: datetime.datetime):

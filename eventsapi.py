@@ -18,7 +18,7 @@ def get_events_of_day(month, day):
     events = []
     for ev in raw_events['events']:
         events.append({
-            'year': ev['year'],
+            'year': int(ev['year']),
             'event': ev['data']
         })
 
