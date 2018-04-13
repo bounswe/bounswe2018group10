@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Are You Following Me</title>
+
+
+</head>
+<body>
+    <div class="container">
+        <p>Type in your Twitter handle to list your friends who don't follow you back</p>
+        <form action="{{ url_for("list") }}" method="POST">
+            <input type="text" name="twitter_handle" required placeholder="@username">
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+</body>
+</html>
