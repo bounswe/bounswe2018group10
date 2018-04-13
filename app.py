@@ -1,6 +1,6 @@
 from flask import Flask, request, render_template, jsonify, url_for, redirect, escape
 from twapi import api
-from eventsapi import get_events_of_day
+from eventsapi import get_events_of_day, get_events_of_year
 import datetime
 
 app = Flask(__name__)
@@ -19,32 +19,38 @@ def events():
 
     user = api.get_user(screen_name=twitter_handle)
     if not user:
-        return render_template('events.html', bag={
-            'is_a_user': False,
-            'screen_name': twitter_handle
-        })
+        bag = {'screen_name': twitter_handle}
+        return render_template('events.html', is_a_user=False, bag=bag)
 
-    created: datetime.datetime = user.created_at
+    created = user.created_at
+    events_year = get_events_of_year(created.year)
+    events_day = get_events_of_day(created.month, created.day)
 
-    (url_day, url_year) = get_api_urls_for_day(created)
-    return render_template('events.html', bag={
-        'is_a_user': True,
+    bag = {
         'name': user.name,
         'screen_name': user.screen_name,
         'profile_image_url': 'https://twitter.com/{}/profile_image?size=original'.format(user.screen_name),
         'created': {
             'day': created.day,
             'month': created.strftime('%B'),
-            'year': created.year,
-            'url_day': url_day,
-            'url_year': url_year
+            'year': created.year
         }
-    })
+    }
+
+    return render_template('events.html', is_a_user=True, bag=bag, events_day=events_day, events_year=events_year)
 
 
 @app.route('/events/<int:month>/<int:day>', methods=['GET'])
 def api_events_day(month, day):
     events = get_events_of_day(month, day)
+
+    if request.is_json:
+        return jsonify(events)
+
+
+@app.route('/events/<int:year>', methods=['GET'])
+def api_events_year(year):
+    events = get_events_of_year(year)
 
     if request.is_json:
         return jsonify(events)

@@ -50,7 +50,7 @@ def _parse_multiple_events(raw):
     } for event in lines]
 
 
-def get_events_year(year):
+def get_events_of_year(year):
     endpoint = "https://en.wikipedia.org/wiki/{}".format(year)
     soup = _get_soup(endpoint)
     soup.find('h2', text='Events')

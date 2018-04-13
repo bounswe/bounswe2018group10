@@ -2,7 +2,7 @@
 {% block title %}Here's what happened{% endblock %}
 
 {% block sidebar %}
-    {% if bag.is_a_user %}
+    {% if is_a_user %}
         <div class="message">
             <p class="greetings">
                 Hello, <span class="twitter__name text--bold">{{ bag.name }}</span>
@@ -10,10 +10,10 @@
                 <span class="twitter__screen-name">@{{ bag.screen_name }}</span><br>
                 You created your Twitter account at:</p>
             <p class="twitter__created">
-                <a class="created__component" href="{{ bag.created.url_day }}" title="events of the day" data-note>
+                <a class="created__component" href="#events__day" title="events of the day" data-note>
                     <span class="created__day">{{ bag.created.day }}</span>
                     <span class="created__month">{{ bag.created.month }}</span></a>
-                <a class="created__component" href="{{ bag.created.url_year }}" title="events of the year" data-note>
+                <a class="created__component" href="#events__year" title="events of the year" data-note>
                     <span class="created__year">{{ bag.created.year }}</span>
                 </a>
             </p>
@@ -25,17 +25,28 @@
     {% endif %}
 {% endblock %}
 
+{% block content %}
+    <div class="events">
+        <div id="events__day" class="events__day">
+            {% include "_events.day.html" %}
+        </div>
+        <div id="events__year" class="events__year">
+            {% include "_events.year.html" %}
+        </div>
+    </div>
+{% endblock %}
+
 {% block scripts %}
     <script>
-    window.addEventListener('DOMContentLoaded', () => {
-        let annotatables = [].slice.call(document.querySelectorAll('[data-note]'))
+        window.addEventListener('DOMContentLoaded', () => {
+            let notables = [].slice.call(document.querySelectorAll('[data-note]'));
 
-        annotatables.forEach(an => {
-            let note = document.createElement('span')
-            note.className = 'note';
-            note.innerText = an.title;
-            an.appendChild(note)
+            notables.forEach(an => {
+                let note = document.createElement('span');
+                note.className = 'note';
+                note.innerText = an.title;
+                an.appendChild(note)
+            });
         });
-    });
     </script>
 {% endblock %}
