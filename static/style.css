@@ -207,11 +207,11 @@ button[disabled] {
     text-transform: uppercase;
     letter-spacing: 2px;
     margin-bottom: 1rem;
-    color: var(--c-accent);
+    color: var(--c-primary);
 }
 
 .event__day {
-    color: var(--c-accent);
+    color: var(--c-primary);
 }
 
 .separator {
