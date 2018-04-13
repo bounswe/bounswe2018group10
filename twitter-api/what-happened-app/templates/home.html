@@ -1,0 +1,38 @@
+{% extends "_main.html" %}
+{% block title %}So, what happened then? - A Twitter Experiment{% endblock %}
+
+{% block content %}
+    <p>Hello, fellow interwebz user <span class="emoji">✌</span></p>
+    <p>With this super cool app you can learn what happened in history <br>
+        the day you've created your Twitter account</p>
+    <form method="POST" action="{{ url_for('events') }}">
+        <input type="text"
+               name="twitter_handle"
+               placeholder="@username"
+               autofocus
+               required>
+        <button class="button" type="submit" disabled>Submit</button>
+        <noscript>
+            <button class="button" type="submit">Submit</button>
+        </noscript>
+    </form>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+
+        window.addEventListener('DOMContentLoaded', () => {
+            let handleInput = document.querySelector('[type=text]');
+            let submit = document.querySelector('[type=submit]');
+            // enable or disable submit button
+            handleInput.addEventListener('keyup', function (e) {
+                if (!this.value.length) {
+                    submit.setAttribute('disabled', 1);
+                    return;
+                }
+                submit.removeAttribute('disabled')
+            })
+
+        });
+    </script>
+{% endblock %}

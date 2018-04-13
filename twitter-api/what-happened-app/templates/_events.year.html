@@ -1,0 +1,16 @@
+<ul>
+    {% for month in events_year %}
+        <li class="event__month">
+            <h3 class="event__month-name">{{ month.month }}</h3>
+            <ul class="events__month">
+                {% for ev in month.events %}
+                    <li class="event">
+                        <span class="event__day text--bold">{{ ev.day }}</span>
+                        <span class="separator"> - </span>
+                        <span class="event__text">{{ ev.event }}</span>
+                    </li>
+                {% endfor %}
+            </ul>
+        </li>
+    {% endfor %}
+</ul>

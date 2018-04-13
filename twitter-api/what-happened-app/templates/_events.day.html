@@ -1,0 +1,9 @@
+<ul>
+    {% for ev in events_day %}
+        <li class="event">
+            <span class="event__day text--bold">{{ ev.year }}</span>
+            <span class="separator"> - </span>
+            <span class="event__text">{{ ev.event }}</span>
+        </li>
+    {% endfor %}
+</ul>
