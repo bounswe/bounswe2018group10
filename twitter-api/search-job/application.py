@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 
 # author: Baran Kılıç
 
@@ -40,9 +41,9 @@ def follow_user(user_id, screen_name):
 def search_job():
     api = get_api()
     job_name = request.values['job'].strip()
-    query = job_name + ' AND (JOB OR JOBS OR CAREER OR CAREERS OR LOOKING OR SEEK OR SEEKING OR HIRE OR HIRING' \
-            ' OR RECRUIT OR RECRUITING OR EMPLOY OR EMPLOYING OR EMPLOYMENT OR CV OR OPPORTUNITY OR' \
-            ' OPPORTUNITIES OR ROLE OR ROLES OR POSITION OR SKILLED OR CONTRACT OR WANTED OR NEEDED OR SALARY)'
+    query = job_name + ' AND (JOB OR JOBS OR CAREER OR CAREERS OR HIRE OR HIRING OR RECRUIT OR RECRUITING OR ' \
+                       'EMPLOY OR EMPLOYING OR EMPLOYMENT OR CV OR OPPORTUNITY OR OPPORTUNITIES OR ROLE OR ROLES OR ' \
+                       'POSITION OR SKILLED OR CONTRACT OR SALARY)'
     max_tweets = 20
     # lang='en' ,include_entities=True  result_type='popular'
     searchResult = tweepy.Cursor(api.search, q=query).items(max_tweets)
