@@ -11,11 +11,23 @@
 <div class="container">
     <h1>Find Me A Job Twitter!</h1>
     <p>Hello, {{ bag.name }}</p>
-    <p>Please enter a skill</p>
     <form action="{{ url_for('search_job') }}" method="POST">
+        Please enter a skill
         <input type="text" name="job" placeholder="example:python" required>
         <button type="submit">Find a job</button>
     </form>
+
+    <p>Quick links:</p>
+    {% for link in quick_link_list %}
+        <form method="post" action="{{ url_for('search_job') }}" class="inline">
+            <button type="submit" name="job" value="{{ link }}" class="btn btn-blue">
+                {{ link }}
+            </button>
+        </form>
+    {% endfor %}
+
+    <div class="quote">{{ tips | random }}</div>
+
     <p><a href="{{ url_for('logout') }}">Log out</a></p>
 </div>
 </body>
