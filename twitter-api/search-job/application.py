@@ -24,10 +24,17 @@ def home():
     api = get_api()
     me = api.me()
 
+    quick_link_list = ['python', 'java', 'javascript', 'php', 'nodejs', 'cpp', 'swift']
+
+    tips = ['"Your profile is your brand. Better add a profile picture and bio to your profile!"',
+            '"Follow the companies and recruiters you are interested in!"',
+            '"Start a Twitter conversation!"',
+            '"Be someone worth following!"']
+
     return render_template('home.html', bag={
         'screen_name': me.screen_name,
         'name': me.name
-    })
+    }, quick_link_list=quick_link_list, tips=tips)
 
 
 @application.route('/follow/<user_id>/<screen_name>')
