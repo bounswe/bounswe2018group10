@@ -14,7 +14,7 @@ This web app shows you job posting tweets about a particular skill.
     ```
 - Run application.py
 
-#Screenshots
+# Screenshots
 
 ![Screenshot of main page](screenshots/1.png)
 ![Screenshot of search results](screenshots/2.png)
