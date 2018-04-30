@@ -15,7 +15,7 @@
             <img src={{ tweet.author.profile_image_url }}>
             <div class="user-name"><strong>{{ tweet.author.name }}</strong></div>
             <div class="user-screen-name">@{{ tweet.author.screen_name }}</div>
-            <div class="tweet-text">{{ tweet.text }}</div>
+            <div class="tweet-text">{{ tweet.full_text }}</div>
             <div class="tweet-date">{{ tweet.created_at }}</div>
             <a class="btn btn-blue no-underline" href="https://twitter.com/i/web/status/{{ tweet.id_str }}" target="_blank">Go to tweet</a>
             <form class="inline" action="{{ url_for('follow_user', user_id=tweet.author.id, screen_name=tweet.author.screen_name) }}">

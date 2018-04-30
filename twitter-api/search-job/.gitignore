@@ -2,6 +2,7 @@
 venv/
 .secrets.yaml
 __pycache__/
+Procfile
 
 # Elastic Beanstalk Files
 .elasticbeanstalk/*

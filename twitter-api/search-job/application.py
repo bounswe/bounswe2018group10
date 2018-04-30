@@ -3,6 +3,7 @@
 # author: Baran Kılıç
 
 from flask import Flask, jsonify, render_template, request, session, redirect, url_for
+from flask_restful import Resource, Api
 import yaml
 import tweepy
 import os
@@ -13,6 +14,42 @@ if not os.path.isfile('.secrets.yaml'):
 application = Flask(__name__)
 application.secret_key = 'super secret key'
 application.config['SESSION_TYPE'] = 'filesystem'
+
+flask_restful_api = Api(application)
+
+class SearchJobApi(Resource):
+    def get(self,skill):
+        api = get_api()
+        query = skill + ' AND (JOB OR JOBS OR CAREER OR CAREERS OR HIRE OR HIRING OR RECRUIT OR RECRUITING OR ' \
+                           'EMPLOY OR EMPLOYING OR EMPLOYMENT OR CV OR OPPORTUNITY OR OPPORTUNITIES OR ROLE OR ROLES OR ' \
+                           'POSITION OR SKILLED OR CONTRACT OR SALARY)'
+        max_tweets = 20
+        searchResult = tweepy.Cursor(api.search, q=query, tweet_mode='extended').items(max_tweets)
+
+        dict = {}
+        dict['tweets'] = []
+        for tweet in searchResult:
+            t = {}
+            t['author'] = {}
+            t['author']['name'] = tweet.author.name
+            t['author']['screen_name'] = tweet.author.screen_name
+            t['author']['profile_image_url'] = tweet.author.profile_image_url
+            t['text'] = tweet.full_text
+            t['created_at'] = tweet.created_at
+            t['id_str'] = tweet.id_str
+            dict['tweets'].append(t)
+        return jsonify(dict)
+
+
+class FollowApi(Resource):
+    def get(self,screen_name):
+        api = get_api()
+        api.create_friendship(screen_name=screen_name, follow=True)
+        return jsonify({'message': 'You are now following '+screen_name})
+
+
+flask_restful_api.add_resource(SearchJobApi, '/api/search/<string:skill>')
+flask_restful_api.add_resource(FollowApi, '/api/follow/<string:screen_name>')
 
 
 @application.route('/')
@@ -53,7 +90,7 @@ def search_job():
                        'POSITION OR SKILLED OR CONTRACT OR SALARY)'
     max_tweets = 20
     # lang='en' ,include_entities=True  result_type='popular'
-    searchResult = tweepy.Cursor(api.search, q=query).items(max_tweets)
+    searchResult = tweepy.Cursor(api.search, q=query, tweet_mode='extended').items(max_tweets)
     # searchResult = api.search(q=query, lang='en',include_entities=True)
     return render_template('search_job.html', searchResult=searchResult)
 
