@@ -14,7 +14,7 @@ api = tweepy.API(_oauth, wait_on_rate_limit=True)
 
 def get_friends_list(screen_name):
     friends = []
-    for page in tweepy.Cursor(api.friends, screen_name=screen_name).pages():
+    for page in tweepy.Cursor(api.friends, screen_name=screen_name, count=200).pages():
         friends.extend([{
             "screen_name": u.screen_name,
             "name": u.name,
@@ -26,7 +26,7 @@ def get_friends_list(screen_name):
 
 def get_followers_list(screen_name):
     followers = []
-    for page in tweepy.Cursor(api.followers, screen_name=screen_name).pages():
+    for page in tweepy.Cursor(api.followers, screen_name=screen_name, count=200).pages():
         followers.extend([{
             "screen_name": u.screen_name,
             "name": u.name,
