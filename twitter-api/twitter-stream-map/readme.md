@@ -1,8 +1,10 @@
-# <img src="./static/twitter_loc.png" width="35px" height="auto">Twitter Stream Map<img src="./static/twitter_loc.png" width="35px" height="auto">
+# [<img src="./static/twitter_loc.png" width="35px" height="auto">Twitter Stream Map<img src="./static/twitter_loc.png" width="35px" height="auto">](https://twitter-stream-web.herokuapp.com/)
 
 This app streams tweets each 5 seconds and shows them on a map.
 
 This is a mini project for Fundamentals of Software Engineering course.
+
+Live app can be found at [Heroku](https://twitter-stream-web.herokuapp.com/)
 
 Original code can be found at [link](https://github.com/cetinerhalil/twitter-stream-map)
 
