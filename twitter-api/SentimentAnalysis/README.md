@@ -1,6 +1,6 @@
 # SentimentAnalysis
 A Simple Sentiment Analysis algorithm 
-which uses several libraries to analyze tweets of a given user and charts their overall mood.
+which uses several libraries to analyze tweets of a given user and charts their overall emotions.
 
 # How to run in your computer
 - Clone the repository
