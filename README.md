@@ -1,5 +1,5 @@
 # HoneyBadgers :honey_pot:
-#### BOUN-CmpE 352 Project
+#### BOUN-CmpE 352/451 Project
 <p align="center">
 <a href = "https://github.com/bounswe/bounswe2018group10/wiki"><img 
 <img src="./resources/honey_badgers.png" width="200" height="200"></a>
