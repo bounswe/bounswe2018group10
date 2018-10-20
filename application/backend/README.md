@@ -1,3 +1,6 @@
-# BACKEND CURRENT VERSION
+# BACKEND
 
-<p> You can view the latest version of our backend in here. </p>
+<p> Final version of backend implementation of the project will be here. Please look 
+  <a href="https://github.com/bounswe/bounswe2018group10/tree/backend/application/backend">backend</a> branch for current version. </p>
+
+
