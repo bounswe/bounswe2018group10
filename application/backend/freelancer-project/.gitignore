@@ -15,4 +15,6 @@ media
 # <django-project-name>/staticfiles/
 
 
+*.idea*
+
 # End of https://www.gitignore.io/api/django
