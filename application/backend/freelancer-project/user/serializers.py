@@ -22,3 +22,10 @@ class UserSerializer(serializers.ModelSerializer):
 
         return user
 
+
+class UserProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.UserProfile
+        fields = ('id', 'user_id', 'name', 'avatar', 'body', 'created_on', 'rating')
+        extra_kwargs = {'user_id': {'read_only': True}}
+
