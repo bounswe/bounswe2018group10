@@ -13,6 +13,10 @@ const axiosConfig = {
 Vue.prototype.$axios = axios.create(axiosConfig);
 
 new Vue({
+  data: {
+    token: localStorage.getItem('token') || '',
+    role: localStorage.getItem('role') || '',
+  },
   router,
   render: h => h(App)
 }).$mount('#app')

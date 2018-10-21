@@ -1,9 +1,10 @@
 <template>
   <div>
-    <div class="text-center">
-      <h1>HoneyBadgers</h1>
+    <div class="text-center mt-4">
+      <img src="../assets/logo.svg" width="70" height="70" alt="logo">
+      <h2>HoneyBadgers</h2>
     </div>
-     <b-form class="form-signin" @submit="onSubmit">
+    <b-form class="form-signin" @submit="onSubmit">
       <b-form-group label="Email address:"
                     label-for="exampleInput1">
         <b-form-input id="exampleInput1"
@@ -33,6 +34,7 @@
       </b-form-group>
       <b-button type="submit" variant="primary" block>Sign Up</b-button>
     </b-form>
+    <p class="text-center text-muted">Already have an account? <router-link to="/login">Login</router-link></p>
   </div>
 </template>
 
@@ -57,7 +59,8 @@ export default {
           name: this.form.name
         })
         .then(response => {
-          alert(JSON.stringify(response.data));
+          this.$router.push('/login');
+          //alert(JSON.stringify(response.data));
         })
         .catch(err => {
           console.log(err);

@@ -24,35 +24,59 @@
               <b-button size="sm" class="my-2 my-sm-0" type="submit">Search</b-button>
             </b-nav-form>
 
-            <b-nav-item-dropdown text="Lang" right>
+
+            <b-nav-form>
+              <b-form-radio-group buttons
+                                  button-variant="outline-primary"
+                                  size="sm"
+                                  v-model="selected"
+                                  :options="options"
+                                  name="radioBtnOutline" />
+            </b-nav-form>
+
+            <b-nav-item-dropdown right>
+              <template slot="text">
+                Lang
+              </template>
               <b-dropdown-item href="#">EN</b-dropdown-item>
               <b-dropdown-item href="#">ES</b-dropdown-item>
               <b-dropdown-item href="#">RU</b-dropdown-item>
-              <b-dropdown-item href="#">FA</b-dropdown-item>
+              <b-dropdown-item @click="logout">Log out</b-dropdown-item>
             </b-nav-item-dropdown>
 
-            <b-button class="mr-2" variant="outline-primary" to="/signup">Sign Up</b-button>
-            <b-button variant="outline-primary" to="/login">Login</b-button>
           </b-navbar-nav>
 
         </b-collapse>
       </b-navbar>
 
-      <b-jumbotron header="Hire the best freelancers" header-level="4" lead="Some slogan some slogan some slogan">
-        <p>For more information visit website</p>
-        <b-btn class="mr-2" variant="primary" to="/signup">Create a project</b-btn>
-        <b-btn variant="primary" to="/signup">Start working</b-btn>
-      </b-jumbotron>
-      
+      <p>Token: {{ this.$root.$data.token}}</p>
+      <p>Role: {{this.$root.$data.role}}</p>
   </div>
 </template>
 
 <script>
 export default {
-  name: "Home",
-  beforeMount(){
-    if(this.$root.$data.token !== ''){
-      this.$router.replace('/dashboard')
+  name: "Dashboard",
+  data () {
+    return {
+      selected: 'client',
+      options: [
+        { text: 'Client', value: 'client' },
+        { text: 'Freelancer', value: 'freelancer' }
+      ]
+    }
+  },
+  watch: {
+    selected: function (newSelected, oldSelected) {
+      this.$root.$data.role = newSelected;
+      localStorage.setItem('role',newSelected);
+    }
+  },
+  methods: {
+    logout(){
+      localStorage.removeItem("token");
+      this.$root.$data.token = '';
+      this.$router.push('/');
     }
   }
 };
