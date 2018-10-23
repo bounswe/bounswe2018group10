@@ -9,6 +9,7 @@ router = DefaultRouter()
 
 router.register('register', views.UserViewSet)
 router.register('login', views.LoginViewSet, base_name='login')
+router.register('profile', views.UserProfileViewSet)
 
 
 urlpatterns = [

@@ -49,3 +49,19 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+
+
+class UserProfile(models.Model):
+    """Profile information of users."""
+
+    user_id = models.ForeignKey('User', on_delete=models.CASCADE)
+    name = models.CharField(max_length=255, default='John Doe')
+    avatar = models.ImageField(upload_to='images/')
+    body = models.TextField()
+    created_on = models.DateTimeField(auto_now_add=True)
+    rating = models.FloatField(default=0)
+
+
+    def __str__(self):
+        return self.name
+
