@@ -59,8 +59,18 @@ export default {
           name: this.form.name
         })
         .then(response => {
-          this.$router.push('/login');
-          //alert(JSON.stringify(response.data));
+          this.$axios
+            .post("/user/login/", {
+              username: this.form.email,
+              password: this.form.password
+            })
+            .then(responseForLogin => {
+              this.$axios.defaults.headers.common['Authorization'] = `Token ${responseForLogin.data.token}`;
+              this.$router.push("/dashboard");
+            })
+            .catch(err => {
+              console.log(err);
+            });
         })
         .catch(err => {
           console.log(err);

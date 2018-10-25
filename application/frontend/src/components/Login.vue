@@ -59,10 +59,20 @@ export default {
           password: this.form.password
         })
         .then(response => {
-          localStorage.setItem("token", response.data.token);
-          this.$root.$data.token = response.data.token;
-          this.$router.push("/dashboard");
-          //alert(JSON.stringify(response.data));
+          this.$axios.defaults.headers.common['Authorization'] = `Token ${response.data.token}`;
+          this.$axios
+            .get("/user/register/", {
+              params: {
+                search: this.form.email
+              }
+            })
+            .then(responseForUserID => {
+              this.$root.$data.user_id = responseForUserID.data[0].id;
+              this.$router.push("/dashboard");
+            })
+            .catch(err => {
+              console.log(err);
+            });
         })
         .catch(error => {
           if (error.response) {

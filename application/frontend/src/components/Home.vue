@@ -51,7 +51,7 @@
 export default {
   name: "Home",
   beforeMount(){
-    if(this.$root.$data.token !== ''){
+    if(this.$axios.defaults.headers.common["Authorization"] != null){
       this.$router.replace('/dashboard')
     }
   }

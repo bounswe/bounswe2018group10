@@ -4,7 +4,7 @@
 
         <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
 
-        <b-navbar-brand href="#">
+        <b-navbar-brand to="/">
           <img src="../assets/logo.svg" width="30" height="30" class="d-inline-block align-top" alt="logo">
           HoneyBadgers
         </b-navbar-brand>
@@ -49,7 +49,6 @@
         </b-collapse>
       </b-navbar>
 
-      <p>Token: {{ this.$root.$data.token}}</p>
       <p>Role: {{this.$root.$data.role}}</p>
   </div>
 </template>
@@ -74,8 +73,7 @@ export default {
   },
   methods: {
     logout(){
-      localStorage.removeItem("token");
-      this.$root.$data.token = '';
+      delete this.$axios.defaults.headers.common["Authorization"];
       this.$router.push('/');
     }
   }
