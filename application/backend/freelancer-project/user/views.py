@@ -19,7 +19,7 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.UserSerializer
     queryset = models.User.objects.all()
     filter_backends = (filters.SearchFilter,)
-    search_fields = ('name', 'email',)
+    search_fields = ('email',)
     authentication_classes = (TokenAuthentication,)
     permission_classes = (permissions.UpdateUser,)
 
@@ -37,8 +37,11 @@ class UserProfileViewSet(viewsets.ModelViewSet):
 
     serializer_class = serializers.UserProfileSerializer
     queryset = models.UserProfile.objects.all()
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('user_id__id', 'name',)
     authentication_classes = (TokenAuthentication,)
     permission_classes = (permissions.UpdateUserProfile, IsAuthenticatedOrReadOnly)
 
     def perform_create(self, serializer):
         serializer.save(user_id=self.request.user)
+

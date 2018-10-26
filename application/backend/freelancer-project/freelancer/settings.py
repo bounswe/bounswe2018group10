@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'corsheaders',
     'user.apps.UserConfig',
+    'project.apps.ProjectConfig',
 ]
 
 MIDDLEWARE = [
