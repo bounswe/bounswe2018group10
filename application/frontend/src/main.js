@@ -14,7 +14,7 @@ Vue.prototype.$axios = axios.create(axiosConfig);
 
 new Vue({
   data: {
-    token: localStorage.getItem('token') || '',
+    user_id: 0,
     role: localStorage.getItem('role') || '',
   },
   router,
