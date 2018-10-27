@@ -56,9 +56,9 @@ class UserProfile(models.Model):
 
     user_id = models.ForeignKey('User', on_delete=models.CASCADE)
     name = models.CharField(max_length=255, default='John Doe')
-    avatar = models.ImageField(upload_to='images/')
+    avatar = models.ImageField(upload_to='images/', blank=True)
     body = models.TextField()
-    created_on = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     rating = models.FloatField(default=0)
 
 
