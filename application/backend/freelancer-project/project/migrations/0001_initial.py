@@ -32,7 +32,6 @@ class Migration(migrations.Migration):
                 ('budget_min', models.IntegerField()),
                 ('budget_max', models.IntegerField()),
                 ('deadline', models.DateTimeField()),
-                ('categories', models.ManyToManyField(related_name='projects', to='project.Category')),
             ],
         ),
         migrations.CreateModel(
@@ -51,5 +50,10 @@ class Migration(migrations.Migration):
             model_name='project',
             name='user_id',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
+        ),
+        migrations.AddField(
+            model_name='project',
+            name='category',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='project.Category'),
         ),
     ]
