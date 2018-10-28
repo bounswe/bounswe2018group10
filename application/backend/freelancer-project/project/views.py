@@ -20,7 +20,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)     # defines which authentication type will be used
     permission_classes = (permissions.UpdateProject, IsAuthenticatedOrReadOnly)   # defines users' permissions
     filter_backends = (filters.SearchFilter,)           # defines which filter type will be used
-    search_fields = ('title', 'tags__title', 'categories__title', 'user_id__id')  # to filter with a foreign key, field
+    search_fields = ('title', 'tags__title', 'category__title', 'user_id__id')  # to filter with a foreign key, field
                                                                                   # name in the related table must be
                                                                                   # written after name of the field
 

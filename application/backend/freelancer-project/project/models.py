@@ -19,7 +19,7 @@ class Project(models.Model):
                                                                                 # object is saved. Useful for “last-modified” timestamps.
 
     tags = models.ManyToManyField('Tag', related_name='projects')               # creates a many-to-many relationship between tags and projects.
-    categories = models.ManyToManyField('Category', related_name='projects')    # creates a many-to-many relationship between tags and projects.
+    category = models.ForeignKey('Category', on_delete=models.CASCADE)
     budget_min = models.IntegerField()
     budget_max = models.IntegerField()
     deadline = models.DateTimeField()
