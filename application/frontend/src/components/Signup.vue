@@ -59,6 +59,7 @@ export default {
           name: this.form.name
         })
         .then(response => {
+          this.$root.$data.user_id = response.data.id;
           this.$axios
             .post("/user/login/", {
               username: this.form.email,
@@ -66,7 +67,7 @@ export default {
             })
             .then(responseForLogin => {
               this.$axios.defaults.headers.common['Authorization'] = `Token ${responseForLogin.data.token}`;
-              this.$router.push("/dashboard");
+              this.$router.push("/profile-edit");
             })
             .catch(err => {
               console.log(err);
