@@ -2,6 +2,9 @@
   <div>
       <NavigationBar/>
 
+      <b-container>
+        <b-button variant="primary" to="/project-create">Create Project</b-button>
+      </b-container>
       <!--<p>Role: {{this.$root.$data.role}}</p>-->
   </div>
 </template>
