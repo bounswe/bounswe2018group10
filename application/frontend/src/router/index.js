@@ -10,6 +10,8 @@ import ProfileEdit from '../components/ProfileEdit.vue'
 import ProjectCreate from '../components/ProjectCreate.vue'
 import MyProjects from '../components/MyProjects.vue'
 import Project from '../components/Project.vue'
+import Search from '../components/Search.vue'
+
 
 Vue.use(VueRouter)
 
@@ -49,6 +51,10 @@ const routes = [
   {
     path: '/project/:id',
     component: Project
+  },
+  {
+    path: '/search/:query',
+    component: Search
   }
 ]
 
