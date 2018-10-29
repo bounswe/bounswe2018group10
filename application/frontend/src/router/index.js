@@ -8,6 +8,8 @@ import Dashboard from '../components/Dashboard.vue'
 import Profile from '../components/Profile.vue'
 import ProfileEdit from '../components/ProfileEdit.vue'
 import ProjectCreate from '../components/ProjectCreate.vue'
+import MyProjects from '../components/MyProjects.vue'
+import Project from '../components/Project.vue'
 
 Vue.use(VueRouter)
 
@@ -39,6 +41,14 @@ const routes = [
   {
     path: '/project-create',
     component: ProjectCreate
+  },
+  {
+    path: '/my-projects',
+    component: MyProjects
+  },
+  {
+    path: '/project/:id',
+    component: Project
   }
 ]
 

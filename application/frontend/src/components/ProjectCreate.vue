@@ -47,17 +47,15 @@
 
           <b-form-row>
             <b-col>
-              <b-form-group label="Tags"
-                            label-for="inputTag">
-                <b-form-input id="inputTag"
-                              type="text"
-                              list="tags"
-                              v-model="form.tag">
-                </b-form-input>
-                <datalist id="tags">
-                  <option :key="tag.id" v-for="tag in tags" :value="tag.id" :label="tag.title"></option>
-                </datalist>
-              </b-form-group> 
+              <b-form-group label="Tags">
+                <tags-input input-class="form-control"
+                            :typeahead-max-results="6"
+                            placeholder="Enter tags (e.g required skills)"
+                            :only-existing-tags="true"
+                            v-model="form.tags"
+                            :existing-tags="form.tagOptions"
+                            :typeahead="true"></tags-input>
+              </b-form-group>
             </b-col>
           </b-form-row>
 
@@ -118,6 +116,7 @@
 
 <script>
 import NavigationBar from "./NavigationBar.vue";
+import "@voerro/vue-tagsinput/dist/style.css";
 
 export default {
   name: "ProjectCreate",
@@ -132,7 +131,7 @@ export default {
         description: "",
         categorySelected: null,
         categoryOptions: [{ value: null, text: "Select a category" }],
-        tagOptions: [],
+        tagOptions: {},
         tags: [],
         budget_min: null,
         budget_max: null,
@@ -163,7 +162,9 @@ export default {
       this.$axios
         .get("/project/tag/")
         .then(response => {
-          this.tagOptions = response.data;
+          response.data.forEach(element => {
+            this.form.tagOptions[element.id] = element.title;
+          });
         })
         .catch(err => {
           console.log(err);
@@ -178,10 +179,11 @@ export default {
           tags: this.form.tags,
           budget_min: this.form.budget_min,
           budget_max: this.form.budget_max,
-          deadline: this.form.deadlineDate + "T" + this.form.deadlineTime + ":00Z"
+          deadline:
+            this.form.deadlineDate + "T" + this.form.deadlineTime + ":00Z"
         })
         .then(response => {
-          this.$root.$data.user_id = response.data.id;
+          this.$router.push(`/project/${response.data.id}`);
         })
         .catch(err => {
           console.log(err);
