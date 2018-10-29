@@ -9,7 +9,7 @@
                variant="danger" 
                v-for="(error, index) in form.non_field_errors"
                v-bind:key="index">{{ error }}</b-alert>
-      <b-form-group label="Email address:"
+      <b-form-group label="Email address"
                     label-for="exampleInput1">
         <b-form-input id="exampleInput1"
                       type="email"
@@ -18,7 +18,7 @@
                       placeholder="Enter email">
         </b-form-input>
       </b-form-group>
-      <b-form-group label="Password:"
+      <b-form-group label="Password"
                     label-for="exampleInput2">
         <b-form-input id="exampleInput2"
                       type="password"

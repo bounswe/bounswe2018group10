@@ -11,6 +11,7 @@
                             label-for="inputTitle">
                 <b-form-input id="inputTitle"
                               type="text"
+                              maxlength="200"
                               v-model="form.title"
                               placeholder="e.g. Interior Desing for a Restaurant"
                               required>

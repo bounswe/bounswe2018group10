@@ -5,11 +5,11 @@
     <b-container>
       <h2>Edit Profile</h2>
       <b-form @submit="onSubmit">
-        <b-row>
+        <b-form-row>
           <b-col cols="12" md="6">
-            <div>Current Profile Picture:</div>
+            <div>Current Profile Picture</div>
             <b-img :src="avatar" rounded width="150" height="150" blank-color="#777" alt="img" class="m-1" />
-            <b-form-group label="New Profile Picture:"
+            <b-form-group label="New Profile Picture"
                           label-for="inputAvatar">
               <b-form-file id="inputAvatar"
                             accept="image/*"
@@ -19,15 +19,16 @@
             </b-form-group>    
           </b-col>
           <b-col cols="12" md="6">
-            <b-form-group label="Name:"
+            <b-form-group label="Name"
                           label-for="inputName">
               <b-form-input id="inputName"
                             type="text"
+                            maxlength="255"
                             v-model="form.name"
                             placeholder="Enter name">
               </b-form-input>
             </b-form-group>
-            <b-form-group label="Profile Body:"
+            <b-form-group label="Profile Body"
                           label-for="inputBody">
               <b-form-textarea id="inputBody"
                         v-model="form.body"
@@ -37,7 +38,7 @@
               </b-form-textarea>
             </b-form-group>
           </b-col>
-        </b-row>
+        </b-form-row>
         
         
         <b-button type="submit" variant="primary" block>Save changes</b-button>
