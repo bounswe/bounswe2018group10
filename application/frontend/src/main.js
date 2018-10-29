@@ -4,6 +4,9 @@ import './plugins/bootstrap-vue'
 import App from './App.vue'
 import router from './router'
 import axios from 'axios'
+import VoerroTagsInput from '@voerro/vue-tagsinput'
+
+Vue.component('tags-input', VoerroTagsInput);
 
 Vue.config.productionTip = false
 

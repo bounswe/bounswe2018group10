@@ -5,7 +5,7 @@
       <h2>HoneyBadgers</h2>
     </div>
     <b-form class="form-signin" @submit="onSubmit">
-      <b-form-group label="Email address:"
+      <b-form-group label="Email address"
                     label-for="exampleInput1">
         <b-form-input id="exampleInput1"
                       type="email"
@@ -14,7 +14,7 @@
                       placeholder="Enter email">
         </b-form-input>
       </b-form-group>
-      <b-form-group label="Name:"
+      <b-form-group label="Name"
                     label-for="exampleInput2">
         <b-form-input id="exampleInput2"
                       type="text"
@@ -23,7 +23,7 @@
                       placeholder="Enter name">
         </b-form-input>
       </b-form-group>
-      <b-form-group label="Password:"
+      <b-form-group label="Password"
                     label-for="exampleInput3">
         <b-form-input id="exampleInput3"
                       type="password"
