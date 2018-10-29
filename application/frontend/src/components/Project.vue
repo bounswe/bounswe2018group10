@@ -35,11 +35,12 @@
         <b-col>
           <b-card title="Project Description">
               <p class="card-text">{{project.description}}</p>
-              <div>Category: {{projectCategory.title}}</div>
+              <div>Category: <router-link :to="`/search/${projectCategory.title}`">{{projectCategory.title}}</router-link></div>
               <div>
                     <span>Tags: </span>
                     <b-badge class="mr-1" 
-                             variant="primary" 
+                             variant="primary"
+                             :to="`/search/${tag.title}`" 
                              :key="tag.id" 
                              v-for="tag in projectTags">{{tag.title}}</b-badge>
                   </div>

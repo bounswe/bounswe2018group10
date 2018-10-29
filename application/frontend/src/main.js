@@ -15,6 +15,16 @@ const axiosConfig = {
 };
 Vue.prototype.$axios = axios.create(axiosConfig);
 
+Vue.filter('shortDescription', function (value) {
+  if (!value) return "";
+  const limit = 200;
+  if(value.length > limit){
+    return value.slice(0,limit) + "...";
+  }else{
+    return value;
+  }
+})
+
 new Vue({
   data: {
     user_id: 0,

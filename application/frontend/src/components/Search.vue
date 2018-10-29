@@ -5,7 +5,7 @@
     <b-container>
       <b-row>
         <b-col>
-          <h2>My Projects</h2>
+          <h2>Search Results</h2>
         </b-col>
       </b-row>
 
@@ -28,25 +28,31 @@
 </template>
 
 <script>
-import NavigationBar from './NavigationBar.vue'
+import NavigationBar from "./NavigationBar.vue";
 
 export default {
-  name: "MyProjects",
+  name: "Search",
   components: {
     NavigationBar
   },
-  data () {
+  data() {
     return {
       projects: [],
-    }
+      query: this.$route.params.query
+    };
   },
   created() {
     this.fetchData();
   },
+  beforeRouteUpdate(to, from, next) {
+    this.query = to.params.query;
+    this.fetchData();
+    next();
+  },
   methods: {
-    fetchData(){
+    fetchData() {
       this.$axios
-        .get(`/project/create/?search=${this.$root.$data.user_id}`)
+        .get(`/project/create/?search=${this.query}`)
         .then(response => {
           this.projects = response.data;
         })
