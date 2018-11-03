@@ -171,7 +171,8 @@ export default {
           console.log(err);
         });
     },
-    onSubmit() {
+    onSubmit(evt) {
+      evt.preventDefault();
       this.$axios
         .post("/project/create/", {
           title: this.form.title,

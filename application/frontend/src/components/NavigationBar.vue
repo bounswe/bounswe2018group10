@@ -69,7 +69,8 @@ export default {
       delete this.$axios.defaults.headers.common["Authorization"];
       this.$router.push('/');
     },
-    onSubmit(){
+    onSubmit(evt){
+      evt.preventDefault();
       this.$router.push('/search/'+this.query);
     }
   }

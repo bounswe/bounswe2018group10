@@ -94,7 +94,8 @@ export default {
           console.log(err);
         });
     },
-    onSubmit() {
+    onSubmit(evt) {
+      evt.preventDefault();
       let formData = new FormData();
       formData.append("name", this.form.name);
       formData.append("body", this.form.body);
