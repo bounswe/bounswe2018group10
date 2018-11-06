@@ -8,7 +8,9 @@
             <h2>My Profile</h2>
           </b-col >
           <b-col cols="auto">
-            <b-button variant="primary" to="/profile-edit">Edit Profile</b-button>
+            <b-button variant="primary" to="/profile-edit">
+              <font-awesome-icon icon="user-edit" fixed-width />Edit Profile
+            </b-button>
           </b-col>
         </b-row>
         <b-row>
