@@ -23,6 +23,9 @@ class Project(models.Model):
     budget_min = models.IntegerField()
     budget_max = models.IntegerField()
     deadline = models.DateTimeField()
+    file = models.FileField(upload_to='files/', blank=True)
+    latitude = models.DecimalField(max_digits=10, decimal_places=7, blank=True, default=None, null=True)
+    longitude = models.DecimalField(max_digits=10, decimal_places=7, blank=True, default=None, null=True)
 
 
     def __str__(self):          # thanks to this in admin panel projects are seen with their title
