@@ -26,3 +26,20 @@ class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Category
         fields = ('id', 'title')
+
+
+class BidSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.Bid
+        fields = ('id', 'user_id', 'project_id', 'description', 'amount', 'created_at', 'updated_at')
+
+        extra_kwargs = {'user_id': {'read_only': True}}
+
+
+class MilestoneSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Milestone
+        fields = ('id', 'user_id', 'bid_id', 'description', 'amount', 'created_at', 'updated_at', 'deadline')
+
+        extra_kwargs = {'user_id': {'read_only': True}}

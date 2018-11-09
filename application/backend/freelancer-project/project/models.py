@@ -29,7 +29,7 @@ class Project(models.Model):
 
 
     def __str__(self):          # thanks to this in admin panel projects are seen with their title
-        return self.title
+        return str(self.id)
 
 
 
@@ -49,4 +49,30 @@ class Category(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class Bid(models.Model):
+
+    user_id = models.ForeignKey('user.User', on_delete=models.CASCADE)
+    project_id = models.ForeignKey('Project', on_delete=models.CASCADE)
+    description = models.TextField()
+    amount = models.IntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return str(self.id)
+
+
+class Milestone(models.Model):
+    user_id = models.ForeignKey('user.User', on_delete=models.CASCADE)
+    bid_id = models.ForeignKey('Bid', on_delete=models.CASCADE)
+    description = models.TextField()
+    amount = models.IntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    deadline = models.DateTimeField(default=None)
+
+    def __str__(self):
+        return (self.id)
 

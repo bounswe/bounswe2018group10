@@ -3,6 +3,9 @@ from rest_framework import viewsets
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework import filters
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from django.http import Http404
 
 
 from . import serializers
@@ -30,6 +33,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
         serializer.save(user_id=self.request.user)
 
 
+
 class TagViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.TagSerializer
     queryset = models.Tag.objects.all()
@@ -47,3 +51,30 @@ class CategoryViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticatedOrReadOnly,)
 
+
+
+
+class BidViewSet(viewsets.ModelViewSet):
+    serializer_class = serializers.BidSerializer
+    queryset = models.Bid.objects.all()
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('project_id__id',)
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (permissions.UpdateBid, IsAuthenticatedOrReadOnly,)
+
+    def perform_create(self, serializer):
+        serializer.save(user_id=self.request.user)
+
+        
+
+
+class MilestoneViewSet(viewsets.ModelViewSet):
+    serializer_class = serializers.MilestoneSerializer
+    queryset = models.Milestone.objects.all()
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('bid_id__id',)
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (permissions.UpdateMilestone, IsAuthenticatedOrReadOnly,)
+
+    def perform_create(self, serializer):
+        serializer.save(user_id=self.request.user)
