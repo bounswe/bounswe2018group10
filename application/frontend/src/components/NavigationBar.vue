@@ -19,16 +19,20 @@
       <b-navbar-nav class="ml-auto">
 
         <b-nav-form @submit="onSubmit">
-          <b-form-input required v-model="query" size="sm" class="mr-sm-2" type="text" placeholder="Search"/>
-          <b-button size="sm" class="my-2 my-sm-0 mr-sm-3" type="submit">Search</b-button>
+          <b-input-group>
+            <b-form-input required v-model="query" size="sm" type="text" placeholder="Search"/>
+            <b-input-group-append>
+              <b-button size="sm" class="my-sm-0 mr-sm-3" type="submit">Search</b-button>
+            </b-input-group-append>
+          </b-input-group>
         </b-nav-form>
         <!--
         <b-nav-form>
             <b-form-radio-group buttons
                                 button-variant="outline-primary"
                                 size="sm"
-                                v-model="selected"
-                                :options="options"
+                                v-model="role"
+                                :options="roleOptions"
                                 name="radioBtnOutline" />
         </b-nav-form>-->
 
@@ -50,18 +54,23 @@ export default {
   name: "NavigationBar",
   data () {
     return {
-      selected: this.$root.$data.role,
-      options: [
+      role: this.$root.$data.role,
+      roleOptions: [
         { text: 'Client', value: 'client' },
         { text: 'Freelancer', value: 'freelancer' }
       ],
       query: ""
     }
   },
+  created() {
+    if(!this.$axios.defaults.headers.common["Authorization"]){
+      this.$router.replace('/');
+    }
+  },
   watch: {
-    selected: function (newSelected, oldSelected) {
-      this.$root.$data.role = newSelected;
-      localStorage.setItem('role',newSelected);
+    role: function (newRole, oldRole) {
+      this.$root.$data.role = newRole;
+      localStorage.setItem('role',newRole);
     }
   },
   methods: {
