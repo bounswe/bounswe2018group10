@@ -8,7 +8,7 @@
         <b-form-row>
           <b-col cols="12" md="6">
             <div>Current Profile Picture</div>
-            <b-img :src="avatar" rounded width="150" height="150" blank-color="#777" alt="img" class="m-1" />
+            <b-img :src="avatar" rounded width="160" blank-color="#777" alt="img" class="m-1" />
             <b-form-group label="New Profile Picture"
                           label-for="inputAvatar">
               <b-form-file id="inputAvatar"
@@ -25,7 +25,8 @@
                             type="text"
                             maxlength="255"
                             v-model="form.name"
-                            placeholder="Enter name">
+                            placeholder="Enter name"
+                            required>
               </b-form-input>
             </b-form-group>
             <b-form-group label="Profile Body"
@@ -34,7 +35,8 @@
                         v-model="form.body"
                         placeholder="Tell us about yourself"
                         :rows="4"
-                        :max-rows="8">
+                        :max-rows="8"
+                        required>
               </b-form-textarea>
             </b-form-group>
           </b-col>
@@ -94,7 +96,8 @@ export default {
           console.log(err);
         });
     },
-    onSubmit() {
+    onSubmit(evt) {
+      evt.preventDefault();
       let formData = new FormData();
       formData.append("name", this.form.name);
       formData.append("body", this.form.body);

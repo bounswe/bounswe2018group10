@@ -52,7 +52,8 @@ export default {
     };
   },
   methods: {
-    onSubmit() {
+    onSubmit(evt) {
+      evt.preventDefault();
       this.$axios
         .post("/user/login/", {
           username: this.form.email,

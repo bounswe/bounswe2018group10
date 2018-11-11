@@ -13,7 +13,7 @@
         </b-row>
         <b-row>
           <b-col cols="12" sm="2">
-            <b-img :src="avatar" thumbnail fluid rounded alt="img" class="m-1" />
+            <b-img :src="avatar" fluid rounded alt="img" class="m-1" />
             <!-- width="150" height="150"  -->
           </b-col>
           <b-col cols="12" sm="7">
