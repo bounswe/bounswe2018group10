@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  web:
+    build: ./backend/freelancer-project/
+    command: python3 manage.py runserver 0.0.0.0:8000
+    ######
+    #volumes:
+    #  - ./backend/freelancer-project:/code
+    ######
+    ports:
+      - "8000:8000"
+  vue:
+    build: ./frontend/
+    command: npm run serve
+    ######
+    #volumes:
+    #- ./frontend:/code
+    ######
+    ports:
+    - "8080:8080"

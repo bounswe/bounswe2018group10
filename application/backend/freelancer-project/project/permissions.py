@@ -10,3 +10,21 @@ class UpdateProject(permissions.BasePermission):
 
         return obj.user_id.id == request.user.id        # system allows user's request if the id of the user who made
                                                         # the request is same with the related id of the changed object
+
+
+
+
+class UpdateBid(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+
+        return obj.user_id.id == request.user.id
+
+
+class UpdateMilestone(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+
+        return obj.user_id.id == request.user.id

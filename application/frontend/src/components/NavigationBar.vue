@@ -22,7 +22,7 @@
           <b-input-group>
             <b-form-input required v-model="query" size="sm" type="text" placeholder="Search"/>
             <b-input-group-append>
-              <b-button size="sm" class="my-sm-0 mr-sm-3" variant="secondary" type="submit">Search</b-button>
+              <b-button size="sm" class="my-sm-0 mr-sm-3" variant="secondary" type="submit"><font-awesome-icon icon="search"/>Search</b-button>
             </b-input-group-append>
           </b-input-group>
         </b-nav-form>
@@ -40,9 +40,9 @@
             <template slot="text">
             Settings
             </template>
-            <b-dropdown-item to="/profile">Profile</b-dropdown-item>
+            <b-dropdown-item to="/profile"><font-awesome-icon icon="user" fixed-width />Profile</b-dropdown-item>
             <b-dropdown-divider></b-dropdown-divider>
-            <b-dropdown-item @click="logout">Log out</b-dropdown-item>
+            <b-dropdown-item @click="logout"><font-awesome-icon icon="sign-out-alt" fixed-width />Log out</b-dropdown-item>
         </b-nav-item-dropdown>
       </b-navbar-nav>
     </b-collapse>
@@ -78,7 +78,8 @@ export default {
       delete this.$axios.defaults.headers.common["Authorization"];
       this.$router.push('/');
     },
-    onSubmit(){
+    onSubmit(evt){
+      evt.preventDefault();
       this.$router.push('/search/'+this.query);
     }
   }

@@ -30,11 +30,19 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
+    # Definition of different user roles, we have 'freelancer' and 'client'
+    FREELANCER = 0
+    CLIENT = 1
+    ROLE_CHOICES = (
+        (FREELANCER, 'Freelancer'),
+        (CLIENT, 'Client'),
+    )
 
     email = models.EmailField(max_length=255, unique=True)
     name = models.CharField(max_length=255)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
+    role = models.IntegerField(choices=ROLE_CHOICES, default=FREELANCER)
 
     objects = UserManager()
 
@@ -64,4 +72,3 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return self.name
-
