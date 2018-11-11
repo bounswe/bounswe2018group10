@@ -10,6 +10,8 @@ router = DefaultRouter()
 router.register('create', views.ProjectViewSet)
 router.register('tag', views.TagViewSet)
 router.register('category', views.CategoryViewSet)
+router.register('bid', views.BidViewSet)
+router.register('milestone', views.MilestoneViewSet)
 
 
 urlpatterns = [
