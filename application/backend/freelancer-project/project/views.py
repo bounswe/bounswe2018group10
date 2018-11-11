@@ -3,9 +3,7 @@ from rest_framework import viewsets
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework import filters
-from rest_framework.views import APIView
 from rest_framework.response import Response
-from django.http import Http404
 
 
 from . import serializers
@@ -23,7 +21,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)     # defines which authentication type will be used
     permission_classes = (permissions.UpdateProject, IsAuthenticatedOrReadOnly)   # defines users' permissions
     filter_backends = (filters.SearchFilter,)           # defines which filter type will be used
-    search_fields = ('title', 'tags__title', 'category__title', 'user_id__id')  # to filter with a foreign key, field
+    search_fields = ('title', 'tags__title', 'category__title', '=user_id__id')  # to filter with a foreign key, field
                                                                                   # name in the related table must be
                                                                                   # written after name of the field
 
@@ -31,6 +29,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         '''Relates the created project to the logged in user.'''
         serializer.save(user_id=self.request.user)
+
 
 
 
@@ -58,21 +57,22 @@ class BidViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.BidSerializer
     queryset = models.Bid.objects.all()
     filter_backends = (filters.SearchFilter,)
-    search_fields = ('project_id__id',)
+    search_fields = ('=project_id__id',)
     authentication_classes = (TokenAuthentication,)
     permission_classes = (permissions.UpdateBid, IsAuthenticatedOrReadOnly,)
 
     def perform_create(self, serializer):
         serializer.save(user_id=self.request.user)
 
-        
+
+
 
 
 class MilestoneViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.MilestoneSerializer
     queryset = models.Milestone.objects.all()
     filter_backends = (filters.SearchFilter,)
-    search_fields = ('bid_id__id',)
+    search_fields = ('=bid_id__id',)
     authentication_classes = (TokenAuthentication,)
     permission_classes = (permissions.UpdateMilestone, IsAuthenticatedOrReadOnly,)
 
