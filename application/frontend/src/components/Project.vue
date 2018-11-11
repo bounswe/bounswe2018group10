@@ -15,7 +15,7 @@
       <b-collapse id="collapse1">
         <b-row class="mb-4">
           <b-col>
-            <b-card>
+            <b-card class="shadow">
               <b-form>
                 <b-form-row>
                   <b-col cols="12" md="6">
@@ -89,15 +89,19 @@
 
       <b-row class="mb-4">
         <b-col>
-          <b-card>
+          <b-card class="shadow">
               <b-row>
+                <b-col>
+                  <strong>Bids</strong>
+                  <div>
+                    2
+                  </div>
+                </b-col>
                 <b-col>
                   <strong>Budget</strong>
                   <div>
                     {{project.budget_min}} - {{project.budget_max}}
                   </div>
-                </b-col>
-                <b-col>
                 </b-col>
                 <b-col>
                   <strong>Deadline</strong>
@@ -112,7 +116,7 @@
 
       <b-row class="mb-4">
         <b-col>
-          <b-card title="Project Description">
+          <b-card class="shadow" title="Project Description">
               <p class="card-text">{{project.description}}</p>
               <div>Category: <router-link :to="`/search/${projectCategory.title}`">{{projectCategory.title}}</router-link></div>
               <div>
@@ -123,13 +127,17 @@
                          :key="tag.id" 
                          v-for="tag in projectTags">{{tag.title}}</b-badge>
               </div>
+              <h6>Location</h6>
+              <div class="embed-responsive">
+                <div id="map"></div>
+              </div>
           </b-card>
         </b-col>
       </b-row>
 
       <b-row class="mb-4">
         <b-col>
-          <b-list-group>
+          <b-list-group class="shadow">
             <b-list-group-item>
               <b-row>
                 <b-col>
@@ -168,7 +176,7 @@
 
       <b-row class="mb-4">
         <b-col>
-          <b-list-group>
+          <b-list-group class="shadow">
             <b-list-group-item>
               <b-row>
                 <b-col>
@@ -230,6 +238,7 @@
 
 <script>
 import NavigationBar from "./NavigationBar.vue";
+import GoogleMapsLoader from "google-maps";
 
 export default {
   name: "Project",
@@ -262,7 +271,7 @@ export default {
           picture: "https://randomuser.me/api/portraits/men/44.jpg",
           text: "Sounds like a good project !!",
           date: "2018-11-1"
-        },
+        }
       ],
       newCommentText: "",
       bidForm: {
@@ -271,14 +280,21 @@ export default {
         milestones: [
           {
             name: "",
-            amount: null,
+            amount: null
           }
-        ],
+        ]
       },
+      position: { lat: 41.0851665, lng: 29.0446262 },
+      map: null,
+      mapMarkers: [],
     };
   },
   created() {
     this.fetchData();
+  },
+  mounted() {
+    this.googleMapsFontFix();
+    this.googleMapsInit();
   },
   methods: {
     fetchData() {
@@ -313,12 +329,52 @@ export default {
         });
     },
     addMilestone() {
-      this.bidForm.milestones.push({name:"",amount: null});
+      this.bidForm.milestones.push({ name: "", amount: null });
     },
     removeMilestone() {
-      if(this.bidForm.milestones.length > 1){
+      if (this.bidForm.milestones.length > 1) {
         this.bidForm.milestones.pop();
       }
+    },
+    googleMapsFontFix(){
+      /* to prevent google maps from replacing the default
+       * font with Roboto. */
+      let head = document.getElementsByTagName("head")[0];
+
+      // Save the original method
+      let insertBefore = head.insertBefore;
+
+      // Replace it!
+      head.insertBefore = function(newElement, referenceElement) {
+        if (
+          newElement.href &&
+          newElement.href.indexOf("//fonts.googleapis.com/css?family=Roboto") > -1
+        ) {
+          console.info("Prevented Roboto from loading!");
+          return;
+        }
+        insertBefore.call(head, newElement, referenceElement);
+      };
+    },
+    googleMapsInit(){
+      GoogleMapsLoader.KEY = process.env.VUE_APP_GOOGLE_MAPS_API_KEY;
+
+      GoogleMapsLoader.load((google) => {
+        this.map = new google.maps.Map(document.getElementById("map"), {
+          zoom: 15,
+          center: this.position,
+        });
+        this.addMapMarker(this.position);
+      });
+    },
+    addMapMarker(location){
+      GoogleMapsLoader.load((google) => {
+        let marker = new google.maps.Marker({
+          position: location,
+          map: this.map
+        });
+        this.mapMarkers.push(marker);
+      });
     }
   }
 };
@@ -326,4 +382,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+#map {
+  height: 400px;
+}
 </style>

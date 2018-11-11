@@ -22,11 +22,11 @@
           <b-input-group>
             <b-form-input required v-model="query" size="sm" type="text" placeholder="Search"/>
             <b-input-group-append>
-              <b-button size="sm" class="my-sm-0 mr-sm-3" type="submit">Search</b-button>
+              <b-button size="sm" class="my-sm-0 mr-sm-3" variant="secondary" type="submit">Search</b-button>
             </b-input-group-append>
           </b-input-group>
         </b-nav-form>
-        <!--
+        
         <b-nav-form>
             <b-form-radio-group buttons
                                 button-variant="outline-primary"
@@ -34,7 +34,7 @@
                                 v-model="role"
                                 :options="roleOptions"
                                 name="radioBtnOutline" />
-        </b-nav-form>-->
+        </b-nav-form>
 
         <b-nav-item-dropdown right>
             <template slot="text">
