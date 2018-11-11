@@ -43,7 +43,7 @@
         </b-form-row>
         
         
-        <b-button type="submit" variant="primary" block>Save changes</b-button>
+        <b-button type="submit" variant="primary" block><font-awesome-icon icon="save" fixed-width />Save changes</b-button>
       </b-form>
     </b-container>
   </div>

@@ -5,8 +5,11 @@
       <h2>HoneyBadgers</h2>
     </div>
     <b-form class="form-signin" @submit="onSubmit">
-      <b-form-group label="Email address"
-                    label-for="exampleInput1">
+      <b-form-group label-for="exampleInput1">
+        <template slot="label">
+          <font-awesome-icon icon="envelope" fixed-width />
+          Email address
+        </template>
         <b-form-input id="exampleInput1"
                       type="email"
                       v-model="form.email"
@@ -14,8 +17,11 @@
                       placeholder="Enter email">
         </b-form-input>
       </b-form-group>
-      <b-form-group label="Name"
-                    label-for="exampleInput2">
+      <b-form-group label-for="exampleInput2">
+        <template slot="label">
+          <font-awesome-icon icon="user" fixed-width />
+          Name
+        </template>
         <b-form-input id="exampleInput2"
                       type="text"
                       v-model="form.name"
@@ -23,8 +29,11 @@
                       placeholder="Enter name">
         </b-form-input>
       </b-form-group>
-      <b-form-group label="Password"
-                    label-for="exampleInput3">
+      <b-form-group label-for="exampleInput3">
+        <template slot="label">
+          <font-awesome-icon icon="lock" fixed-width />
+          Password
+        </template>
         <b-form-input id="exampleInput3"
                       type="password"
                       v-model="form.password"

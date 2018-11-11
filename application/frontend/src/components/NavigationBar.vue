@@ -20,7 +20,7 @@
 
         <b-nav-form @submit="onSubmit">
           <b-form-input required v-model="query" size="sm" class="mr-sm-2" type="text" placeholder="Search"/>
-          <b-button size="sm" class="my-2 my-sm-0 mr-sm-3" type="submit">Search</b-button>
+          <b-button size="sm" class="my-2 my-sm-0 mr-sm-3" type="submit"><font-awesome-icon icon="search"/> Search</b-button>
         </b-nav-form>
         <!--
         <b-nav-form>
@@ -36,9 +36,9 @@
             <template slot="text">
             Settings
             </template>
-            <b-dropdown-item to="/profile">Profile</b-dropdown-item>
+            <b-dropdown-item to="/profile"><font-awesome-icon icon="user" fixed-width />Profile</b-dropdown-item>
             <b-dropdown-divider></b-dropdown-divider>
-            <b-dropdown-item @click="logout">Log out</b-dropdown-item>
+            <b-dropdown-item @click="logout"><font-awesome-icon icon="sign-out-alt" fixed-width />Log out</b-dropdown-item>
         </b-nav-item-dropdown>
       </b-navbar-nav>
     </b-collapse>
