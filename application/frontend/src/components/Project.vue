@@ -8,7 +8,7 @@
           <h2 class="mb-0">{{project.title}}</h2>
         </b-col>
         <b-col cols="auto" class="ml-auto">
-          <b-button v-b-toggle.collapse1 variant="primary">Bid for Project</b-button>
+          <b-button v-if="isFreelancer" v-b-toggle.collapse1 variant="primary">Bid for Project</b-button>
         </b-col>
       </b-row>
 
@@ -284,7 +284,6 @@ export default {
           }
         ]
       },
-      position: { lat: 41.0851665, lng: 29.0446262 },
       map: null,
       mapMarkers: [],
     };
@@ -358,13 +357,18 @@ export default {
     },
     googleMapsInit(){
       GoogleMapsLoader.KEY = process.env.VUE_APP_GOOGLE_MAPS_API_KEY;
+      GoogleMapsLoader.VERSION = '3.34';
 
       GoogleMapsLoader.load((google) => {
+        let position = {
+          lat: Number(this.project.latitude),
+          lng: Number(this.project.longitude)
+        };
         this.map = new google.maps.Map(document.getElementById("map"), {
           zoom: 15,
-          center: this.position,
+          center: position,
         });
-        this.addMapMarker(this.position);
+        this.addMapMarker(position);
       });
     },
     addMapMarker(location){

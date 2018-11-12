@@ -22,7 +22,7 @@
           <b-input-group>
             <b-form-input required v-model="query" size="sm" type="text" placeholder="Search"/>
             <b-input-group-append>
-              <b-button size="sm" class="my-sm-0 mr-sm-3" variant="secondary" type="submit"><font-awesome-icon icon="search"/>Search</b-button>
+              <b-button size="sm" class="my-sm-0 mr-sm-3" variant="secondary" type="submit"><font-awesome-icon icon="search"/></b-button>
             </b-input-group-append>
           </b-input-group>
         </b-nav-form>
