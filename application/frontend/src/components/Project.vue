@@ -247,6 +247,7 @@ export default {
   },
   data() {
     return {
+      projectID: this.$route.params.id,
       project: {},
       projectTags: [],
       projectCategory: {},
@@ -295,10 +296,18 @@ export default {
     this.googleMapsFontFix();
     this.googleMapsInit();
   },
+  beforeRouteUpdate(to, from, next) {
+    this.projectID = to.params.id;
+    this.fetchData();
+    next();
+  },
+  beforeDestroy() {
+    GoogleMapsLoader.release(function() {});
+  },
   methods: {
     fetchData() {
       this.$axios
-        .get(`/project/create/${this.$route.params.id}/`)
+        .get(`/project/create/${this.projectID}/`)
         .then(response => {
           this.project = response.data;
           this.deadline = this.project.deadline.replace(/[TZ]/g, " ");
@@ -358,6 +367,7 @@ export default {
     googleMapsInit(){
       GoogleMapsLoader.KEY = process.env.VUE_APP_GOOGLE_MAPS_API_KEY;
       GoogleMapsLoader.VERSION = '3.34';
+      GoogleMapsLoader.LIBRARIES = ['places'];
 
       GoogleMapsLoader.load((google) => {
         let position = {
