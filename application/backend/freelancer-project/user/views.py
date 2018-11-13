@@ -33,15 +33,26 @@ class LoginViewSet(viewsets.ViewSet):
         return ObtainAuthToken().post(request)
 
 
-class UserProfileViewSet(viewsets.ModelViewSet):
+class ClientProfileViewSet(viewsets.ModelViewSet):
 
-    serializer_class = serializers.UserProfileSerializer
-    queryset = models.UserProfile.objects.all()
+    serializer_class = serializers.ClientProfileSerializer
+    queryset = models.ClientProfile.objects.all()
     filter_backends = (filters.SearchFilter,)
     search_fields = ('user_id__id', 'name',)
     authentication_classes = (TokenAuthentication,)
-    permission_classes = (permissions.UpdateUserProfile, IsAuthenticatedOrReadOnly)
+    permission_classes = (permissions.UpdateClientProfile, IsAuthenticatedOrReadOnly)
 
     def perform_create(self, serializer):
         serializer.save(user_id=self.request.user)
 
+
+class FreelancerProfileViewSet(viewsets.ModelViewSet):
+    serializer_class = serializers.FreelancerProfileSerializer
+    queryset = models.FreelancerProfile.objects.all()
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('user_id__id', 'name',)
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (permissions.UpdateFreelancerProfile, IsAuthenticatedOrReadOnly)
+
+    def perform_create(self, serializer):
+        serializer.save(user_id=self.request.user)

@@ -7,14 +7,15 @@ from . import models
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.User
-        fields = ('id', 'email', 'name', 'password')
+        fields = ('id', 'email', 'name', 'password', 'username')
         extra_kwargs = {'password': {'write_only': True}}
 
 
     def create(self, validated_data):
         user = models.User(
             email = validated_data['email'],
-            name = validated_data['name']
+            name = validated_data['name'],
+            username = validated_data['username']
         )
 
         user.set_password(validated_data['password'])
@@ -23,9 +24,17 @@ class UserSerializer(serializers.ModelSerializer):
         return user
 
 
-class UserProfileSerializer(serializers.ModelSerializer):
+class ClientProfileSerializer(serializers.ModelSerializer):
     class Meta:
-        model = models.UserProfile
+        model = models.ClientProfile
         fields = ('id', 'user_id', 'name', 'avatar', 'body', 'created_at', 'rating')
         extra_kwargs = {'user_id': {'read_only': True}, 'rating': {'read_only': True}}
+
+
+class FreelancerProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.FreelancerProfile
+        fields = ('id', 'user_id', 'name', 'avatar', 'body', 'created_at', 'rating')
+        extra_kwargs = {'user_id': {'read_only': True}, 'rating': {'read_only': True}}
+
 
