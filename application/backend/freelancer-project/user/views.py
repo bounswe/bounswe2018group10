@@ -40,7 +40,7 @@ class ClientProfileViewSet(viewsets.ModelViewSet):
     filter_backends = (filters.SearchFilter,)
     search_fields = ('user_id__id', 'name',)
     authentication_classes = (TokenAuthentication,)
-    permission_classes = (permissions.UpdateClientProfile, IsAuthenticatedOrReadOnly)
+    permission_classes = (permissions.UpdateClientProfile,)
 
     def perform_create(self, serializer):
         serializer.save(user_id=self.request.user)
@@ -52,7 +52,7 @@ class FreelancerProfileViewSet(viewsets.ModelViewSet):
     filter_backends = (filters.SearchFilter,)
     search_fields = ('user_id__id', 'name',)
     authentication_classes = (TokenAuthentication,)
-    permission_classes = (permissions.UpdateFreelancerProfile, IsAuthenticatedOrReadOnly)
+    permission_classes = (permissions.UpdateFreelancerProfile,)
 
     def perform_create(self, serializer):
         serializer.save(user_id=self.request.user)
