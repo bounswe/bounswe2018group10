@@ -19,7 +19,7 @@ class UpdateClientProfile(permissions.BasePermission):
         if request.method in permissions.SAFE_METHODS:
             return True
 
-        return obj.user_id.id == request.user.id
+        return obj.user.id == request.user.id
 
 class UpdateFreelancerProfile(permissions.BasePermission):
 
@@ -28,4 +28,4 @@ class UpdateFreelancerProfile(permissions.BasePermission):
         if request.method in permissions.SAFE_METHODS:
             return True
 
-        return obj.user_id.id == request.user.id
+        return obj.user.id == request.user.id

@@ -38,7 +38,7 @@ class ClientProfileViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.ClientProfileSerializer
     queryset = models.ClientProfile.objects.all()
     filter_backends = (filters.SearchFilter,)
-    search_fields = ('user_id__id', 'name',)
+    search_fields = ('user__id', 'name',)
     authentication_classes = (TokenAuthentication,)
     permission_classes = (permissions.UpdateClientProfile,)
 
@@ -50,7 +50,7 @@ class FreelancerProfileViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.FreelancerProfileSerializer
     queryset = models.FreelancerProfile.objects.all()
     filter_backends = (filters.SearchFilter,)
-    search_fields = ('user_id__id', 'name',)
+    search_fields = ('user__id', 'name',)
     authentication_classes = (TokenAuthentication,)
     permission_classes = (permissions.UpdateFreelancerProfile,)
 

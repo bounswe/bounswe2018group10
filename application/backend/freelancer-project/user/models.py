@@ -62,7 +62,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 class FreelancerProfile(models.Model):
     """Profile information for freelancers"""
-    user_id = models.ForeignKey('User', on_delete=models.CASCADE)
+    user = models.OneToOneField('User', on_delete=models.CASCADE)
     avatar = models.ImageField(upload_to='images/', blank=True)
     body = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
@@ -70,7 +70,7 @@ class FreelancerProfile(models.Model):
 
 class ClientProfile(models.Model):
     """Profile information for clients"""
-    user_id = models.ForeignKey('User', on_delete=models.CASCADE)
+    user = models.OneToOneField('User', on_delete=models.CASCADE)
     avatar = models.ImageField(upload_to='images/', blank=True)
     body = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
