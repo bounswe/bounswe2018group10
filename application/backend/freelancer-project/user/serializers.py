@@ -27,14 +27,30 @@ class UserSerializer(serializers.ModelSerializer):
 class ClientProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.ClientProfile
-        fields = ('id', 'user_id', 'name', 'avatar', 'body', 'created_at', 'rating')
-        extra_kwargs = {'user_id': {'read_only': True}, 'rating': {'read_only': True}}
+        fields = ('id', 'user_id', 'avatar', 'body')
+
+    def create(self, validated_data):
+        client_profile = models.ClientProfile(
+            user_id = validated_data["user_id"],
+            avatar = validated_data["avatar"],
+            body = validated_data["body"],
+        )
+
+        client_profile.save()
 
 
 class FreelancerProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.FreelancerProfile
-        fields = ('id', 'user_id', 'name', 'avatar', 'body', 'created_at', 'rating')
-        extra_kwargs = {'user_id': {'read_only': True}, 'rating': {'read_only': True}}
+        fields = ('id', 'user_id', 'avatar', 'body')
+
+    def create(self, validated_data):
+        freelancer_profile = models.ClientProfile(
+            user_id = validated_data["user_id"],
+            avatar = validated_data["avatar"],
+            body = validated_data["body"],
+        )
+
+        freelancer_profile.save()
 
 
