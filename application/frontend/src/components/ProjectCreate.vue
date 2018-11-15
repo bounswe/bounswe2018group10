@@ -134,32 +134,44 @@
             </b-col>
           </b-form-row>
 
-          <h6><font-awesome-icon icon="map-marker-alt" fixed-width />Location <span class="text-muted">(Optional)</span></h6>
-          <div><small class="text-muted">You can select a location by clicking to the map or searching via search box. You can change the selected location by clicking again. You can remove location by reset button.</small></div>
-          <b-button class="mb-1" size="sm" @click="deleteMarkerAndClearInput">Reset location</b-button>
+          <b-form-row>
+            <b-col>
+              <b-form-group>
+                <b-button class="mb-2" v-b-toggle.collapse1 variant="primary">Add Location</b-button>
 
-          <GmapAutocomplete id="location-input" class="form-control mb-2" 
-                            placeholder="Search location" 
-                            @place_changed="setPlace"
-                            @keydown.native.enter.prevent
-                            :selectFirstOnEnter="true"></GmapAutocomplete>
-                            
-          <div class="embed-responsive mb-2">
-            <GmapMap :center="position"
-                     :zoom="zoom"
-                     style="height: 400px"
-                     @click="mapClick"
-                     ref="mapRef">
-              <GmapMarker :key="index"
-                v-for="(m, index) in markers"
-                :position="m.position"
-                :clickable="true"
-                :draggable="false"
-              />
-            </GmapMap>
-          </div>
+                <b-collapse id="collapse1">
+                  <h6><font-awesome-icon icon="map-marker-alt" fixed-width />Location <span class="text-muted">(Optional)</span></h6>
+                  <div><small class="text-muted">You can select a location by clicking to the map or searching via search box. You can change the selected location by clicking again. You can remove location by reset button.</small></div>
+                  <b-button class="mb-2" size="sm" @click="deleteMarkerAndClearInput">Reset location</b-button>
 
-          <b-button type="submit" variant="primary" block>Post Project</b-button>
+                  <GmapAutocomplete id="location-input" class="form-control mb-2" 
+                                    placeholder="Search location" 
+                                    @place_changed="setPlace"
+                                    @keydown.native.enter.prevent
+                                    :selectFirstOnEnter="true"></GmapAutocomplete>
+                                    
+                  <div class="embed-responsive mb-2">
+                    <GmapMap :center="position"
+                            :zoom="zoom"
+                            style="height: 400px"
+                            @click="mapClick"
+                            ref="mapRef">
+                      <GmapMarker :key="index"
+                        v-for="(m, index) in markers"
+                        :position="m.position"
+                        :clickable="true"
+                        :draggable="false"
+                      />
+                    </GmapMap>
+                  </div>
+                </b-collapse>
+
+              </b-form-group>
+            </b-col>
+          </b-form-row>
+          
+
+          <b-button type="submit" size="lg" variant="primary" block>Post Project</b-button>
         </b-form>
       </b-container>
   </div>
