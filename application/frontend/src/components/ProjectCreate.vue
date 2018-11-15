@@ -137,9 +137,26 @@
           <h6><font-awesome-icon icon="map-marker-alt" fixed-width />Location <span class="text-muted">(Optional)</span></h6>
           <div><small class="text-muted">You can select a location by clicking to the map or searching via search box. You can change the selected location by clicking again. You can remove location by reset button.</small></div>
           <b-button class="mb-1" size="sm" @click="deleteMarkerAndClearInput">Reset location</b-button>
-          <b-form-input id="pac-input" class="controls mb-1" type="text" placeholder="Search location"></b-form-input>
+
+          <GmapAutocomplete id="location-input" class="form-control mb-2" 
+                            placeholder="Search location" 
+                            @place_changed="setPlace"
+                            @keydown.native.enter.prevent
+                            :selectFirstOnEnter="true"></GmapAutocomplete>
+                            
           <div class="embed-responsive mb-2">
-            <div id="map"></div>
+            <GmapMap :center="position"
+                     :zoom="zoom"
+                     style="height: 400px"
+                     @click="mapClick"
+                     ref="mapRef">
+              <GmapMarker :key="index"
+                v-for="(m, index) in markers"
+                :position="m.position"
+                :clickable="true"
+                :draggable="false"
+              />
+            </GmapMap>
           </div>
 
           <b-button type="submit" variant="primary" block>Post Project</b-button>
@@ -151,7 +168,6 @@
 <script>
 import NavigationBar from "./NavigationBar.vue";
 import "@voerro/vue-tagsinput/dist/style.css";
-import GoogleMapsLoader from "google-maps";
 
 export default {
   name: "ProjectCreate",
@@ -173,21 +189,15 @@ export default {
         deadlineDate: null,
         deadlineTime: "23:59"
       },
-      map: null,
-      mapMarkers: [],
-      mapSearchBox: null
+      position: {lat:0, lng:0},
+      markers: [],
+      currentPlace: null,
+      zoom: 1
     };
   },
   created() {
     this.setToday();
     this.fetchData();
-  },
-  mounted() {
-    this.googleMapsFontFix();
-    this.googleMapsInit();
-  },
-  beforeDestroy() {
-    GoogleMapsLoader.release(function() {});
   },
   methods: {
     fetchData() {
@@ -227,9 +237,9 @@ export default {
         deadline:
           this.form.deadlineDate + "T" + this.form.deadlineTime + ":00Z"
       };
-      if(this.mapMarkers.length > 0){
-        postBody["latitude"] = this.mapMarkers[0].getPosition().lat().toFixed(7);
-        postBody["longitude"] = this.mapMarkers[0].getPosition().lng().toFixed(7);
+      if(this.markers.length > 0){
+        postBody["latitude"] = this.markers[0].getPosition().lat().toFixed(7);
+        postBody["longitude"] = this.markers[0].getPosition().lng().toFixed(7);
       }
       this.$axios
         .post("/project/create/", postBody)
@@ -255,133 +265,39 @@ export default {
       }
       this.today = yyyy + "-" + mm + "-" + dd;
     },
-    googleMapsFontFix(){
-      /* to prevent google maps from replacing the default
-       * font with Roboto. */
-      let head = document.getElementsByTagName("head")[0];
-
-      // Save the original method
-      let insertBefore = head.insertBefore;
-
-      // Replace it!
-      head.insertBefore = function(newElement, referenceElement) {
-        if (
-          newElement.href &&
-          newElement.href.indexOf("//fonts.googleapis.com/css?family=Roboto") > -1
-        ) {
-          console.info("Prevented Roboto from loading!");
-          return;
-        }
-        insertBefore.call(head, newElement, referenceElement);
-      };
-    },
-    googleMapsInit(){
-      GoogleMapsLoader.KEY = process.env.VUE_APP_GOOGLE_MAPS_API_KEY;
-      GoogleMapsLoader.VERSION = '3.34';
-      GoogleMapsLoader.LIBRARIES = ['places'];
-
-      GoogleMapsLoader.load((google) => {
-        this.map = new google.maps.Map(document.getElementById("map"), {
-          zoom: 1,
-          center: {lat:0, lng:0},
-        });
-        
-        // Create the search box and link it to the UI element.
-        let input = document.getElementById('pac-input');
-        google.maps.event.addDomListener(input, 'keydown', function(event) { 
-          if (event.keyCode === 13) { 
-              event.preventDefault();
-          }
-        });
-        this.mapSearchBox = new google.maps.places.SearchBox(input);
-        //this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
-
-        // Bias the SearchBox results towards current map's viewport.
-        this.map.addListener('bounds_changed', () => {
-          this.mapSearchBox.setBounds(this.map.getBounds());
-        });
-
-        this.mapSearchBox.addListener('places_changed', () => {
-          let places = this.mapSearchBox.getPlaces();
-
-          if (places.length == 0) {
-            return;
-          }
-
-          // Clear out the old markers.
-          this.deleteMarkers();
-
-          // For each place, get the icon, name and location.
-          let bounds = new google.maps.LatLngBounds();
-          places.forEach((place) => {
-            if (!place.geometry) {
-              console.log("Returned place contains no geometry");
-              return;
-            }
-            /*
-            let icon = {
-              url: place.icon,
-              size: new google.maps.Size(71, 71),
-              origin: new google.maps.Point(0, 0),
-              anchor: new google.maps.Point(17, 34),
-              scaledSize: new google.maps.Size(25, 25)
-            };*/
-
-            // Create a marker for each place.
-            this.mapMarkers.push(new google.maps.Marker({
-              map: this.map,
-              //icon: icon,
-              title: place.name,
-              position: place.geometry.location
-            }));
-
-            if (place.geometry.viewport) {
-              // Only geocodes have viewport.
-              bounds.union(place.geometry.viewport);
-            } else {
-              bounds.extend(place.geometry.location);
-            }
-          });
-          this.map.fitBounds(bounds);
-        });
-
-
-        
-        this.map.addListener('click', (event) => {
-          this.deleteMarkers();
-          document.getElementById('pac-input').value = "";
-          this.addMapMarker(event.latLng);
-        });
-      });
-    },
-    addMapMarker(location){
-      // Adds a marker to the map and push to the array.
-      GoogleMapsLoader.load((google) => {
-        let marker = new google.maps.Marker({
-          position: location,
-          map: this.map
-        });
-        this.mapMarkers.push(marker);
-      });
-    },
-    deleteMarkers() { 
-      // Deletes all markers in the array by removing references to them.
-      this.clearMarkers();
-      this.mapMarkers = [];
-    },
-    clearMarkers() {
-      // Removes the markers from the map, but keeps them in the array.
-      this.setMapOnAll(null);
-    },
-    setMapOnAll(map) {
-      // Sets the map on all markers in the array.
-      for (var i = 0; i < this.mapMarkers.length; i++) {
-        this.mapMarkers[i].setMap(map);
-      }
-    },
     deleteMarkerAndClearInput(){
-      this.deleteMarkers();
-      document.getElementById('pac-input').value = "";
+      this.markers = [];
+      document.getElementById('location-input').value = "";
+    },
+    setPlace(place) {
+      if (!place.geometry) {
+        console.log("Returned place contains no geometry");
+        return;
+      }
+
+      this.currentPlace = place;
+      this.markers = [{position: place.geometry.location}];
+      this.position = place.geometry.location;
+
+      let bounds = new google.maps.LatLngBounds();
+
+      if (place.geometry.viewport) {
+        // Only geocodes have viewport.
+        bounds.union(place.geometry.viewport);
+      } else {
+        bounds.extend(place.geometry.location);
+      }
+
+      this.$refs.mapRef.$mapPromise.then((map) => {
+        map.fitBounds(bounds);
+      });
+    },
+    mapClick(mouseArgs) {
+      let position = {};
+      position.lat = mouseArgs.latLng.lat();
+      position.lng = mouseArgs.latLng.lng();
+
+      this.markers = [{position: position}];
     }
   }
 };
@@ -393,8 +309,5 @@ export default {
   width: 100%;
   max-width: 660px;
   margin: auto;
-}
-#map {
-  height: 400px;
 }
 </style>

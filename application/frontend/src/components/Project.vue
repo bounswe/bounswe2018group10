@@ -12,7 +12,7 @@
         </b-col>
       </b-row>
 
-      <b-collapse id="collapse1">
+      <b-collapse v-if="isFreelancer" id="collapse1">
         <b-row class="mb-4">
           <b-col>
             <b-card class="shadow">
@@ -127,9 +127,20 @@
                          :key="tag.id" 
                          v-for="tag in projectTags">{{tag.title}}</b-badge>
               </div>
-              <h6>Location</h6>
-              <div class="embed-responsive">
-                <div id="map"></div>
+              <div v-if="position.lat!=0&&position.lng!=0">
+                <h6>Location</h6>
+                <div class="embed-responsive">
+                  <GmapMap :center="position"
+                           :zoom="15"
+                           style="height: 400px">
+                    <GmapMarker :key="index"
+                      v-for="(m, index) in markers"
+                      :position="m.position"
+                      :clickable="true"
+                      :draggable="false"
+                    />
+                  </GmapMap>
+                </div>
               </div>
           </b-card>
         </b-col>
@@ -238,7 +249,6 @@
 
 <script>
 import NavigationBar from "./NavigationBar.vue";
-import GoogleMapsLoader from "google-maps";
 
 export default {
   name: "Project",
@@ -285,24 +295,17 @@ export default {
           }
         ]
       },
-      map: null,
-      mapMarkers: [],
+      position: {lat:0,lng:0},
+      markers: []
     };
   },
   created() {
     this.fetchData();
   },
-  mounted() {
-    this.googleMapsFontFix();
-    this.googleMapsInit();
-  },
   beforeRouteUpdate(to, from, next) {
     this.projectID = to.params.id;
     this.fetchData();
     next();
-  },
-  beforeDestroy() {
-    GoogleMapsLoader.release(function() {});
   },
   methods: {
     fetchData() {
@@ -310,6 +313,11 @@ export default {
         .get(`/project/create/${this.projectID}/`)
         .then(response => {
           this.project = response.data;
+          this.position = {
+            lat: Number(this.project.latitude),
+            lng: Number(this.project.longitude)
+          };
+          this.markers.push({position:this.position});
           this.deadline = this.project.deadline.replace(/[TZ]/g, " ");
           this.$axios
             .get("/project/category/")
@@ -343,52 +351,6 @@ export default {
       if (this.bidForm.milestones.length > 1) {
         this.bidForm.milestones.pop();
       }
-    },
-    googleMapsFontFix(){
-      /* to prevent google maps from replacing the default
-       * font with Roboto. */
-      let head = document.getElementsByTagName("head")[0];
-
-      // Save the original method
-      let insertBefore = head.insertBefore;
-
-      // Replace it!
-      head.insertBefore = function(newElement, referenceElement) {
-        if (
-          newElement.href &&
-          newElement.href.indexOf("//fonts.googleapis.com/css?family=Roboto") > -1
-        ) {
-          console.info("Prevented Roboto from loading!");
-          return;
-        }
-        insertBefore.call(head, newElement, referenceElement);
-      };
-    },
-    googleMapsInit(){
-      GoogleMapsLoader.KEY = process.env.VUE_APP_GOOGLE_MAPS_API_KEY;
-      GoogleMapsLoader.VERSION = '3.34';
-      GoogleMapsLoader.LIBRARIES = ['places'];
-
-      GoogleMapsLoader.load((google) => {
-        let position = {
-          lat: Number(this.project.latitude),
-          lng: Number(this.project.longitude)
-        };
-        this.map = new google.maps.Map(document.getElementById("map"), {
-          zoom: 15,
-          center: position,
-        });
-        this.addMapMarker(position);
-      });
-    },
-    addMapMarker(location){
-      GoogleMapsLoader.load((google) => {
-        let marker = new google.maps.Marker({
-          position: location,
-          map: this.map
-        });
-        this.mapMarkers.push(marker);
-      });
     }
   }
 };
