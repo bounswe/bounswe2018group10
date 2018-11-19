@@ -8,7 +8,7 @@
           <h2 class="mb-0">{{project.title}}</h2>
         </b-col>
         <b-col cols="auto" class="ml-auto">
-          <b-button v-if="isFreelancer" v-b-toggle.collapse1 variant="primary">Bid for Project</b-button>
+          <b-button v-if="isFreelancer && !placedBid" v-b-toggle.collapse1 variant="primary">Bid for Project</b-button>
         </b-col>
       </b-row>
 
@@ -16,9 +16,9 @@
         <b-row class="mb-4">
           <b-col>
             <b-card class="shadow">
-              <b-form>
+              <b-form @submit="onBidSubmit">
                 <b-form-row>
-                  <b-col cols="12" md="6">
+                  <b-col>
                     <b-form-group label="Bid Amount"
                                   label-for="inputBid"
                                   description="Your bid should be within the budget range.">
@@ -31,7 +31,7 @@
                       </b-form-input>
                     </b-form-group>
                   </b-col>
-                  <b-col cols="12" md="6">
+                  <!--<b-col cols="12" md="6">
                     <b-form-group label="Deliver In"
                                   label-for="inputDeliver">
                       <b-input-group append="Days">
@@ -39,39 +39,90 @@
                                       type="number"
                                       v-model="bidForm.deliverIn"
                                       min="1"
-                                      required>
+                                      >
                         </b-form-input>
                       </b-input-group>
+                    </b-form-group>
+                  </b-col>-->
+                </b-form-row>
+                <b-form-row>
+                  <b-col>
+                    <b-form-group label-for="inputDesc">
+                      <template slot="label">
+                        <!--<font-awesome-icon icon="align-left" fixed-width />-->
+                        Description
+                      </template>
+                      <b-form-textarea id="inputDesc"
+                                v-model="bidForm.description"
+                                placeholder="Describe why the client should choose you"
+                                maxlength="1000"
+                                :rows="2"
+                                :max-rows="8"
+                                required>
+                      </b-form-textarea>
                     </b-form-group>
                   </b-col>
                 </b-form-row>
 
                 <h6><strong>Milestones</strong></h6>
-
-                <b-form-row :key="index" v-for="(milestone,index) in bidForm.milestones">
-                  <b-col cols="12" md="6">
-                    <b-form-group :label="`Milestone ${index+1} Name`"
-                                  label-for="inputMilestone">
-                      <b-form-input id="inputMilestone"
-                                    type="text"
-                                    maxlength="200"
-                                    v-model="milestone.name"
-                                    required>
-                      </b-form-input>
-                    </b-form-group>
-                  </b-col>
-                  <b-col cols="12" md="6">
-                    <b-form-group :label="`Milestone ${index+1} Amount`"
-                                  label-for="inputMileBud">
-                      <b-form-input id="inputMileBud"
-                                    type="number"
-                                    v-model="milestone.amount"
-                                    min="1"
-                                    required>
-                      </b-form-input>
-                    </b-form-group>
-                  </b-col>
-                </b-form-row>
+                <div :key="index" v-for="(milestone,index) in bidForm.milestones">
+                  <p class="mb-0">Milestone {{index+1}}</p>
+                  <b-form-row>                    
+                    <b-col cols="12" md="12" lg="6">
+                      <b-form-group :label="`Description`"
+                                    label-for="inputMilestone">
+                        <b-form-textarea id="inputMilestone"
+                                      type="text"
+                                      placeholder="Description for milestone"
+                                      maxlength="200"
+                                      :rows="2"
+                                      :max-rows="4"
+                                      v-model="milestone.description"
+                                      required>
+                        </b-form-textarea>
+                      </b-form-group>
+                    </b-col>
+                    <b-col cols="12" md="4" lg="2">
+                      <b-form-group :label="`Amount`"
+                                    label-for="inputMileBud">
+                        <b-form-input id="inputMileBud"
+                                      type="number"
+                                      v-model="milestone.amount"
+                                      min="1"
+                                      required>
+                        </b-form-input>
+                      </b-form-group>
+                    </b-col>
+                    <b-col cols="12" sm="6" md="4" lg="2">
+                      <b-form-group label-for="inputDeadlineD">
+                        <template slot="label">
+                          <!--<font-awesome-icon icon="calendar-alt" fixed-width />-->
+                          Deadline Date
+                        </template>
+                        <b-form-input id="inputDeadlineD"
+                                      type="date"
+                                      v-model="milestone.deadlineDate"
+                                      :min="today"
+                                      required>
+                        </b-form-input>
+                      </b-form-group> 
+                    </b-col>
+                    <b-col cols="12" sm="6" md="4" lg="2">
+                      <b-form-group label-for="inputDeadlineT">
+                        <template slot="label">
+                          <!--<font-awesome-icon icon="clock" fixed-width />-->
+                          Deadline Time
+                        </template>
+                        <b-form-input id="inputDeadlineT"
+                                      type="time"
+                                      v-model="milestone.deadlineTime"
+                                      required>
+                        </b-form-input>
+                      </b-form-group> 
+                    </b-col>
+                  </b-form-row>
+                </div>
+                
 
                 <b-form-row class="mb-2">
                   <b-col>
@@ -80,7 +131,7 @@
                   </b-col>
                 </b-form-row>
             
-                <b-button type="submit" variant="primary" block>Place Bid</b-button>
+                <b-button v-b-toggle.collapse1 type="submit" variant="primary" block>Place Bid</b-button>
               </b-form>
             </b-card>
           </b-col>
@@ -94,7 +145,7 @@
                 <b-col>
                   <strong>Bids</strong>
                   <div>
-                    2
+                    {{bids.length}}
                   </div>
                 </b-col>
                 <b-col>
@@ -119,7 +170,7 @@
           <b-card class="shadow" title="Project Description">
               <p class="card-text">{{project.description}}</p>
               <div>Category: <router-link :to="`/search/${projectCategory.title}`">{{projectCategory.title}}</router-link></div>
-              <div>
+              <div class="mb-2">
                 <span>Tags: </span>
                 <b-badge class="mr-1" 
                          variant="primary"
@@ -146,7 +197,53 @@
         </b-col>
       </b-row>
 
-      <b-row class="mb-4">
+      <b-row v-if="isProjectCreator" class="mb-4">
+        <b-col>
+          <b-list-group class="shadow">
+            <b-list-group-item>
+              <b-row>
+                <b-col>
+                  <strong>Freelancer</strong>
+                </b-col>
+                <b-col>
+                  <strong>Description</strong>
+                </b-col>
+                <b-col>
+                  <strong>Bid</strong>
+                </b-col>
+                <b-col></b-col>
+              </b-row>
+            </b-list-group-item>
+            <b-list-group-item v-show="!bids.length">
+              <p class="mb-0">There is no bids placed on this project.</p>
+          </b-list-group-item>
+            <b-list-group-item :active="isAcceptedBid(bid.id)" :key="index" v-for="(bid,index) in bids">
+              <b-row>
+                <b-col class="clearfix">
+                  <!--<b-img left 
+                         :src="" 
+                         fluid 
+                         rounded 
+                         width="96" 
+                         class="m-1"/>-->
+                  User id: {{bid.user_id}}
+                </b-col>
+                <b-col>
+                  {{bid.description}}
+                </b-col>
+                <b-col>
+                  {{bid.amount}}
+                </b-col>
+                <b-col>
+                  <b-button @click="placeBid(bid.id)" v-show="!project.accepted_bid && isClient" variant="primary">Accept Bid</b-button>
+                </b-col>
+              </b-row>
+            </b-list-group-item>
+          </b-list-group>
+        </b-col>
+      </b-row>
+
+      <b-row class="mb-4" v-if="isProjectCreator">
         <b-col>
           <b-list-group class="shadow">
             <b-list-group-item>
@@ -257,6 +354,7 @@ export default {
   },
   data() {
     return {
+      today: "",
       projectID: this.$route.params.id,
       project: {},
       projectTags: [],
@@ -288,24 +386,38 @@ export default {
       bidForm: {
         amount: null,
         deliverIn: null,
+        description: "",
         milestones: [
           {
-            name: "",
-            amount: null
+            description: "",
+            amount: null,
+            deadlineDate: null,
+            deadlineTime: null
           }
         ]
       },
-      position: {lat:0,lng:0},
+      bids: [],
+      position: { lat: 0, lng: 0 },
       markers: []
     };
   },
   created() {
+    this.setToday();
     this.fetchData();
   },
   beforeRouteUpdate(to, from, next) {
     this.projectID = to.params.id;
     this.fetchData();
+    window.scrollTo(0,0);
     next();
+  },
+  computed: {
+    isProjectCreator: function () {
+      return this.$root.$data.user_id == this.project.user_id;
+    },
+    placedBid: function() {
+      return this.bids.some(bid => bid.user_id == this.$root.$data.user_id);
+    }
   },
   methods: {
     fetchData() {
@@ -317,7 +429,7 @@ export default {
             lat: Number(this.project.latitude),
             lng: Number(this.project.longitude)
           };
-          this.markers.push({position:this.position});
+          this.markers.push({ position: this.position });
           this.deadline = this.project.deadline.replace(/[TZ]/g, " ");
           this.$axios
             .get("/project/category/")
@@ -343,14 +455,98 @@ export default {
         .catch(err => {
           console.log(err);
         });
+      this.$axios
+        .get(`/project/bid/`, {
+          params: {
+            search: this.projectID
+          }
+        })
+        .then(response => {
+          this.bids = response.data;
+        })
+        .catch(err => {
+          console.log(err);
+        });
     },
     addMilestone() {
-      this.bidForm.milestones.push({ name: "", amount: null });
+      this.bidForm.milestones.push({ description: "",
+            amount: null,
+            deadlineDate: null,
+            deadlineTime: null });
     },
     removeMilestone() {
       if (this.bidForm.milestones.length > 1) {
         this.bidForm.milestones.pop();
       }
+    },
+    onBidSubmit(evt) {
+      evt.preventDefault();
+      this.$axios
+        .post("/project/bid/", {
+          project_id: this.projectID,
+          description: this.bidForm.description,
+          amount: this.bidForm.amount
+        })
+        .then(response => {
+          let bidId = response.data.id;
+          this.sendMilestone(0,bidId);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    sendMilestone(index, bidId) {
+      this.$axios
+        .post("/project/milestone/", {
+          bid_id: bidId,
+          description: this.bidForm.milestones[index].description,
+          amount: this.bidForm.milestones[index].amount,
+          deadline:
+            this.bidForm.milestones[index].deadlineDate +
+            "T" +
+            this.bidForm.milestones[index].deadlineTime +
+            ":00Z"
+        })
+        .then(response => {
+          if(index == this.bidForm.milestones.length - 1){
+            this.$router.push(`/project/${this.projectID}`);
+          }else{
+            this.sendMilestone(index+1,bidId);
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    setToday() {
+      let today = new Date();
+      let dd = today.getDate();
+      let mm = today.getMonth() + 1; //January is 0!
+      let yyyy = today.getFullYear();
+
+      if (dd < 10) {
+        dd = "0" + dd;
+      }
+
+      if (mm < 10) {
+        mm = "0" + mm;
+      }
+      this.today = yyyy + "-" + mm + "-" + dd;
+    },
+    isAcceptedBid(index) {
+      return this.project.accepted_bid == index;
+    },
+    placeBid(bidId) {
+      this.$axios
+        .patch(`/project/create/${this.projectID}/`, {
+          accepted_bid: bidId
+        })
+        .then(response => {
+          this.project.accepted_bid = bidId;
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   }
 };
@@ -358,7 +554,4 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-#map {
-  height: 400px;
-}
 </style>
