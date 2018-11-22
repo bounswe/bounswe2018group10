@@ -170,7 +170,7 @@
           <b-card class="shadow" title="Project Description">
               <p class="card-text">{{project.description}}</p>
               <div>Category: <router-link :to="`/search/${projectCategory.title}`">{{projectCategory.title}}</router-link></div>
-              <div class="mb-2">
+              <div>
                 <span>Tags: </span>
                 <b-badge class="mr-1" 
                          variant="primary"
@@ -178,7 +178,7 @@
                          :key="tag.id" 
                          v-for="tag in projectTags">{{tag.title}}</b-badge>
               </div>
-              <div v-if="position.lat!=0&&position.lng!=0">
+              <div class="mt-2" v-if="position.lat!=0&&position.lng!=0">
                 <h6>Location</h6>
                 <div class="embed-responsive">
                   <GmapMap :center="position"
@@ -387,14 +387,7 @@ export default {
         amount: null,
         deliverIn: null,
         description: "",
-        milestones: [
-          {
-            description: "",
-            amount: null,
-            deadlineDate: null,
-            deadlineTime: null
-          }
-        ]
+        milestones: []
       },
       bids: [],
       position: { lat: 0, lng: 0 },
@@ -475,9 +468,7 @@ export default {
             deadlineTime: null });
     },
     removeMilestone() {
-      if (this.bidForm.milestones.length > 1) {
-        this.bidForm.milestones.pop();
-      }
+      this.bidForm.milestones.pop();
     },
     onBidSubmit(evt) {
       evt.preventDefault();
@@ -496,27 +487,28 @@ export default {
         });
     },
     sendMilestone(index, bidId) {
-      this.$axios
-        .post("/project/milestone/", {
-          bid_id: bidId,
-          description: this.bidForm.milestones[index].description,
-          amount: this.bidForm.milestones[index].amount,
-          deadline:
-            this.bidForm.milestones[index].deadlineDate +
-            "T" +
-            this.bidForm.milestones[index].deadlineTime +
-            ":00Z"
-        })
-        .then(response => {
-          if(index == this.bidForm.milestones.length - 1){
-            this.$router.push(`/project/${this.projectID}`);
-          }else{
+      if(index == this.bidForm.milestones.length){
+        this.fetchData();
+        window.scrollTo(0,0);
+      }else{
+        this.$axios
+          .post("/project/milestone/", {
+            bid_id: bidId,
+            description: this.bidForm.milestones[index].description,
+            amount: this.bidForm.milestones[index].amount,
+            deadline:
+              this.bidForm.milestones[index].deadlineDate +
+              "T" +
+              this.bidForm.milestones[index].deadlineTime +
+              ":00Z"
+          })
+          .then(response => {
             this.sendMilestone(index+1,bidId);
-          }
-        })
-        .catch(err => {
-          console.log(err);
-        });
+          })
+          .catch(err => {
+            console.log(err);
+          }); 
+      }
     },
     setToday() {
       let today = new Date();
