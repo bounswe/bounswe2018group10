@@ -5,6 +5,10 @@
       <h2>HoneyBadgers</h2>
     </div>
     <b-form class="form-signin" @submit="onSubmit">
+      <b-alert show 
+               variant="danger" 
+               v-for="(error, index) in form.errors"
+               v-bind:key="index">{{ error }}</b-alert>
       <b-form-group label-for="exampleInput1">
         <template slot="label">
           <font-awesome-icon icon="envelope" fixed-width />
@@ -55,7 +59,8 @@ export default {
       form: {
         email: "",
         password: "",
-        name: ""
+        name: "",
+        errors: [],
       }
     };
   },
@@ -83,8 +88,30 @@ export default {
               console.log(err);
             });
         })
-        .catch(err => {
-          console.log(err);
+        .catch(error => {
+          if (error.response) {
+            // The request was made and the server responded with a status code
+            // that falls out of the range of 2xx
+            for(let key in error.response.data){
+              if(error.response.data[key].constructor === Array){
+                error.response.data[key].forEach((errorString) => {
+                  this.form.errors.push(errorString);
+                });
+              }
+            }
+            console.log(error.response.data);
+            console.log(error.response.status);
+            console.log(error.response.headers);
+          } else if (error.request) {
+            // The request was made but no response was received
+            // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+            // http.ClientRequest in node.js
+            console.log(error.request);
+          } else {
+            // Something happened in setting up the request that triggered an Error
+            console.log("Error", error.message);
+          }
+          console.log(error.config);
         });
     }
   }

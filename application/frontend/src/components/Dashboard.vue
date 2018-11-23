@@ -3,7 +3,7 @@
       <NavigationBar/>
 
       <b-container>
-        <b-button class="mr-2" variant="primary" to="/project-create">
+        <b-button v-if="isClient" class="mr-2" variant="primary" to="/project-create">
           <font-awesome-icon icon="plus" fixed-width />Create Project
         </b-button>
         <b-button variant="primary" to="/my-projects">My Projects</b-button>

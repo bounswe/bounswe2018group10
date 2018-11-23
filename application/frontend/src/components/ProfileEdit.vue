@@ -10,13 +10,18 @@
             <div>Current Profile Picture</div>
             <b-img :src="avatar" rounded width="160" blank-color="#777" alt="img" class="m-1" />
             <b-form-group label="New Profile Picture"
-                          label-for="inputAvatar">
+                          label-for="inputAvatar"
+                          description="You can drag and drop your profile picture to this input box.">
               <b-form-file id="inputAvatar"
                             accept="image/*"
                             v-model="form.file" 
-                            placeholder="Choose an image file...">
+                            placeholder="Choose an image file..."
+                            ref="fileinput">
               </b-form-file>
-            </b-form-group>    
+            </b-form-group> 
+            <b-form-group>
+              <b-button @click="clearFiles" size="sm">Reset browsed image file</b-button>
+            </b-form-group>
           </b-col>
           <b-col cols="12" md="6">
             <b-form-group label="Name"
@@ -129,6 +134,9 @@ export default {
         .catch(err => {
           console.log(err);
         });
+    },
+    clearFiles () {
+      this.$refs.fileinput.reset();
     }
   }
 };
