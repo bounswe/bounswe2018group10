@@ -35,7 +35,6 @@ class LoginViewSet(viewsets.mixins.CreateModelMixin, viewsets.GenericViewSet):
 
 
 class ProfileViewSet(viewsets.ModelViewSet):
-    serializer_class = serializers.ProfileSerializer
     filter_backends = (filters.SearchFilter,)
     search_fields = ('user__id', 'name',)
     authentication_classes = (TokenAuthentication,)
@@ -43,7 +42,7 @@ class ProfileViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        if user.role == 0:
+        if user.role == user.FREELANCER:
             return models.FreelancerProfile.objects.filter(user_id=user.id)
         return models.ClientProfile.objects.filter(user_id=user.id)
 
@@ -51,6 +50,16 @@ class ProfileViewSet(viewsets.ModelViewSet):
         instance = self.get_object()
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
+
+    def get_serializer_class(self):
+        user = self.request.user
+        if user.role == user.FREELANCER:
+            return serializers.FreelancerProfileSerializer
+        elif user.role == user.CLIENT:
+            return serializers.ClientProfileSerializer
+        else:
+            return None
+
 
 
 class ClientProfileViewSet(viewsets.ModelViewSet):
