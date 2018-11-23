@@ -250,8 +250,8 @@ export default {
           this.form.deadlineDate + "T" + this.form.deadlineTime + ":00Z"
       };
       if(this.markers.length > 0){
-        postBody["latitude"] = this.markers[0].getPosition().lat().toFixed(7);
-        postBody["longitude"] = this.markers[0].getPosition().lng().toFixed(7);
+        postBody["latitude"] = this.markers[0].position.lat.toFixed(7);
+        postBody["longitude"] = this.markers[0].position.lng.toFixed(7);
       }
       this.$axios
         .post("/project/create/", postBody)
