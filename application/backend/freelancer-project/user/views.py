@@ -22,7 +22,7 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.UserSerializer
     queryset = models.User.objects.all()
     filter_backends = (filters.SearchFilter,)
-    search_fields = ('email',)
+    search_fields = ('=email',)
     authentication_classes = (TokenAuthentication,)
     permission_classes = (permissions.UpdateUser,)
 
@@ -36,7 +36,7 @@ class LoginViewSet(viewsets.mixins.CreateModelMixin, viewsets.GenericViewSet):
 
 class ProfileViewSet(viewsets.ModelViewSet):
     filter_backends = (filters.SearchFilter,)
-    search_fields = ('user__id', 'name',)
+    search_fields = ('=user__id', '=name',)
     authentication_classes = (TokenAuthentication,)
     permission_classes = (permissions.IsAuthenticated,)
 
@@ -66,7 +66,7 @@ class ClientProfileViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.ClientProfileSerializer
     queryset = models.ClientProfile.objects.all()
     filter_backends = (filters.SearchFilter,)
-    search_fields = ('user__id', 'name',)
+    search_fields = ('=user__id', '=name',)
     authentication_classes = (TokenAuthentication,)
     permission_classes = (permissions.UpdateClientProfile,)
 
@@ -78,7 +78,7 @@ class FreelancerProfileViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.FreelancerProfileSerializer
     queryset = models.FreelancerProfile.objects.all()
     filter_backends = (filters.SearchFilter,)
-    search_fields = ('user__id', 'name',)
+    search_fields = ('=user__id', '=name',)
     authentication_classes = (TokenAuthentication,)
     permission_classes = (permissions.UpdateFreelancerProfile,)
 

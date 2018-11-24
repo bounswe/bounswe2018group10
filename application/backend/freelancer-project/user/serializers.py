@@ -29,23 +29,6 @@ class UserSerializer(serializers.ModelSerializer):
         return user
 
 
-class ProfileSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.ClientProfile
-        fields = ('id', 'user', 'avatar', 'body', 'type')
-
-    def create(self, validated_data):
-        client_profile = models.ClientProfile(
-            user=validated_data["user"],
-            avatar=validated_data["avatar"],
-            body=validated_data["body"],
-        )
-
-        client_profile.save()
-
-        return client_profile
-
-
 class ClientProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.ClientProfile
