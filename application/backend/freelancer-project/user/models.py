@@ -39,7 +39,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     )
 
     email = models.EmailField(max_length=255, unique=True)
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, default="")
+    username = models.CharField(max_length=255, unique=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     role = models.IntegerField(choices=ROLE_CHOICES, default=FREELANCER)
@@ -59,16 +60,27 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.email
 
 
-class UserProfile(models.Model):
-    """Profile information of users."""
-
-    user_id = models.ForeignKey('User', on_delete=models.CASCADE)
-    name = models.CharField(max_length=255, default='John Doe')
-    avatar = models.ImageField(upload_to='images/', blank=True)
+class FreelancerProfile(models.Model):
+    """Profile information for freelancers"""
+    #type = 'FREELANCER'
+    user = models.OneToOneField('User', on_delete=models.CASCADE)
+    avatar = models.ImageField(upload_to='images/', blank=True, null=True)
     body = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     rating = models.FloatField(default=0)
 
+    def __str__(self):
+        return self.user.username
+
+
+class ClientProfile(models.Model):
+    """Profile information for clients"""
+    #type = 'CLIENT'
+    user = models.OneToOneField('User', on_delete=models.CASCADE)
+    avatar = models.ImageField(upload_to='images/', blank=True, null=True)
+    body = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    rating = models.FloatField(default=0)
 
     def __str__(self):
-        return self.name
+        return self.user.username
