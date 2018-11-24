@@ -35,7 +35,6 @@ class LoginViewSet(viewsets.mixins.CreateModelMixin, viewsets.GenericViewSet):
 
 
 class ProfileViewSet(viewsets.ModelViewSet):
- #   serializer_class = serializers.ProfileSerializer
     filter_backends = (filters.SearchFilter,)
     search_fields = ('user__id', 'name',)
     authentication_classes = (TokenAuthentication,)
@@ -43,7 +42,7 @@ class ProfileViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        if user.role == 0:
+        if user.role == user.FREELANCER:
             return models.FreelancerProfile.objects.filter(user_id=user.id)
         return models.ClientProfile.objects.filter(user_id=user.id)
 
@@ -60,7 +59,6 @@ class ProfileViewSet(viewsets.ModelViewSet):
             return serializers.ClientProfileSerializer
         else:
             return None
-
 
 class ClientProfileViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.ClientProfileSerializer
@@ -85,26 +83,4 @@ class FreelancerProfileViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(user_id=self.request.user)
 
-
-class ChangeProfileViewSet(viewsets.ModelViewSet):
-    serializer_class = serializers.ChangeProfileSerializer
-    queryset = models.User.objects.all()
-    filter_backends = (filters.SearchFilter,)
-    search_fields = ('email',)
-    authentication_classes = (TokenAuthentication,)
-    permission_classes = (permissions.UpdateUser,)
-
-    def update(self, request, *args, **kwargs):
-        instance = self.request.user
-        if instance.role == instance.FREELANCER:
-            instance.role = instance.CLIENT
-        else:
-            instance.role = instance.FREELANCER
-
-        instance.save(update_fields=['role'])
-        serializer = self.get_serializer(instance)
-        serializer.is_valid(raise_exception=True)
-        self.perform_update(serializer)
-
-        return Response(serializer.data)
 
