@@ -72,7 +72,7 @@ class FreelancerProfileSerializer(serializers.ModelSerializer):
         freelancer_profile = models.FreelancerProfile(
             user=validated_data["user"],
             avatar=validated_data["avatar"],
-    #        body=validated_data["body"],
+            body=validated_data["body"],
         )
 
         freelancer_profile.save()

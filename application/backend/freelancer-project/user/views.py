@@ -60,6 +60,7 @@ class ProfileViewSet(viewsets.ModelViewSet):
         else:
             return None
 
+
 class ClientProfileViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.ClientProfileSerializer
     queryset = models.ClientProfile.objects.all()
