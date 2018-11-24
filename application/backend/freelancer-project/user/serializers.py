@@ -23,7 +23,6 @@ class UserSerializer(serializers.ModelSerializer):
         profile.save()
         profile = models.ClientProfile(user=user)
         profile.save()
-
         return user
 
 
@@ -59,8 +58,3 @@ class FreelancerProfileSerializer(serializers.ModelSerializer):
         freelancer_profile.save()
 
         return freelancer_profile
-
-class SwitchProfileSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.User
-        fields = ('id', )
