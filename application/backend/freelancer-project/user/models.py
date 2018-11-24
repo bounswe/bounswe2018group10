@@ -62,23 +62,26 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 class FreelancerProfile(models.Model):
     """Profile information for freelancers"""
-    type = 'FREELANCER'
+    #type = 'FREELANCER'
     user = models.OneToOneField('User', on_delete=models.CASCADE)
     avatar = models.ImageField(upload_to='images/', blank=True, null=True)
     body = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     rating = models.FloatField(default=0)
+
+    def __str__(self):
+        return self.user.username
+
 
 class ClientProfile(models.Model):
     """Profile information for clients"""
-    type = 'CLIENT'
+    #type = 'CLIENT'
     user = models.OneToOneField('User', on_delete=models.CASCADE)
     avatar = models.ImageField(upload_to='images/', blank=True, null=True)
     body = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     rating = models.FloatField(default=0)
 
-
     def __str__(self):
-        return self.name
+        return self.user.username
 

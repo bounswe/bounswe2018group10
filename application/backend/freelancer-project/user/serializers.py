@@ -6,7 +6,7 @@ from . import models
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.User
-        fields = ('id', 'email', 'name', 'password', 'username', 'role')
+        fields = ('id', 'email', 'name', 'password', 'username',)
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
@@ -14,42 +14,23 @@ class UserSerializer(serializers.ModelSerializer):
             email=validated_data['email'],
             name=validated_data['name'],
             username=validated_data['username'],
-            role=validated_data['role']
         )
 
         user.set_password(validated_data['password'])
         user.save()
 
-        if user.role == 0:
-            profile = models.FreelancerProfile(user=user)
-        else:
-            profile = models.ClientProfile(user=user)
-
+        profile = models.FreelancerProfile(user=user)
         profile.save()
+        profile = models.ClientProfile(user=user)
+        profile.save()
+
         return user
-
-
-class ProfileSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.ClientProfile
-        fields = ('id', 'user', 'avatar', 'body', 'type',)
-
-    def create(self, validated_data):
-        client_profile = models.ClientProfile(
-            user=validated_data["user"],
-            avatar=validated_data["avatar"],
-            body=validated_data["body"],
-        )
-
-        client_profile.save()
-
-        return client_profile
 
 
 class ClientProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.ClientProfile
-        fields = ('id', 'user', 'avatar', 'body', 'type',)
+        fields = ('id', 'user', 'avatar', 'body', )
 
     def create(self, validated_data):
         client_profile = models.ClientProfile(
@@ -66,7 +47,7 @@ class ClientProfileSerializer(serializers.ModelSerializer):
 class FreelancerProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.FreelancerProfile
-        fields = ('id', 'user', 'avatar', 'type', )
+        fields = ('id', 'user', 'avatar', 'body',)
 
     def create(self, validated_data):
         freelancer_profile = models.FreelancerProfile(
@@ -79,7 +60,7 @@ class FreelancerProfileSerializer(serializers.ModelSerializer):
 
         return freelancer_profile
 
-class ChangeProfileSerializer(serializers.ModelSerializer):
+class SwitchProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.User
         fields = ('id', )

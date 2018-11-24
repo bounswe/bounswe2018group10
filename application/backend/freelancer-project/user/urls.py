@@ -12,7 +12,6 @@ router.register('login', views.LoginViewSet, base_name='login')
 router.register('profile', views.ProfileViewSet, base_name='profile')
 router.register('freelancerprofile', views.FreelancerProfileViewSet)
 router.register('clientprofile', views.ClientProfileViewSet)
-router.register('changeprofile', views.ChangeProfileViewSet, base_name='changeprofile')
 
 
 urlpatterns = [
