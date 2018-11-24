@@ -65,7 +65,7 @@ class FreelancerProfile(models.Model):
     type = 'FREELANCER'
     user = models.OneToOneField('User', on_delete=models.CASCADE)
     avatar = models.ImageField(upload_to='images/', blank=True)
-    body = models.TextField()
+#    body = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     rating = models.FloatField(default=0)
 
@@ -73,7 +73,7 @@ class ClientProfile(models.Model):
     """Profile information for clients"""
     type = 'CLIENT'
     user = models.OneToOneField('User', on_delete=models.CASCADE)
-    avatar = models.ImageField(upload_to='images/', blank=True)
+    avatar = models.ImageField(upload_to='images/', null=True)
     body = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     rating = models.FloatField(default=0)
