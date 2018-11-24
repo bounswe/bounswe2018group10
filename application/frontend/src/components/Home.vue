@@ -18,7 +18,7 @@
 
           <!-- Right aligned nav items -->
           <b-navbar-nav class="ml-auto">
-            <b-button class="mr-2" variant="outline-primary" to="/signup">Sign Up</b-button>
+            <b-button class="mb-1 mb-md-0 mr-md-2" variant="outline-primary" to="/signup">Sign Up</b-button>
             <b-button variant="outline-primary" to="/login">Login</b-button>
           </b-navbar-nav>
 

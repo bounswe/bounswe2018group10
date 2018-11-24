@@ -5,7 +5,7 @@
     <b-container>
       <b-row>
         <b-col>
-          <h2>Search Results</h2>
+          <h2>Search Results for "{{this.query}}"</h2>
         </b-col>
       </b-row>
 
