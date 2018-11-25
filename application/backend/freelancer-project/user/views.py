@@ -36,7 +36,7 @@ class LoginViewSet(viewsets.mixins.CreateModelMixin, viewsets.GenericViewSet):
 
 class ProfileViewSet(viewsets.ModelViewSet):
     filter_backends = (filters.SearchFilter,)
-    #search_fields = ('=user__id', '=name',)
+    search_fields = ('=user__id',)
     authentication_classes = (TokenAuthentication,)
     permission_classes = (permissions.IsAuthenticated,)
 
