@@ -25,4 +25,5 @@ urlpatterns = [
     # path('api/v1/', APIRootView().as_view()),
     path('api/v1/user/', include('user.urls')),
     path('api/v1/project/', include('project.urls')),
+    path('api/v1/comment/', include('comment.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
