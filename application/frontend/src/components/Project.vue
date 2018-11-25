@@ -178,6 +178,13 @@
                          :key="tag.id" 
                          v-for="tag in projectTags">{{tag.title}}</b-badge>
               </div>
+              <div v-if="project.file">
+                File: 
+                <b-link :href="project.file">
+                  <font-awesome-icon icon="file" />
+                  {{project.file.split('/').pop()}}
+                </b-link>
+              </div>
               <div class="mt-2" v-if="position.lat!=0&&position.lng!=0">
                 <h6>Location</h6>
                 <div class="embed-responsive">
