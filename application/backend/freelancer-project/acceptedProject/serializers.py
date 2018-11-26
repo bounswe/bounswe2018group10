@@ -14,9 +14,9 @@ class AcceptedProjectSerializer(serializers.ModelSerializer):
         extra_kwargs = {'user_id': {'read_only': True}}
 
 
-class MilestoneSerializer(serializers.ModelSerializer):
+class AcceptedMilestoneSerializer(serializers.ModelSerializer):
     class Meta:
-        model = models.Milestone
+        model = models.AcceptedMilestone
         fields = ('id', 'user_id', 'acceptedproject_id', 'description', 'amount', 'created_at', 'updated_at', 'deadline',
                   'file', 'is_done')
 
