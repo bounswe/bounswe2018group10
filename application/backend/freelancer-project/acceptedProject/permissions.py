@@ -7,7 +7,12 @@ class UpdateAcceptedProject(permissions.BasePermission):
         if request.method in permissions.SAFE_METHODS:
             return True
 
-        return obj.user_id.id == request.user.id
+        if(obj.user_id.id == request.user.id or obj.freelancer_id.id == request.user.id):
+            return True
+        else:
+            return False
+
+        #return obj.user_id.id == request.user.id
 
 
 class UpdateAcceptedMilestone(permissions.BasePermission):

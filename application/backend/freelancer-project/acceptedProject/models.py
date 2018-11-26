@@ -4,13 +4,13 @@ from django.db import models
 
 
 class AcceptedProject(models.Model):
-    user_id = models.ForeignKey('user.User', on_delete=models.CASCADE)
-    freelancer_id = models.ForeignKey('user.User', on_delete=models.CASCADE)
+    user_id = models.ForeignKey('user.User', on_delete=models.CASCADE, related_name='owner')
+    freelancer_id = models.ForeignKey('user.User', on_delete=models.CASCADE, related_name='freelancer')
     title = models.CharField(max_length=200)
     description = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    tags = models.ManyToManyField('project.Tag',related_name='projects')
+    tags = models.ManyToManyField('project.Tag',related_name='acceptedprojects')
     category = models.ForeignKey('project.Category', on_delete=models.CASCADE)
     price = models.IntegerField()
     deadline = models.DateTimeField()
@@ -22,7 +22,6 @@ class AcceptedProject(models.Model):
 
     def __str__(self):
         return str(self.id)
-
 
 
 class AcceptedMilestone(models.Model):
