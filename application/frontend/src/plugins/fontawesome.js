@@ -18,7 +18,8 @@ import {
     faMapMarkerAlt,
     faAlignLeft,
     faTextHeight,
-    faFile
+    faFile,
+    faUserCog
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
@@ -38,6 +39,7 @@ library.add(faEnvelope,
     faMapMarkerAlt,
     faAlignLeft,
     faTextHeight,
-    faFile)
+    faFile,
+    faUserCog)
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)

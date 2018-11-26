@@ -33,6 +33,18 @@
                       placeholder="Enter name">
         </b-form-input>
       </b-form-group>
+      <b-form-group label-for="exampleInput4">
+        <template slot="label">
+          <font-awesome-icon icon="user" fixed-width />
+          Username
+        </template>
+        <b-form-input id="exampleInput4"
+                      type="text"
+                      v-model="form.username"
+                      required
+                      placeholder="Enter username">
+        </b-form-input>
+      </b-form-group>
       <b-form-group label-for="exampleInput3">
         <template slot="label">
           <font-awesome-icon icon="lock" fixed-width />
@@ -44,6 +56,16 @@
                       required
                       placeholder="Enter password">
         </b-form-input>
+      </b-form-group>
+      <b-form-group description="You will be able to change your role later.">
+        <template slot="label">
+          <font-awesome-icon icon="user-cog" fixed-width />
+          Role
+        </template>
+        <b-form-radio-group v-model="form.selectedRole" name="radioSubComponent" required>
+          <b-form-radio value="freelancer">Freelancer</b-form-radio>
+          <b-form-radio value="client">Client</b-form-radio>
+        </b-form-radio-group>
       </b-form-group>
       <b-button type="submit" variant="primary" block>Sign Up</b-button>
     </b-form>
@@ -60,6 +82,8 @@ export default {
         email: "",
         password: "",
         name: "",
+        username: "",
+        selectedRole: "freelancer",
         errors: [],
       }
     };
@@ -71,9 +95,12 @@ export default {
         .post("/user/register/", {
           email: this.form.email,
           password: this.form.password,
-          name: this.form.name
+          name: this.form.name,
+          username: this.form.username
         })
         .then(response => {
+          this.$root.$data.role = this.form.selectedRole;
+          localStorage.setItem('role',this.form.selectedRole);
           this.$root.$data.user_id = response.data.id;
           this.$axios
             .post("/user/login/", {
