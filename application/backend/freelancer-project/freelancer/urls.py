@@ -22,8 +22,8 @@ from rest_framework.routers import APIRootView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # path('api/v1/', APIRootView().as_view()),
     path('api/v1/user/', include('user.urls')),
     path('api/v1/project/', include('project.urls')),
     path('api/v1/comment/', include('comment.urls')),
+    path('api/v1/acceptedproject/', include('acceptedProject.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

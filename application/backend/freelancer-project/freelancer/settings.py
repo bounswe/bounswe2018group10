@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'user.apps.UserConfig',
     'project.apps.ProjectConfig',
     'comment.apps.CommentConfig',
+    'acceptedProject.apps.AcceptedprojectConfig',
 ]
 
 MIDDLEWARE = [
