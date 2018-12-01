@@ -27,6 +27,8 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class ClientProfileSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
+
     class Meta:
         model = models.ClientProfile
         fields = ('id', 'user', 'avatar', 'body', )
@@ -44,6 +46,8 @@ class ClientProfileSerializer(serializers.ModelSerializer):
 
 
 class FreelancerProfileSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
+
     class Meta:
         model = models.FreelancerProfile
         fields = ('id', 'user', 'avatar', 'body',)

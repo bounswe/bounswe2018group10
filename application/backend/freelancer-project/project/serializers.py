@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from . import models
+from user import models as userModels
 
 
 class ProjectSerializer(serializers.ModelSerializer):
@@ -29,12 +30,25 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class BidSerializer(serializers.ModelSerializer):
+    avatar = serializers.SerializerMethodField()
+    name = serializers.SerializerMethodField()
 
     class Meta:
         model = models.Bid
-        fields = ('id', 'user_id', 'project_id', 'description', 'amount', 'created_at', 'updated_at')
+        fields = ('id', 'user_id', 'project_id', 'description', 'amount', 'created_at', 'updated_at', 'avatar', 'name')
 
         extra_kwargs = {'user_id': {'read_only': True}}
+
+    def get_avatar(self,obj):
+        request = self.context.get('request')
+        avatar = userModels.FreelancerProfile.objects.get(id=obj.user_id.id).avatar
+        if avatar:
+            return request.build_absolute_uri(avatar.url)
+        else:
+            return None
+
+    def get_name(self,obj):
+        return obj.user_id.name
 
 
 class MilestoneSerializer(serializers.ModelSerializer):
