@@ -10,6 +10,7 @@ from acceptedProject.models import AcceptedProject
 from user.models import User
 from . import models
 from . import serializers
+from . import permissions
 
 # Create your views here.
 
@@ -18,14 +19,12 @@ class WalletViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.WalletSerializer
     queryset = models.Wallet.objects.all()
     authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticatedOrReadOnly)
+    permission_classes = (permissions.UpdateWallet, IsAuthenticatedOrReadOnly)
     filter_backends = (filters.SearchFilter,)
     search_fields = ('=user_id__id')
 
     def perform_create(self, serializer):
         serializer.save(user_id=self.request.user)
-
-
 
 
 @api_view(['GET', 'POST'])
@@ -41,8 +40,6 @@ def payment(request):
     amount = saveable.validated_data['amount']
 
     chosen_project = AcceptedProject.objects.filter(id=acceptedproject_id)
-    #client = User.objects.get(id=chosen_project.values_list('user_id', flat=True)[0])
-    #freelancer = User.objects.get(id=chosen_project.values_list('freelancer_id', flat=True)[0])
     client_id = chosen_project.values_list('user_id', flat=True)[0]
     freelancer_id = chosen_project.values_list('freelancer_id', flat=True)[0]
 
