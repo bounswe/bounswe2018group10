@@ -11,5 +11,5 @@ router.register('wallet', views.WalletViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('accept', views.payment),
+    path('transaction', views.payment),
 ]
