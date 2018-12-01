@@ -11,6 +11,8 @@ router.register('create', views.AcceptedProjectViewSet)
 router.register('milestone', views.AcceptedMilestoneViewSet)
 
 
+
 urlpatterns = [
     path('', include(router.urls)),
+    path('accept', views.acceptProject),
 ]

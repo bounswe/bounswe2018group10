@@ -12,7 +12,6 @@ class UpdateAcceptedProject(permissions.BasePermission):
         else:
             return False
 
-        #return obj.user_id.id == request.user.id
 
 
 class UpdateAcceptedMilestone(permissions.BasePermission):

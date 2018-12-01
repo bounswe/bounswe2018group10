@@ -5,3 +5,4 @@ from . import models
 
 admin.site.register(models.AcceptedProject)
 admin.site.register(models.AcceptedMilestone)
+admin.site.register(models.ModelForBackend)
