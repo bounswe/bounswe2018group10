@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'project.apps.ProjectConfig',
     'comment.apps.CommentConfig',
     'acceptedProject.apps.AcceptedprojectConfig',
+    'payment.apps.PaymentConfig',
 ]
 
 MIDDLEWARE = [
