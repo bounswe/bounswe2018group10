@@ -180,7 +180,7 @@
               </div>
               <div v-if="project.file">
                 File: 
-                <b-link :href="project.file">
+                <b-link :href="project.file" :target="'_blank'" :rel="'noopener noreferrer'">
                   <font-awesome-icon icon="file" />
                   {{project.file.split('/').pop()}}
                 </b-link>
