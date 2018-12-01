@@ -21,7 +21,7 @@ class WalletViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (permissions.UpdateWallet, IsAuthenticatedOrReadOnly)
     filter_backends = (filters.SearchFilter,)
-    search_fields = ('=user_id__id')
+    search_fields = ('=user_id__id',)
 
     def perform_create(self, serializer):
         serializer.save(user_id=self.request.user)
@@ -36,17 +36,22 @@ def payment(request):
     if not saveable.is_valid():
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
-    acceptedproject_id = saveable.validated_data['acceptedproject_id']
+    acceptedproject = saveable.validated_data['acceptedproject_id']
     amount = saveable.validated_data['amount']
 
-    chosen_project = AcceptedProject.objects.filter(id=acceptedproject_id)
+    chosen_project = AcceptedProject.objects.filter(id=acceptedproject.id)
     client_id = chosen_project.values_list('user_id', flat=True)[0]
     freelancer_id = chosen_project.values_list('freelancer_id', flat=True)[0]
 
     client_wallet = models.Wallet.objects.get(user_id=client_id)
-    client_wallet.budget = client_wallet.budget - amount
-    client_wallet.save()
+    if(client_wallet.budget - amount < 0):
+        return Response('{message: Not enough money in the account}')
+    else:
+        client_wallet.budget = client_wallet.budget - amount
+        client_wallet.save()
 
-    freelancer_wallet = models.Wallet.objects.get(user_id=freelancer_id)
-    freelancer_wallet.budget = freelancer_wallet.budget - amount
-    freelancer_wallet.save()
+        freelancer_wallet = models.Wallet.objects.get(user_id=freelancer_id)
+        freelancer_wallet.budget = freelancer_wallet.budget + amount
+        freelancer_wallet.save()
+
+        return Response('{message: Transaction completed}')

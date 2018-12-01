@@ -14,5 +14,5 @@ class WalletSerializer(serializers.ModelSerializer):
 class PaymentSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Payment
-        fields = ('id', 'acceptedproject_id', 'amount')
+        fields = ('acceptedproject_id', 'amount')
 
