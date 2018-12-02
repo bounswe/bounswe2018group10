@@ -169,6 +169,31 @@
               </b-form-group>
             </b-col>
           </b-form-row>
+
+          <b-form-row>
+            <b-col>
+              <b-form-group>
+                <b-button class="mb-2" v-b-toggle.collapse2 variant="primary">Add file</b-button>
+
+                <b-collapse id="collapse2">
+                  <b-form-group label="File"
+                                label-for="inputFile"
+                                description="You can drag and drop your file to this input box.">
+                    <b-form-file id="inputFile"
+                                  accept="*"
+                                  v-model="form.file" 
+                                  placeholder="Choose a file..."
+                                  ref="fileinput">
+                    </b-form-file>
+                  </b-form-group> 
+                  <b-form-group>
+                    <b-button @click="clearFiles" size="sm">Reset file</b-button>
+                  </b-form-group>
+                </b-collapse>
+
+              </b-form-group>
+            </b-col>
+          </b-form-row>
           
 
           <b-button type="submit" size="lg" variant="primary" block>Post Project</b-button>
@@ -199,7 +224,8 @@ export default {
         budget_min: null,
         budget_max: null,
         deadlineDate: null,
-        deadlineTime: "23:59"
+        deadlineTime: "23:59",
+        file: null
       },
       position: {lat:0, lng:0},
       markers: [],
@@ -241,23 +267,30 @@ export default {
     },
     onSubmit(evt) {
       evt.preventDefault();
-      let postBody = {
-        title: this.form.title,
-        description: this.form.description,
-        category: this.form.categorySelected,
-        tags: this.form.tags,
-        budget_min: this.form.budget_min,
-        budget_max: this.form.budget_max,
-        accepted_bid: 0,
-        deadline:
-          this.form.deadlineDate + "T" + this.form.deadlineTime + ":00Z"
-      };
-      if(this.markers.length > 0){
-        postBody["latitude"] = this.markers[0].position.lat.toFixed(7);
-        postBody["longitude"] = this.markers[0].position.lng.toFixed(7);
+      let formData = new FormData();
+      formData.append("title", this.form.title);
+      formData.append("description", this.form.description);
+      formData.append("category", this.form.categorySelected);
+      formData.append("tags", this.form.tags);
+      formData.append("budget_min", this.form.budget_min);
+      formData.append("budget_max", this.form.budget_max);
+      formData.append("deadline", this.form.deadlineDate + "T" + this.form.deadlineTime + ":00Z");
+      formData.append("accepted_bid", 0);
+      if (this.form.file) {
+        formData.append("file", this.form.file, this.form.file.name);
       }
-      this.$axios
-        .post("/project/create/", postBody)
+      if(this.markers.length > 0){
+        formData.append("latitude", this.markers[0].position.lat.toFixed(7));
+        formData.append("longitude", this.markers[0].position.lng.toFixed(7));
+      }
+      this.$axios({
+        method: "post",
+        url: "/project/create/",
+        data: formData,
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      })
         .then(response => {
           this.$router.push(`/project/${response.data.id}`);
         })
@@ -315,6 +348,9 @@ export default {
       position.lng = mouseArgs.latLng.lng();
 
       this.markers = [{position: position}];
+    },
+    clearFiles () {
+      this.$refs.fileinput.reset();
     }
   }
 };

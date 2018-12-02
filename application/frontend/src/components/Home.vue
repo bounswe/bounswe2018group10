@@ -32,7 +32,6 @@
         <b-btn class="mr-2" variant="primary" to="/signup">Create a project</b-btn>
         <b-btn variant="primary" to="/signup">Start working</b-btn>
       </b-jumbotron>
-      
   </div>
 </template>
 
