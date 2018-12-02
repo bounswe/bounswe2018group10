@@ -17,7 +17,13 @@ import {
     faClock,
     faMapMarkerAlt,
     faAlignLeft,
-    faTextHeight
+    faTextHeight,
+    faUsers,
+    faHandshake,
+    faBolt,
+    faFileImport,
+    faListUl,
+    faFileMedicalAlt
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
@@ -36,6 +42,12 @@ library.add(faEnvelope,
     faClock,
     faMapMarkerAlt,
     faAlignLeft,
-    faTextHeight)
+    faTextHeight,
+    faUsers,
+    faHandshake,
+    faBolt,
+    faFileImport,
+    faListUl,
+    faFileMedicalAlt)
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
