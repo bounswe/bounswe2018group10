@@ -255,7 +255,7 @@ export default {
           if (profile.avatar) {
             this.freelancer.avatar = profile.avatar;
           }
-          this.name = profile.user.name;
+          this.name = profile.user_info.name;
         })
         .catch(err => {
           // eslint-disable-next-line
@@ -285,8 +285,6 @@ export default {
             }
             this.clientComments.push(comment);
           });
-          //this.clientComments.description = comment.description;
-          //this.clientComments.date = comment.created_at;
         })
         .catch(err => {
           // eslint-disable-next-line
@@ -303,8 +301,6 @@ export default {
             }
             this.freelancerComments.push(comment);
           });
-          //this.freelancerComments.description = comment.description;
-          //this.freelancerComments.date = comment.created_at;
         })
         .catch(err => {
           // eslint-disable-next-line
@@ -322,6 +318,7 @@ export default {
           this.reloadDataAndResetForm();
         })
         .catch(err => {
+          // eslint-disable-next-line
           console.log(err);
         });
     },
@@ -336,6 +333,7 @@ export default {
           this.reloadDataAndResetForm();
         })
         .catch(err => {
+          // eslint-disable-next-line
           console.log(err);
         });
     },

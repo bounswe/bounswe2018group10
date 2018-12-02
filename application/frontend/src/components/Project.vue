@@ -256,7 +256,7 @@
                   <strong>Bid </strong>{{bid.amount}}
                 </b-col>
                 <b-col cols="12" lg="2">
-                  <b-button @click="placeBid(bid.id)" v-show="!project.accepted_bid && isClient" variant="primary">Accept Bid</b-button>
+                  <b-button @click="chooseBid(bid.id)" v-show="!project.accepted_bid && isClient" variant="primary">Accept Bid</b-button>
                   <h5><b-badge v-show="project.accepted_bid && isClient" variant="success" class="p-2">Accepted Bid</b-badge></h5>
                 </b-col>
               </b-row>
@@ -500,13 +500,22 @@ export default {
     isAcceptedBid(index) {
       return this.project.accepted_bid == index;
     },
-    placeBid(bidId) {
+    chooseBid(bidId) {
       this.$axios
         .patch(`/project/create/${this.projectID}/`, {
           accepted_bid: bidId
         })
         .then(response => {
-          this.project.accepted_bid = bidId;
+          this.$axios
+            .post(`/acceptedproject/accept/`, {
+              accepted_bid: bidId
+            })
+            .then(response => {
+              this.project.accepted_bid = bidId;
+            })
+            .catch(err => {
+              console.log(err);
+            });
         })
         .catch(err => {
           console.log(err);

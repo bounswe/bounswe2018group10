@@ -224,6 +224,7 @@ export default {
           });
         })
         .catch(err => {
+          // eslint-disable-next-line
           console.log(err);
         });
       this.$axios
@@ -234,6 +235,7 @@ export default {
           });
         })
         .catch(err => {
+          // eslint-disable-next-line
           console.log(err);
         });
     },
@@ -246,6 +248,7 @@ export default {
         tags: this.form.tags,
         budget_min: this.form.budget_min,
         budget_max: this.form.budget_max,
+        accepted_bid: 0,
         deadline:
           this.form.deadlineDate + "T" + this.form.deadlineTime + ":00Z"
       };
@@ -259,6 +262,7 @@ export default {
           this.$router.push(`/project/${response.data.id}`);
         })
         .catch(err => {
+          // eslint-disable-next-line
           console.log(err);
         });
     },
@@ -283,6 +287,7 @@ export default {
     },
     setPlace(place) {
       if (!place.geometry) {
+        // eslint-disable-next-line
         console.log("Returned place contains no geometry");
         return;
       }
