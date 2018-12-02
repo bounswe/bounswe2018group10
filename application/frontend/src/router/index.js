@@ -9,6 +9,8 @@ import Profile from '../components/Profile.vue'
 import ProfileEdit from '../components/ProfileEdit.vue'
 import ProjectCreate from '../components/ProjectCreate.vue'
 import MyProjects from '../components/MyProjects.vue'
+import MyAcceptedProjects from '../components/MyAcceptedProjects.vue'
+import AcceptedProject from '../components/AcceptedProject.vue'
 import Project from '../components/Project.vue'
 import Search from '../components/Search.vue'
 
@@ -49,8 +51,16 @@ const routes = [
     component: MyProjects
   },
   {
+    path: '/my-accepted-projects',
+    component: MyAcceptedProjects
+  },
+  {
     path: '/project/:id',
     component: Project
+  },
+  {
+    path: '/accepted-project/:id',
+    component: AcceptedProject
   },
   {
     path: '/search/:query',
