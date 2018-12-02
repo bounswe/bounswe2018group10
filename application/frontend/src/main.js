@@ -9,6 +9,10 @@ import VoerroTagsInput from '@voerro/vue-tagsinput'
 import './mixins.js'
 import * as VueGoogleMaps from 'vue2-google-maps'
 import './filters.js'
+import VueAwesomeSwiper from 'vue-awesome-swiper'
+import 'swiper/dist/css/swiper.css';
+
+Vue.use(VueAwesomeSwiper);
 
 Vue.use(VueGoogleMaps, {
   load: {
