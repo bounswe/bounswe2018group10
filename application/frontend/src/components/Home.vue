@@ -103,6 +103,7 @@
         rel="noopener noreferrer"
       >HoneyBadgers</b-link>
     </footer>
+
   </div>
 </template>
 

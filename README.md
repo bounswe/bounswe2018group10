@@ -5,7 +5,7 @@
 <img src="./resources/honey_badgers.png" width="200" height="200"></a>
 </p>
 
-[honeybadgers.com](http://35.178.179.18:8080)
+[honeybadgers.com](http://18.130.93.29:8080)
 
 ## :rocket: Freelancer | Collaboration Platform
 

@@ -13,9 +13,9 @@ services:
   vue:
     build: ./frontend/
     command: npm run serve
-    ######
+    ##
     #volumes:
-    #- ./frontend:/code
-    ######
+    #- ./frontend/:/app/
+    ##
     ports:
     - "8080:8080"

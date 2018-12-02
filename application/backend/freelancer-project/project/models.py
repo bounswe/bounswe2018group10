@@ -26,7 +26,7 @@ class Project(models.Model):
     file = models.FileField(upload_to='files/', blank=True)
     latitude = models.DecimalField(max_digits=10, decimal_places=7, blank=True, default=None, null=True)
     longitude = models.DecimalField(max_digits=10, decimal_places=7, blank=True, default=None, null=True)
-    accepted_bid = models.IntegerField(default=0, blank=True)
+    accepted_bid = models.IntegerField(default=0)
 
 
     def __str__(self):          # thanks to this in admin panel projects are seen with their title

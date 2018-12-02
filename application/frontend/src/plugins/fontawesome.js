@@ -23,7 +23,9 @@ import {
     faBolt,
     faFileImport,
     faListUl,
-    faFileMedicalAlt
+    faFileMedicalAlt,
+    faFile,
+    faUserCog
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
@@ -48,6 +50,8 @@ library.add(faEnvelope,
     faBolt,
     faFileImport,
     faListUl,
-    faFileMedicalAlt)
+    faFileMedicalAlt,
+    faFile,
+    faUserCog)
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
