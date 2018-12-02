@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from . import models
+from payment import models as payment_models
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -23,6 +24,10 @@ class UserSerializer(serializers.ModelSerializer):
         profile.save()
         profile = models.ClientProfile(user=user)
         profile.save()
+
+        wallet = payment_models.Wallet(user_id=user)
+        wallet.save()
+
         return user
 
 
