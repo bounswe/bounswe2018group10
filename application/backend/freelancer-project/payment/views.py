@@ -29,6 +29,9 @@ class WalletViewSet(viewsets.ModelViewSet):
 
 @api_view(['GET', 'POST'])
 def payment(request):
+    if request.method == 'GET':
+        return Response(status=status.HTTP_200_OK)
+
     if request.method != 'POST':
         return Response('Only POST method is allowed!', status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
