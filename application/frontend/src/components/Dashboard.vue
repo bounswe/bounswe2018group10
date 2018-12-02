@@ -7,13 +7,8 @@
           <font-awesome-icon icon="plus" fixed-width />Create Project
         </b-button>
         <b-button variant="primary" to="/my-projects">My Projects</b-button>
-        <b-button variant="primary" to="/my-accepted-projects">My Projects</b-button>
+        <b-button variant="primary" to="/my-accepted-projects">My Accepted Projects</b-button>
       </b-container>
-
-      <router-link :to="`/accepted-project/1`">
-        Accepted Project
-      </router-link>
-      <!--<p>Role: {{this.$root.$data.role}}</p>-->
   </div>
 </template>
 
