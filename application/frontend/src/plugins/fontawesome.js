@@ -18,6 +18,12 @@ import {
     faMapMarkerAlt,
     faAlignLeft,
     faTextHeight,
+    faUsers,
+    faHandshake,
+    faBolt,
+    faFileImport,
+    faListUl,
+    faFileMedicalAlt,
     faFile,
     faUserCog
 } from '@fortawesome/free-solid-svg-icons'
@@ -39,6 +45,12 @@ library.add(faEnvelope,
     faMapMarkerAlt,
     faAlignLeft,
     faTextHeight,
+    faUsers,
+    faHandshake,
+    faBolt,
+    faFileImport,
+    faListUl,
+    faFileMedicalAlt,
     faFile,
     faUserCog)
 
