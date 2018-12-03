@@ -14,6 +14,8 @@ import MyAcceptedProjects from '../components/MyAcceptedProjects.vue'
 import AcceptedProject from '../components/AcceptedProject.vue'
 import Project from '../components/Project.vue'
 import Search from '../components/Search.vue'
+import Wallet from '../components/Wallet.vue'
+import Deposit from '../components/Deposit.vue'
 
 
 Vue.use(VueRouter)
@@ -70,6 +72,14 @@ const routes = [
   {
     path: '/search/:query',
     component: Search
+  },
+  {
+    path: '/wallet',
+    component: Wallet
+  },
+  {
+    path: '/deposit',
+    component: Deposit
   }
 ]
 

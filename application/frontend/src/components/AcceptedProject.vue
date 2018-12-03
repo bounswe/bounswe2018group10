@@ -70,7 +70,10 @@
                   </h5>
                 </b-col>
                 <b-col cols="auto">
-                  <span class="text-muted">Deadline: {{milestone.deadline}}</span>
+                  <span
+                    class="text-muted"
+                    v-b-tooltip.hover.bottom="$moment(milestone.deadline).format('LLLL')"
+                  >Deadline {{milestone.deadline | moment("from")}}</span>
                 </b-col>
               </b-row>
               <p>
@@ -82,7 +85,8 @@
                 {{milestone.amount}}
               </p>
 
-              <div v-if="milestone.file"><strong class="mr-1">File:</strong>
+              <div v-if="milestone.file">
+                <strong class="mr-1">File:</strong>
                 <b-link :href="milestone.file" :target="'_blank'" :rel="'noopener noreferrer'">
                   <font-awesome-icon icon="file"/>
                   {{milestone.file.split('/').pop()}}
@@ -94,7 +98,7 @@
                 v-b-modal="`modal${index}`"
                 variant="primary"
               >Complete</b-button>
-              
+
               <!-- Modal Component -->
               <b-modal
                 :id="`modal${index}`"
@@ -200,11 +204,15 @@ export default {
           console.log(err);
         });
     },
-    completeMilestone(id,fileIndex) {
+    completeMilestone(id, fileIndex) {
       let formData = new FormData();
       formData.append("is_done", true);
       if (this.files[fileIndex]) {
-        formData.append("file", this.files[fileIndex], this.files[fileIndex].name);
+        formData.append(
+          "file",
+          this.files[fileIndex],
+          this.files[fileIndex].name
+        );
       }
       this.$axios({
         method: "patch",

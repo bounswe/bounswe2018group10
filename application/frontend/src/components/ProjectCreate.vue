@@ -326,8 +326,16 @@ export default {
       }
 
       this.currentPlace = place;
-      this.markers = [{position: place.geometry.location}];
-      this.position = place.geometry.location;
+      this.markers = [{
+        position: {
+          lat: place.geometry.location.lat(),
+          lng: place.geometry.location.lng()
+        }
+      }];
+      this.position = {
+        lat: place.geometry.location.lat(),
+        lng: place.geometry.location.lng()
+      };
 
       let bounds = new google.maps.LatLngBounds();
 
