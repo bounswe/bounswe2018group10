@@ -6,6 +6,7 @@ import Login from '../components/Login.vue'
 import Signup from '../components/Signup.vue'
 import Dashboard from '../components/Dashboard.vue'
 import Profile from '../components/Profile.vue'
+import OtherProfiles from '../components/OtherProfiles.vue'
 import ProfileEdit from '../components/ProfileEdit.vue'
 import ProjectCreate from '../components/ProjectCreate.vue'
 import MyProjects from '../components/MyProjects.vue'
@@ -35,6 +36,10 @@ const routes = [
   {
     path: '/profile',
     component: Profile
+  },
+  {
+    path: '/profile/:id/:role?',
+    component: OtherProfiles
   },
   {
     path: '/profile-edit',

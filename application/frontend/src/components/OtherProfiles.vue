@@ -5,23 +5,38 @@
     <b-container>
       <b-row>
         <b-col>
-          <h2>My {{isClient ? "Client":"Freelancer"}} Profile</h2>
+          <h2>{{name}}'s {{isClientProfile ? "Client":"Freelancer"}} Profile</h2>
         </b-col>
         <b-col cols="auto">
-          <b-button variant="primary" to="/profile-edit">
-            <font-awesome-icon icon="user-edit" fixed-width/>Edit Profile
-          </b-button>
+          <span>Profile type:</span>
+          <b-form-radio-group
+            buttons
+            button-variant="outline-secondary"
+            size="sm"
+            v-model="role"
+            name="radioBtnOutline"
+          >
+            <b-form-radio value="client">Client</b-form-radio>
+            <b-form-radio value="freelancer">Freelancer</b-form-radio>
+          </b-form-radio-group>
         </b-col>
       </b-row>
+
       <b-row class="mb-4">
         <b-col cols="12" sm="2">
-          <b-img v-if="isFreelancer" :src="freelancer.avatar" fluid rounded alt="img" class="m-1"/>
-          <b-img v-if="isClient" :src="client.avatar" fluid rounded alt="img" class="m-1"/>
+          <b-img
+            v-if="isFreelancerProfile"
+            :src="freelancer.avatar"
+            fluid
+            rounded
+            alt="img"
+            class="m-1"
+          />
+          <b-img v-if="isClientProfile" :src="client.avatar" fluid rounded alt="img" class="m-1"/>
         </b-col>
         <b-col cols="12" sm="7">
-          <h4>{{name}}</h4>
-          <p v-if="isFreelancer">{{freelancer.body}}</p>
-          <p v-if="isClient">{{client.body}}</p>
+          <p v-if="isFreelancerProfile">{{freelancer.body}}</p>
+          <p v-if="isClientProfile">{{client.body}}</p>
           <!--<p>Rating: {{rating}}</p>-->
         </b-col>
         <b-col cols="12" sm="3">
@@ -37,13 +52,33 @@
 
       <b-row class="mb-4">
         <b-col>
-          <b-list-group v-show="isClient">
+          <b-list-group v-show="isClientProfile">
             <b-list-group-item>
               <b-row>
                 <b-col>
                   <h5 class="mb-0">Comments ({{clientComments.length}})</h5>
                 </b-col>
               </b-row>
+            </b-list-group-item>
+            <b-list-group-item>
+              <b-form @submit="submitCommentForClient" ref="clientForm">
+                <b-form-row>
+                  <b-col>
+                    <b-form-group label label-for="inputComment">
+                      <b-form-textarea
+                        id="inputComment"
+                        v-model="commentForClient"
+                        placeholder="Write your comment here"
+                        :rows="2"
+                        :max-rows="8"
+                        required
+                      ></b-form-textarea>
+                    </b-form-group>
+                  </b-col>
+                </b-form-row>
+
+                <b-button type="submit" variant="primary">Submit Comment</b-button>
+              </b-form>
             </b-list-group-item>
             <b-list-group-item :key="index" v-for="(comment,index) in clientComments">
               <b-row>
@@ -77,13 +112,33 @@
             </b-list-group-item>
           </b-list-group>
 
-          <b-list-group v-show="isFreelancer">
+          <b-list-group v-show="isFreelancerProfile">
             <b-list-group-item>
               <b-row>
                 <b-col>
                   <h5 class="mb-0">Comments ({{freelancerComments.length}})</h5>
                 </b-col>
               </b-row>
+            </b-list-group-item>
+            <b-list-group-item>
+              <b-form @submit="submitCommentForFreelancer" ref="freelancerForm">
+                <b-form-row>
+                  <b-col>
+                    <b-form-group label label-for="inputComment">
+                      <b-form-textarea
+                        id="inputComment"
+                        v-model="commentForFreelancer"
+                        placeholder="Write your comment here"
+                        :rows="2"
+                        :max-rows="8"
+                        required
+                      ></b-form-textarea>
+                    </b-form-group>
+                  </b-col>
+                </b-form-row>
+
+                <b-button type="submit" variant="primary">Submit Comment</b-button>
+              </b-form>
             </b-list-group-item>
             <b-list-group-item :key="index" v-for="(comment,index) in freelancerComments">
               <b-row>
@@ -119,8 +174,6 @@
         </b-col>
       </b-row>
 
-
-
     </b-container>
   </div>
 </template>
@@ -129,12 +182,14 @@
 import NavigationBar from "./NavigationBar.vue";
 
 export default {
-  name: "Profile",
+  name: "OtherProfiles",
   components: {
     NavigationBar
   },
   data() {
     return {
+      role: this.$route.params.role || "freelancer",
+      profileId: this.$route.params.id,
       freelancer: {
         body: "",
         avatar: require("../assets/blank-profile-picture.svg")
@@ -144,32 +199,70 @@ export default {
         avatar: require("../assets/blank-profile-picture.svg")
       },
       name: "",
-      rating: 0,
-      clientComments: [],
+      //rating: 0,
       freelancerComments: [],
+      clientComments: [],
+      commentForClient: "",
+      commentForFreelancer: ""
     };
   },
   created() {
     this.fetchData();
   },
+  beforeRouteUpdate(to, from, next) {
+    this.profileId = to.params.id;
+    this.role = to.params.role || "freelancer";
+    this.freelancer = {
+      body: "",
+      avatar: require("../assets/blank-profile-picture.svg")
+    };
+    this.client = {
+      body: "",
+      avatar: require("../assets/blank-profile-picture.svg")
+    };
+    this.name = "";
+    this.freelancerComments = [];
+    this.clientComments = [];
+    this.commentForClient = "";
+    this.commentForFreelancer = "";
+    this.$refs.freelancerForm.reset();
+    this.$refs.clientForm.reset();
+    //this.fetchData();
+    window.scrollTo(0, 0);
+    next();
+  },
+  watch: {
+    // call again the method if the route changes
+    '$route': function(newRoute,oldRoute) {
+      this.fetchData();
+    }
+  },
+  computed: {
+    isClientProfile: function() {
+      return this.role == "client";
+    },
+    isFreelancerProfile: function() {
+      return this.role == "freelancer";
+    }
+  },
   methods: {
     fetchData() {
       this.$axios
-        .get(`/user/freelancerprofile/?search=${this.$root.$data.user_id}`)
+        .get(`/user/freelancerprofile/?search=${this.profileId}`)
         .then(response => {
           let profile = response.data[0];
           this.freelancer.body = profile.body;
           if (profile.avatar) {
             this.freelancer.avatar = profile.avatar;
           }
-          this.name = profile.user.name;
+          this.name = profile.user_info.name;
         })
         .catch(err => {
           // eslint-disable-next-line
           console.log(err);
         });
       this.$axios
-        .get(`/user/clientprofile/?search=${this.$root.$data.user_id}`)
+        .get(`/user/clientprofile/?search=${this.profileId}`)
         .then(response => {
           let profile = response.data[0];
           this.client.body = profile.body;
@@ -182,7 +275,7 @@ export default {
           console.log(err);
         });
       this.$axios
-        .get(`/comment/client/?search=${this.$root.$data.user_id}`)
+        .get(`/comment/client/?search=${this.profileId}`)
         .then(response => {
           let comments = response.data;
           comments.forEach((comment) => {
@@ -198,7 +291,7 @@ export default {
           console.log(err);
         });
       this.$axios
-        .get(`/comment/freelancer/?search=${this.$root.$data.user_id}`)
+        .get(`/comment/freelancer/?search=${this.profileId}`)
         .then(response => {
           let comments = response.data;
           comments.forEach((comment) => {
@@ -213,6 +306,45 @@ export default {
           // eslint-disable-next-line
           console.log(err);
         });
+    },
+    submitCommentForClient(evt) {
+      evt.preventDefault();
+      this.$axios
+        .post("/comment/client/", {
+          description: this.commentForClient,
+          profile_id: this.profileId
+        })
+        .then(response => {
+          this.reloadDataAndResetForm();
+        })
+        .catch(err => {
+          // eslint-disable-next-line
+          console.log(err);
+        });
+    },
+    submitCommentForFreelancer(evt) {
+      evt.preventDefault();
+      this.$axios
+        .post("/comment/freelancer/", {
+          description: this.commentForFreelancer,
+          profile_id: this.profileId
+        })
+        .then(response => {
+          this.reloadDataAndResetForm();
+        })
+        .catch(err => {
+          // eslint-disable-next-line
+          console.log(err);
+        });
+    },
+    reloadDataAndResetForm() {
+      this.commentForClient = "";
+      this.commentForFreelancer = "";
+      this.$refs.freelancerForm.reset();
+      this.$refs.clientForm.reset();
+      this.freelancerComments = [];
+      this.clientComments = [];
+      this.fetchData();
     }
   }
 };

@@ -30,6 +30,8 @@ Vue.use(VueGoogleMaps, {
   // installComponents: true,
 })
 
+Vue.use(require('vue-moment'));
+
 Vue.component('tags-input', VoerroTagsInput);
 
 Vue.config.productionTip = false

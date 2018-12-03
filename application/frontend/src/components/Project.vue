@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="bg-light">
     <NavigationBar/>
 
     <b-container>
@@ -157,7 +157,9 @@
                 <b-col>
                   <strong>Deadline</strong>
                   <div>
-                    {{deadline}}
+                    <span v-b-tooltip.hover.bottom="$moment(project.deadline).format('LLLL')">
+                      {{project.deadline | moment("from") }}
+                    </span>
                   </div>
                 </b-col>
               </b-row>
@@ -210,78 +212,59 @@
             <b-list-group-item>
               <b-row>
                 <b-col>
-                  <strong>Freelancer</strong>
+                  <h5 class="mb-0">Bids ({{bids.length}})</h5>
+                  <!--<strong>Freelancer</strong>-->
                 </b-col>
-                <b-col>
+                <!--<b-col>
                   <strong>Description</strong>
                 </b-col>
                 <b-col>
                   <strong>Bid</strong>
                 </b-col>
-                <b-col></b-col>
+                <b-col cols="2"></b-col>-->
               </b-row>
             </b-list-group-item>
             <b-list-group-item v-show="!bids.length">
-              <p class="mb-0">There is no bids placed on this project.</p>
+              <p class="mb-0">There are no bids placed on this project.</p>
           </b-list-group-item>
-            <b-list-group-item :active="isAcceptedBid(bid.id)" :key="index" v-for="(bid,index) in bids">
+            <b-list-group-item :key="index" v-for="(bid,index) in bids">
               <b-row>
-                <b-col class="clearfix">
-                  <!--<b-img left 
-                         :src="" 
-                         fluid 
-                         rounded 
-                         width="96" 
-                         class="m-1"/>-->
-                  User id: {{bid.user_id}}
-                </b-col>
-                <b-col>
-                  {{bid.description}}
-                </b-col>
-                <b-col>
-                  {{bid.amount}}
-                </b-col>
-                <b-col>
-                  <b-button @click="placeBid(bid.id)" v-show="!project.accepted_bid && isClient" variant="primary">Accept Bid</b-button>
-                </b-col>
-              </b-row>
-            </b-list-group-item>
-          </b-list-group>
-        </b-col>
-      </b-row>
-
-      <b-row class="mb-4" v-if="isProjectCreator">
-        <b-col>
-          <b-list-group class="shadow">
-            <b-list-group-item>
-              <b-row>
-                <b-col>
-                  <strong>Freelancer</strong>
-                </b-col>
-                <b-col>
-                  <strong>Rating</strong>
-                </b-col>
-                <b-col>
-                  <strong>Bid</strong>
-                </b-col>
-              </b-row>
-            </b-list-group-item>
-            <b-list-group-item :key="index" v-for="(bidder,index) in bidders">
-              <b-row>
-                <b-col class="clearfix">
+                <b-col class="clearfix" cols="12" md="3" lg="2">
                   <b-img left 
-                         :src="bidder.picture" 
+                         :src="bid.avatar" 
                          fluid 
                          rounded 
                          width="96" 
                          class="m-1"/>
-                  {{bidder.name}}
                 </b-col>
-                <b-col>
-                  {{bidder.rating}}
+                <b-col cols="12" md="7" lg="6">
+                  <div>
+                    <router-link :to="`/profile/${bid.user_id}/freelancer`"><strong>{{bid.name}}</strong></router-link>
+                  </div>
+                  <p><strong>Description </strong>{{bid.description}}</p>
+                  <b-btn v-show="milestones.filter(m => m.bid_id == bid.id).length > 0" v-b-toggle="`collapse${index}`" variant="secondary" size="sm">
+                    <span class="when-opened">Hide</span>
+                    <span class="when-closed">Show</span>
+                    Milestones
+                  </b-btn>
+                  <b-collapse :id="`collapse${index}`" class="mt-2">
+                    <b-card>
+                      <div :key="index" v-for="(milestone,index) in milestones.filter(m => m.bid_id == bid.id)">
+                        <hr v-if="index != 0">
+                        <p><strong>{{"Milestone "+(index+1)}}</strong></p>
+                        <p>Description: {{milestone.description}}</p>
+                        <p>Amount: {{milestone.amount}}</p>
+                        <p>Deadline: {{$moment(milestone.deadline).format("LLL")}}</p>
+                      </div>
+                    </b-card>
+                  </b-collapse>
                 </b-col>
-                <b-col>
-                  {{bidder.bid}}
+                <b-col cols="12" md="2" lg="2">
+                  <strong>Bid </strong>{{bid.amount}}
+                </b-col>
+                <b-col cols="12" lg="2">
+                  <b-button @click="chooseBid(bid.id)" v-show="!project.accepted_bid && isClient" variant="primary">Accept Bid</b-button>
+                  <h5><b-badge v-show="project.accepted_bid && isClient" variant="success" class="p-2">Accepted Bid</b-badge></h5>
                 </b-col>
               </b-row>
             </b-list-group-item>
@@ -289,7 +272,7 @@
         </b-col>
       </b-row>
 
-      <b-row class="mb-4">
+      <!--<b-row class="mb-4">
         <b-col>
           <b-list-group class="shadow">
             <b-list-group-item>
@@ -345,7 +328,7 @@
             </b-list-group-item>
           </b-list-group>
         </b-col>
-      </b-row>
+      </b-row>-->
       
     </b-container>
   </div>
@@ -366,30 +349,6 @@ export default {
       project: {},
       projectTags: [],
       projectCategory: {},
-      deadline: "",
-      bidders: [
-        {
-          name: "John",
-          picture: "https://randomuser.me/api/portraits/men/44.jpg",
-          bid: 100,
-          rating: 4.5
-        },
-        {
-          name: "Johnny",
-          picture: "https://randomuser.me/api/portraits/men/18.jpg",
-          bid: 200,
-          rating: 4.5
-        }
-      ],
-      comments: [
-        {
-          name: "John",
-          picture: "https://randomuser.me/api/portraits/men/44.jpg",
-          text: "Sounds like a good project !!",
-          date: "2018-11-1"
-        }
-      ],
-      newCommentText: "",
       bidForm: {
         amount: null,
         deliverIn: null,
@@ -397,6 +356,7 @@ export default {
         milestones: []
       },
       bids: [],
+      milestones: [],
       position: { lat: 0, lng: 0 },
       markers: []
     };
@@ -430,7 +390,6 @@ export default {
             lng: Number(this.project.longitude)
           };
           this.markers.push({ position: this.position });
-          this.deadline = this.project.deadline.replace(/[TZ]/g, " ");
           this.$axios
             .get("/project/category/")
             .then(response => {
@@ -462,7 +421,20 @@ export default {
           }
         })
         .then(response => {
-          this.bids = response.data;
+          let bids = response.data;
+          if(bids.avatar){
+          }else{
+            bids.avatar = require("../assets/blank-profile-picture.svg");
+          }
+          this.bids = bids;
+        })
+        .catch(err => {
+          console.log(err);
+        });
+      this.$axios
+        .get(`/project/milestone/`)
+        .then(response => {
+          this.milestones = response.data;
         })
         .catch(err => {
           console.log(err);
@@ -535,13 +507,22 @@ export default {
     isAcceptedBid(index) {
       return this.project.accepted_bid == index;
     },
-    placeBid(bidId) {
+    chooseBid(bidId) {
       this.$axios
         .patch(`/project/create/${this.projectID}/`, {
           accepted_bid: bidId
         })
         .then(response => {
-          this.project.accepted_bid = bidId;
+          this.$axios
+            .post(`/acceptedproject/accept/`, {
+              accepted_bid: bidId
+            })
+            .then(response => {
+              this.project.accepted_bid = bidId;
+            })
+            .catch(err => {
+              console.log(err);
+            });
         })
         .catch(err => {
           console.log(err);
@@ -553,4 +534,8 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.collapsed > .when-opened,
+:not(.collapsed) > .when-closed {
+  display: none;
+}
 </style>
