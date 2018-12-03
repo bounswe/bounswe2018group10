@@ -48,7 +48,7 @@
             <b-list-group-item :key="index" v-for="(comment,index) in clientComments">
               <b-row>
                 <b-col md=2 lg=1>
-                  <b-img left :src="comment.commenter_avatar" fluid rounded width="96" class="m-1"/>
+                  <b-img left :src="comment.commenter_avatar ? comment.commenter_avatar : blankProfilePic" fluid rounded width="96" class="m-1"/>
                 </b-col>
                 <b-col md="10" lg="11">
                   <b-row>
@@ -88,7 +88,7 @@
             <b-list-group-item :key="index" v-for="(comment,index) in freelancerComments">
               <b-row>
                 <b-col md=2 lg=1>
-                  <b-img left :src="comment.commenter_avatar" fluid rounded width="96" class="m-1"/>
+                  <b-img left :src="comment.commenter_avatar ? comment.commenter_avatar : blankProfilePic" fluid rounded width="96" class="m-1"/>
                 </b-col>
                 <b-col md="10" lg="11">
                   <b-row>
@@ -135,6 +135,7 @@ export default {
   },
   data() {
     return {
+      blankProfilePic: require("../assets/blank-profile-picture.svg"),
       freelancer: {
         body: "",
         avatar: require("../assets/blank-profile-picture.svg")
@@ -184,14 +185,7 @@ export default {
       this.$axios
         .get(`/comment/client/?search=${this.$root.$data.user_id}`)
         .then(response => {
-          let comments = response.data;
-          comments.forEach((comment) => {
-            if(comment.commenter_avatar){
-            }else{
-              comment.commenter_avatar = require("../assets/blank-profile-picture.svg");
-            }
-            this.clientComments.push(comment);
-          });
+          this.clientComments = response.data;
         })
         .catch(err => {
           // eslint-disable-next-line
@@ -200,14 +194,7 @@ export default {
       this.$axios
         .get(`/comment/freelancer/?search=${this.$root.$data.user_id}`)
         .then(response => {
-          let comments = response.data;
-          comments.forEach((comment) => {
-            if(comment.commenter_avatar){
-            }else{
-              comment.commenter_avatar = require("../assets/blank-profile-picture.svg");
-            }
-            this.freelancerComments.push(comment);
-          });
+          this.freelancerComments = response.data;
         })
         .catch(err => {
           // eslint-disable-next-line
