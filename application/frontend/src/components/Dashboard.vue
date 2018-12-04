@@ -7,7 +7,8 @@
           <font-awesome-icon icon="plus" fixed-width />Create Project
         </b-button>
         <b-button class="mr-2" variant="primary" to="/my-projects">My Projects</b-button>
-        <b-button variant="primary" to="/my-accepted-projects">My Accepted Projects</b-button>
+        <b-button class="mr-2" variant="primary" to="/my-accepted-projects">My Accepted Projects</b-button>
+        <b-button variant="primary" to="/all-projects">All Projects</b-button>
       </b-container>
   </div>
 </template>
