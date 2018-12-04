@@ -11,6 +11,7 @@ import ProfileEdit from '../components/ProfileEdit.vue'
 import ProjectCreate from '../components/ProjectCreate.vue'
 import MyProjects from '../components/MyProjects.vue'
 import MyAcceptedProjects from '../components/MyAcceptedProjects.vue'
+import AllProjects from '../components/AllProjects.vue'
 import AcceptedProject from '../components/AcceptedProject.vue'
 import Project from '../components/Project.vue'
 import Search from '../components/Search.vue'
@@ -60,6 +61,10 @@ const routes = [
   {
     path: '/my-accepted-projects',
     component: MyAcceptedProjects
+  },
+  {
+    path: '/all-projects',
+    component: AllProjects
   },
   {
     path: '/project/:id',
