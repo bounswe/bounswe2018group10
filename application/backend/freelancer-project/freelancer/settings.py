@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'comment.apps.CommentConfig',
     'acceptedProject.apps.AcceptedprojectConfig',
     'payment.apps.PaymentConfig',
+    'django_filters',
 ]
 
 MIDDLEWARE = [
