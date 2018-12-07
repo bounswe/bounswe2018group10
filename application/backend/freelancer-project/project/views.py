@@ -56,7 +56,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
 class BidViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.BidSerializer
     queryset = models.Bid.objects.all()
-    filter_backends = (filters.SearchFilter,)
+    filter_backends = (filters.SearchFilter, filters.OrderingFilter)
     search_fields = ('=project_id__id',)
     authentication_classes = (TokenAuthentication,)
     permission_classes = (permissions.UpdateBid, IsAuthenticatedOrReadOnly,)
