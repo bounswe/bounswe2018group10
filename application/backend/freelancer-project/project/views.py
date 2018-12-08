@@ -4,6 +4,7 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework import filters
 
+from .filters import ProjectFilter
 from django_filters import rest_framework as filter
 
 from . import serializers
@@ -20,11 +21,11 @@ class ProjectViewSet(viewsets.ModelViewSet):
     queryset = models.Project.objects.all()             # tells the viewset how to retrieve data from database
     authentication_classes = (TokenAuthentication,)     # defines which authentication type will be used
     permission_classes = (permissions.UpdateProject, IsAuthenticatedOrReadOnly)   # defines users' permissions
-    filter_backends = (filters.SearchFilter, filter.DjangoFilterBackend, filters.OrderingFilter)          # defines which filter type will be used
+    filter_backends = (filters.SearchFilter, filters.OrderingFilter, filter.DjangoFilterBackend)          # defines which filter type will be used
     search_fields = ('title', 'tags__title', 'category__title', '=user_id__id')  # to filter with a foreign key, field
-    filter_fields = ('deadline', 'budget_min', 'budget_max')                    # name in the related table must be
+                                                                                 # name in the related table must be
                                                                                   # written after name of the field
-
+    filterset_class = ProjectFilter
 
     def perform_create(self, serializer):
         '''Relates the created project to the logged in user.'''
