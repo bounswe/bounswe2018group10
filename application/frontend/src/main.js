@@ -11,7 +11,8 @@ import * as VueGoogleMaps from 'vue2-google-maps'
 
 Vue.use(VueGoogleMaps, {
   load: {
-    key: process.env.VUE_APP_GOOGLE_MAPS_API_KEY,
+    //key: process.env.VUE_APP_GOOGLE_MAPS_API_KEY,
+    key: "AIzaSyADzlqDh64x-DG5bx37skcwlpGsPURiqxY",
     libraries: 'places', // This is required if you use the Autocomplete plugin
     //// version
     v: '3.34',
@@ -37,7 +38,8 @@ Vue.component('tags-input', VoerroTagsInput);
 Vue.config.productionTip = false
 
 const axiosConfig = {
-	baseURL: `${process.env.VUE_APP_BACKEND_BASE_URL}/api/v1`
+  //baseURL: `${process.env.VUE_APP_BACKEND_BASE_URL}/api/v1`
+  baseURL: "http://127.0.0.1:8000/api/v1"
 };
 Vue.prototype.$axios = axios.create(axiosConfig);
 
@@ -53,8 +55,9 @@ Vue.filter('shortDescription', function (value) {
 
 new Vue({
   data: {
-    user_id: 0,
-    role: localStorage.getItem('role') || '',
+    user_id: localStorage.getItem('user_id'),
+    role: localStorage.getItem('role') || 'freelancer',
+    token: localStorage.getItem('token')
   },
   router,
   render: h => h(App)

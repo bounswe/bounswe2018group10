@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-navbar toggleable="md" type="light" variant="light">
+    <b-navbar toggleable="sm" type="light" variant="white">
       <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
 
       <b-navbar-brand href="#">
@@ -21,13 +21,14 @@
         </b-navbar-nav>-->
         <!-- Right aligned nav items -->
         <b-navbar-nav class="ml-auto">
-          <b-button class="mb-1 mb-md-0 mr-md-2" variant="outline-primary" to="/signup">Sign Up</b-button>
+          <b-button class="mb-1 mb-sm-0 mr-sm-2" variant="outline-primary" to="/signup">Sign Up</b-button>
           <b-button variant="outline-primary" to="/login">Login</b-button>
         </b-navbar-nav>
       </b-collapse>
     </b-navbar>
 
     <b-jumbotron
+      class="my-gradient2"
       fluid
       header="Hire the best freelancers"
       header-level="4"
@@ -40,20 +41,20 @@
 
     <b-container fluid>
       <b-row class="text-center my-5">
-        <b-col>
+        <b-col cols="12" sm="4">
           <font-awesome-icon icon="users" size="3x" class="text-info"/>
           <h3>Flexible</h3>
           <p class="mb-1">Choose among various freelancers with different skills</p>
           <p class="mb-1">Compare the prior work of freelancers</p>
           <p>Read others client's comments about the freelancers</p>
         </b-col>
-        <b-col>
+        <b-col cols="12" sm="4">
           <font-awesome-icon icon="handshake" size="3x" class="text-success"/>
           <h3>Trustworthy</h3>
           <p class="mb-1">Monitor the progress of your project</p>
           <p>Pay after each milestone not before</p>
         </b-col>
-        <b-col>
+        <b-col cols="12" sm="4">
           <font-awesome-icon icon="bolt" size="3x" class="text-warning"/>
           <h3>Fast</h3>
           <p class="mb-1">Save time and money</p>
@@ -70,19 +71,19 @@
           </b-row>
 
           <b-row class="mb-5">
-            <b-col>
+            <b-col cols="12" sm="3" class="mb-3 mb-sm-0">
               <h4>1. Post Your Project</h4>
               <font-awesome-icon icon="file-import" size="2x"/>
             </b-col>
-            <b-col>
+            <b-col cols="12" sm="3" class="mb-3 mb-sm-0">
               <h4>2. Wait For Bids</h4>
               <font-awesome-icon icon="clock" size="2x"/>
             </b-col>
-            <b-col>
+            <b-col cols="12" sm="3" class="mb-3 mb-sm-0">
               <h4>3. Choose a Bid</h4>
               <font-awesome-icon icon="list-ul" size="2x"/>
             </b-col>
-            <b-col>
+            <b-col cols="12" sm="3" class="mb-3 mb-sm-0">
               <h4>4. Monitor Progress</h4>
               <font-awesome-icon icon="file-medical-alt" size="2x"/>
             </b-col>
@@ -122,5 +123,8 @@ export default {
 <style scoped>
 .my-gradient {
   background-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+.my-gradient2 {
+  background-image: linear-gradient(120deg, #eef2f3 0%, #c3cfe2 100%);
 }
 </style>

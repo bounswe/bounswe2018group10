@@ -21,7 +21,19 @@
         <b-col cols="12" sm="7">
           <h4>{{name}}</h4>
           <p v-if="isFreelancer">{{freelancer.body}}</p>
+          <p
+            v-if="isFreelancer && !freelancer.body"
+          >You need to introduce yourself to attract the clients. 😉
+            <router-link to="/profile-edit">Edit your profile</router-link>
+          </p>
+
           <p v-if="isClient">{{client.body}}</p>
+          <p
+            v-if="isClient && !client.body"
+          >You need to introduce yourself to look more credible to freelancers. 😉
+            <router-link to="/profile-edit">Edit your profile</router-link>
+          </p>
+          
           <!--<p>Rating: {{rating}}</p>-->
         </b-col>
         <b-col cols="12" sm="3">
@@ -47,8 +59,15 @@
             </b-list-group-item>
             <b-list-group-item :key="index" v-for="(comment,index) in clientComments">
               <b-row>
-                <b-col md=2 lg=1>
-                  <b-img left :src="comment.commenter_avatar ? comment.commenter_avatar : blankProfilePic" fluid rounded width="96" class="m-1"/>
+                <b-col md="2" lg="1">
+                  <b-img
+                    left
+                    :src="comment.commenter_avatar ? comment.commenter_avatar : blankProfilePic"
+                    fluid
+                    rounded
+                    width="96"
+                    class="m-1"
+                  />
                 </b-col>
                 <b-col md="10" lg="11">
                   <b-row>
@@ -67,9 +86,10 @@
                   </b-row>
                   <b-row>
                     <b-col>
-                      <small class="text-muted" v-b-tooltip.hover.bottom="$moment(comment.created_at).format('LLLL')">
-                        {{comment.created_at | moment("from") }}
-                      </small>
+                      <small
+                        class="text-muted"
+                        v-b-tooltip.hover.bottom="$moment(comment.created_at).format('LLLL')"
+                      >{{comment.created_at | moment("from") }}</small>
                     </b-col>
                   </b-row>
                 </b-col>
@@ -87,8 +107,15 @@
             </b-list-group-item>
             <b-list-group-item :key="index" v-for="(comment,index) in freelancerComments">
               <b-row>
-                <b-col md=2 lg=1>
-                  <b-img left :src="comment.commenter_avatar ? comment.commenter_avatar : blankProfilePic" fluid rounded width="96" class="m-1"/>
+                <b-col md="2" lg="1">
+                  <b-img
+                    left
+                    :src="comment.commenter_avatar ? comment.commenter_avatar : blankProfilePic"
+                    fluid
+                    rounded
+                    width="96"
+                    class="m-1"
+                  />
                 </b-col>
                 <b-col md="10" lg="11">
                   <b-row>
@@ -107,9 +134,10 @@
                   </b-row>
                   <b-row>
                     <b-col>
-                      <small class="text-muted" v-b-tooltip.hover.bottom="$moment(comment.created_at).format('LLLL')">
-                        {{comment.created_at | moment("from") }}
-                      </small>
+                      <small
+                        class="text-muted"
+                        v-b-tooltip.hover.bottom="$moment(comment.created_at).format('LLLL')"
+                      >{{comment.created_at | moment("from") }}</small>
                     </b-col>
                   </b-row>
                 </b-col>
@@ -118,9 +146,6 @@
           </b-list-group>
         </b-col>
       </b-row>
-
-
-
     </b-container>
   </div>
 </template>
@@ -137,17 +162,17 @@ export default {
     return {
       blankProfilePic: require("../assets/blank-profile-picture.svg"),
       freelancer: {
-        body: "",
+        body: null,
         avatar: require("../assets/blank-profile-picture.svg")
       },
       client: {
-        body: "",
+        body: null,
         avatar: require("../assets/blank-profile-picture.svg")
       },
       name: "",
       rating: 0,
       clientComments: [],
-      freelancerComments: [],
+      freelancerComments: []
     };
   },
   created() {
