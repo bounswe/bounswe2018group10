@@ -16,7 +16,8 @@ class AcceptedProject(models.Model):
     latitude = models.DecimalField(max_digits=10, decimal_places=7, blank=True, default=None, null=True)
     longitude = models.DecimalField(max_digits=10, decimal_places=7, blank=True, default=None, null=True)
     accepted_bid = models.IntegerField(default=0, blank=True)
-    is_done = models.BooleanField(default=False)
+    is_done_client = models.BooleanField(default=False)
+    is_done_freelancer = models.BooleanField(default=False)
 
     def __str__(self):
         return str(self.id)
@@ -31,7 +32,8 @@ class AcceptedMilestone(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     deadline = models.DateTimeField(default=None)
     file = models.FileField(upload_to='files/', blank=True)
-    is_done = models.BooleanField(default=False)
+    is_done_client = models.BooleanField(default=False)
+    is_done_freelancer = models.BooleanField(default=False)
 
     def __str__(self):
         return str(self.id)
