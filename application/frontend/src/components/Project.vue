@@ -188,7 +188,10 @@
       <b-row class="mb-4">
         <b-col>
           <b-card class="shadow" title="Project Description">
-            <p class="card-text">{{project.description}}</p>
+            <div class="unique2 ql-snow"><!-- necessary for quill editor styling -->
+              <div class="ql-editor" v-html="project.description"></div>
+            </div>
+            <!--<p class="card-text">{{project.description}}</p>-->
             <div>Category:
               <router-link :to="`/search/${projectCategory.title}`">{{projectCategory.title}}</router-link>
             </div>
@@ -594,5 +597,11 @@ export default {
 .collapsed > .when-opened,
 :not(.collapsed) > .when-closed {
   display: none;
+}
+</style>
+<style>
+.unique2 .ql-editor {
+  min-height: 0px;
+  padding: 0px;
 }
 </style>

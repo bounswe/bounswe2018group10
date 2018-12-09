@@ -14,7 +14,7 @@
           <b-list-group>
             <b-list-group-item :key="project.id" v-for="project in projects">
               <router-link :to="`/project/${project.id}`">{{project.title}}</router-link>
-              <div>{{project.description | shortDescription}}</div>
+              <div>{{project.description | striphtml | shortDescription}}</div>
             </b-list-group-item>
           </b-list-group>
         </b-col>

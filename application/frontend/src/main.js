@@ -8,6 +8,7 @@ import axios from 'axios'
 import VoerroTagsInput from '@voerro/vue-tagsinput'
 import './mixins.js'
 import * as VueGoogleMaps from 'vue2-google-maps'
+import './filters.js'
 
 Vue.use(VueGoogleMaps, {
   load: {
@@ -41,15 +42,6 @@ const axiosConfig = {
 };
 Vue.prototype.$axios = axios.create(axiosConfig);
 
-Vue.filter('shortDescription', function (value) {
-  if (!value) return "";
-  const limit = 200;
-  if(value.length > limit){
-    return value.slice(0,limit) + "...";
-  }else{
-    return value;
-  }
-})
 
 new Vue({
   data: {
