@@ -4,7 +4,7 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework import filters
 
-from .filters import ProjectFilter
+from .filters import ProjectFilter, BidFilter
 from django_filters import rest_framework as filter
 
 from . import serializers
@@ -57,10 +57,11 @@ class CategoryViewSet(viewsets.ModelViewSet):
 class BidViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.BidSerializer
     queryset = models.Bid.objects.all()
-    filter_backends = (filters.SearchFilter, filters.OrderingFilter)
+    filter_backends = (filters.SearchFilter, filters.OrderingFilter, filter.DjangoFilterBackend)
     search_fields = ('=project_id__id',)
     authentication_classes = (TokenAuthentication,)
     permission_classes = (permissions.UpdateBid, IsAuthenticatedOrReadOnly,)
+    filterset_class = BidFilter
 
     def perform_create(self, serializer):
         serializer.save(user_id=self.request.user)
