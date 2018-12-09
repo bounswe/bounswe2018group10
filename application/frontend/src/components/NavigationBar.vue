@@ -1,5 +1,5 @@
 <template>
-  <b-navbar class="mb-3 border-bottom shadow-sm" toggleable="md" type="light" variant="light">
+  <b-navbar class="mb-3 border-bottom shadow-sm" toggleable="md" type="light" variant="white">
     <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
 
     <b-navbar-brand to="/">
@@ -14,10 +14,14 @@
     </b-navbar-brand>
 
     <b-collapse is-nav id="nav_collapse">
-      <!--<b-navbar-nav>
-        <b-nav-item href="#">Link</b-nav-item>
-        <b-nav-item href="#">Link 2</b-nav-item>
-      </b-navbar-nav>-->
+      <b-navbar-nav>
+        <b-nav-item href="#" to="/dashboard">
+          <font-awesome-icon class="mr-1" icon="home" fixed-width/>Dashboard
+        </b-nav-item>
+        <b-nav-item href="#" to="/profile">
+          <font-awesome-icon class="mr-1" icon="user" fixed-width/>Profile
+        </b-nav-item>
+      </b-navbar-nav>
       <!-- Right aligned nav items -->
       <b-navbar-nav class="ml-auto">
         <b-nav-form @submit="onSubmit">
@@ -46,9 +50,6 @@
           <template slot="text">
             <font-awesome-icon icon="cog" fixed-width/>Settings
           </template>
-          <b-dropdown-item to="/profile">
-            <font-awesome-icon class="mr-1" icon="user" fixed-width/>Profile
-          </b-dropdown-item>
           <b-dropdown-item to="/wallet">
             <font-awesome-icon class="mr-1" icon="wallet" fixed-width/>Wallet
           </b-dropdown-item>
@@ -77,7 +78,12 @@ export default {
   },
   created() {
     if (!this.$axios.defaults.headers.common["Authorization"]) {
-      this.$router.replace("/");
+      const token = localStorage.getItem("token");
+      if (token) {
+        this.$axios.defaults.headers.common["Authorization"] = token;
+      } else {
+        this.$router.replace("/");
+      }
     }
   },
   watch: {
@@ -89,6 +95,8 @@ export default {
   methods: {
     logout() {
       delete this.$axios.defaults.headers.common["Authorization"];
+      localStorage.removeItem("token");
+      localStorage.removeItem("user_id");
       this.$router.push("/");
     },
     onSubmit(evt) {
