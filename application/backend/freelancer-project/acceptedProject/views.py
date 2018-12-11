@@ -6,6 +6,8 @@ from rest_framework.decorators import api_view
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 
+from django_filters import rest_framework as filter
+
 from project.models import Project, Milestone, Bid
 from user.models import User
 from . import models
@@ -88,8 +90,10 @@ class AcceptedProjectViewSet(viewsets.ModelViewSet):
     queryset = models.AcceptedProject.objects.all()
     authentication_classes = (TokenAuthentication,)
     permission_classes = (permissions.UpdateAcceptedProject, IsAuthenticatedOrReadOnly)
-    filter_backends = (filters.SearchFilter,)
-    search_fields = ('title', '=user_id__id')
+    #filter_backends = (filters.SearchFilter,)
+    #search_fields = ('title', '=user_id__id', '=freelancer_id__id')
+    filter_backends = (filter.DjangoFilterBackend,)
+    filter_fields = ('deadline', 'price', 'user_id', 'freelancer_id')
 
     def perform_create(self, serializer):
         serializer.save(user_id=self.request.user)
