@@ -48,6 +48,7 @@ export default {
           this.projects = response.data;
         })
         .catch(err => {
+          // eslint-disable-next-line
           console.log(err);
         });
     }
