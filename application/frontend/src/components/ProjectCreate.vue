@@ -30,13 +30,16 @@
                   <font-awesome-icon icon="align-left" fixed-width />
                   Project Description
                 </template>
-                <b-form-textarea id="inputDesc"
+                <!--<b-form-textarea id="inputDesc"
                           v-model="form.description"
                           placeholder="Describe your project"
                           :rows="4"
                           :max-rows="8"
                           required>
-                </b-form-textarea>
+                </b-form-textarea>-->
+                <div class="ql-snow">
+                  <vue-editor class="unique" v-model="form.description" placeholder="Describe your project"></vue-editor>
+                </div>
               </b-form-group>
             </b-col>
           </b-form-row>
@@ -205,11 +208,13 @@
 <script>
 import NavigationBar from "./NavigationBar.vue";
 import "@voerro/vue-tagsinput/dist/style.css";
+import { VueEditor } from 'vue2-editor';
 
 export default {
   name: "ProjectCreate",
   components: {
-    NavigationBar
+    NavigationBar,
+    VueEditor
   },
   data() {
     return {
@@ -267,6 +272,14 @@ export default {
     },
     onSubmit(evt) {
       evt.preventDefault();
+      if(this.form.description == null){
+        alert("You must add a description to your project.");
+        return;
+      }
+      if(this.form.tags.length == 0){
+        alert("You must add at least a tag to your project.");
+        return;
+      }
       let formData = new FormData();
       formData.append("title", this.form.title);
       formData.append("description", this.form.description);
@@ -370,5 +383,10 @@ export default {
   width: 100%;
   max-width: 660px;
   margin: auto;
+}
+</style>
+<style>
+.unique .ql-editor {
+  max-height: 70vh;
 }
 </style>

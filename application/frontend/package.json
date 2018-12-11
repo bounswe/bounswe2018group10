@@ -16,6 +16,7 @@
     "vue": "^2.5.17",
     "vue-moment": "^4.0.0",
     "vue-router": "^3.0.1",
+    "vue2-editor": "^2.6.6",
     "vue2-google-maps": "^0.10.5"
   },
   "devDependencies": {

@@ -12,7 +12,10 @@
       <b-row class="mb-4">
         <b-col>
           <b-card class="shadow" title="Project Details">
-            <p class="card-text">{{project.description}}</p>
+            <div class="unique2 ql-snow"><!-- necessary for quill editor styling -->
+              <div class="ql-editor" v-html="project.description"></div>
+            </div>
+            <!--<p class="card-text">{{project.description}}</p>-->
             <p>Budget: {{project.price}}</p>
             <div v-if="project.file">File:
               <b-link :href="project.file" :target="'_blank'" :rel="'noopener noreferrer'">
