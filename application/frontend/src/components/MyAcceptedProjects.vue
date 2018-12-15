@@ -51,21 +51,29 @@ export default {
   methods: {
     fetchData() {
       this.$axios
-        .get(`/acceptedproject/create/?search=${this.$root.$data.user_id}`)
+        .get(`/acceptedproject/create/`, {
+          params: {
+            user_id__id: this.$root.$data.user_id
+          }
+        })
         .then(response => {
           this.projects = response.data;
         })
         .catch(err => {
+          // eslint-disable-next-line
           console.log(err);
         });
       this.$axios
-        .get(`/acceptedproject/create/`)
+        .get(`/acceptedproject/create/`, {
+          params: {
+            freelancer_id__id: this.$root.$data.user_id
+          }
+        })
         .then(response => {
-          this.freelancerProjects = response.data.filter(
-            proj => proj.freelancer_id == this.$root.$data.user_id
-          );
+          this.freelancerProjects = response.data;
         })
         .catch(err => {
+          // eslint-disable-next-line
           console.log(err);
         });
     }

@@ -56,6 +56,7 @@ export default {
           this.projects = response.data;
         })
         .catch(err => {
+          // eslint-disable-next-line
           console.log(err);
         });
       this.$axios
@@ -72,10 +73,12 @@ export default {
               );
             })
             .catch(err => {
+              // eslint-disable-next-line
               console.log(err);
             });
         })
         .catch(err => {
+          // eslint-disable-next-line
           console.log(err);
         });
     }

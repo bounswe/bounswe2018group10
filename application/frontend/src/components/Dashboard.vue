@@ -9,17 +9,20 @@
         <b-button class="mr-2" variant="primary" to="/my-projects">My Projects</b-button>
         <b-button class="mr-2" variant="primary" to="/my-accepted-projects">My Accepted Projects</b-button>
         <b-button variant="primary" to="/all-projects">All Projects</b-button>
+        <MyFooter/>
       </b-container>
   </div>
 </template>
 
 <script>
-import NavigationBar from './NavigationBar.vue'
+import NavigationBar from './NavigationBar.vue';
+import MyFooter from "./MyFooter.vue";
 
 export default {
   name: "Dashboard",
   components: {
-    NavigationBar
+    NavigationBar,
+    MyFooter
   }
 };
 </script>

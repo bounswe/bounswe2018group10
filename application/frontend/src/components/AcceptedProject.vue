@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-light">
+  <div class="bg-grey">
     <NavigationBar/>
 
     <b-container>
@@ -12,7 +12,8 @@
       <b-row class="mb-4">
         <b-col>
           <b-card class="shadow" title="Project Details">
-            <div class="unique2 ql-snow"><!-- necessary for quill editor styling -->
+            <div class="unique2 ql-snow">
+              <!-- necessary for quill editor styling -->
               <div class="ql-editor" v-html="project.description"></div>
             </div>
             <!--<p class="card-text">{{project.description}}</p>-->
@@ -48,7 +49,7 @@
               <b-progress-bar
                 :key="index"
                 v-for="(milestone,index) in milestones"
-                :value="milestone.is_done ? 1 : 0"
+                :value="(milestone.is_done_client && milestone.is_done_freelancer) ? 1 : 0"
                 variant="success"
                 :label="`Milestone ${index+1}`"
               ></b-progress-bar>
@@ -57,7 +58,7 @@
         </b-col>
       </b-row>
 
-      <b-row class="mb-4">
+      <b-row>
         <b-col>
           <b-card class="shadow" title="Project Milestones">
             <div :key="index" v-for="(milestone,index) in milestones">
@@ -66,10 +67,20 @@
                 <b-col>
                   <h5>
                     <strong class="mr-2">Milestone {{(index+1)}}</strong>
-                    <span v-if="milestone.is_done" class="badge badge-success">
+                    <span
+                      v-if="milestone.is_done_client && milestone.is_done_freelancer"
+                      class="badge badge-success"
+                    >
                       <font-awesome-icon icon="check"/>Completed
                     </span>
-                    <span v-if="!milestone.is_done" class="badge badge-secondary">Not Completed</span>
+                    <span
+                      v-if="!milestone.is_done_client && !milestone.is_done_freelancer"
+                      class="badge badge-secondary"
+                    >Not Completed</span>
+                    <span
+                      v-if="!milestone.is_done_client && milestone.is_done_freelancer"
+                      class="badge badge-secondary"
+                    >Freelancer Submitted</span>
                   </h5>
                 </b-col>
                 <b-col cols="auto">
@@ -97,7 +108,13 @@
               </div>
 
               <b-button
-                v-if="isProjectFreelancer && !milestone.is_done"
+                v-if="isProjectCreator && milestone.is_done_freelancer && !milestone.is_done_client"
+                variant="primary"
+                @click="acceptMilestone(milestone.id)"
+              >Accept Milestone</b-button>
+
+              <b-button
+                v-if="isProjectFreelancer && !milestone.is_done_client"
                 v-b-modal="`modal${index}`"
                 variant="primary"
               >Complete</b-button>
@@ -136,17 +153,21 @@
           </b-card>
         </b-col>
       </b-row>
+      <MyFooter/>
     </b-container>
   </div>
 </template>
 
 <script>
 import NavigationBar from "./NavigationBar.vue";
+import MyFooter from "./MyFooter.vue";
+import { VueEditor } from "vue2-editor";
 
 export default {
   name: "AcceptedProject",
   components: {
-    NavigationBar
+    NavigationBar,
+    MyFooter
   },
   data() {
     return {
@@ -209,7 +230,7 @@ export default {
     },
     completeMilestone(id, fileIndex) {
       let formData = new FormData();
-      formData.append("is_done", true);
+      formData.append("is_done_freelancer", true);
       if (this.files[fileIndex]) {
         formData.append(
           "file",
@@ -225,6 +246,19 @@ export default {
           "Content-Type": "multipart/form-data"
         }
       })
+        .then(response => {
+          this.fetchData();
+        })
+        .catch(err => {
+          // eslint-disable-next-line
+          console.log(err);
+        });
+    },
+    acceptMilestone(id) {
+      this.$axios
+        .patch(`/acceptedproject/milestone/${id}/`, {
+          is_done_client: true
+        })
         .then(response => {
           this.fetchData();
         })
