@@ -13,18 +13,8 @@
 
       <b-row>
         <b-col>
-          <b-list-group v-if="isClient">
-            <b-list-group-item :key="project.id" v-for="project in projects">
-              <router-link :to="`/accepted-project/${project.id}`">{{project.title}}</router-link>
-              <div>{{project.description | striphtml | shortDescription}}</div>
-            </b-list-group-item>
-          </b-list-group>
-          <b-list-group v-if="isFreelancer">
-            <b-list-group-item :key="project.id" v-for="project in freelancerProjects">
-              <router-link :to="`/accepted-project/${project.id}`">{{project.title}}</router-link>
-              <div>{{project.description | striphtml | shortDescription}}</div>
-            </b-list-group-item>
-          </b-list-group>
+          <ProjectListView v-if="isClient" :projects="projects" :accepted="true"/>
+          <ProjectListView v-if="isFreelancer" :projects="freelancerProjects" :accepted="true"/>
         </b-col>
       </b-row>
     </b-container>
@@ -33,11 +23,13 @@
 
 <script>
 import NavigationBar from "./NavigationBar.vue";
+import ProjectListView from "./ProjectListView.vue"
 
 export default {
   name: "MyAcceptedProjects",
   components: {
-    NavigationBar
+    NavigationBar,
+    ProjectListView
   },
   data() {
     return {

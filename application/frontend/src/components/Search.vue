@@ -57,14 +57,11 @@
         </b-col>
         <b-col cols="12" md="9">
           <b-list-group>
-            <b-list-group-item v-if="projects.length == 0"><p class="mb-0">No project found. 😞</p></b-list-group-item>
-            <b-list-group-item :key="project.id" v-for="project in projects">
-              <router-link :to="`/project/${project.id}`">
-                {{project.title}}
-              </router-link>
-              <div>{{project.description | striphtml | shortDescription}}</div>
+            <b-list-group-item v-if="projects.length == 0">
+              <p class="mb-0">No project found. 😞</p>
             </b-list-group-item>
           </b-list-group>
+          <ProjectListView :projects="projects"/>
         </b-col>
       </b-row>
       <MyFooter/>
@@ -76,12 +73,14 @@
 import NavigationBar from "./NavigationBar.vue";
 import MyFooter from "./MyFooter.vue";
 import debounce from "lodash.debounce";
+import ProjectListView from "./ProjectListView.vue";
 
 export default {
   name: "Search",
   components: {
     NavigationBar,
-    MyFooter
+    MyFooter,
+    ProjectListView
   },
   data() {
     return {
@@ -112,31 +111,31 @@ export default {
     };
   },
   watch: {
-    'filter.ordering' : function(newOrdering, oldOrdering) {
+    "filter.ordering": function(newOrdering, oldOrdering) {
       this.fetchData();
     },
-    'filter.budget_min' : function(newBudget_min, oldBudget_max) {
+    "filter.budget_min": function(newBudget_min, oldBudget_max) {
       this.debouncedFetchData();
     },
-    'filter.budget_max' : function(newBudget_max, oldBudget_max) {
+    "filter.budget_max": function(newBudget_max, oldBudget_max) {
       this.debouncedFetchData();
     }
   },
   beforeRouteLeave(to, from, next) {
-    sessionStorage.setItem("filterMinPrice",this.filter.budget_min);
+    sessionStorage.setItem("filterMinPrice", this.filter.budget_min);
     sessionStorage.setItem("filterMaxPrice", this.filter.budget_max);
     next();
   },
   created() {
     this.setSorting(Number(sessionStorage.getItem("sortByIndex") || "1"));
-    if(sessionStorage.getItem("filterMinPrice")){
+    if (sessionStorage.getItem("filterMinPrice")) {
       this.filter.budget_min = Number(sessionStorage.getItem("filterMinPrice"));
-    }else{
+    } else {
       this.filter.budget_min = 0;
     }
-    if(sessionStorage.getItem("filterMaxPrice")){
+    if (sessionStorage.getItem("filterMaxPrice")) {
       this.filter.budget_max = Number(sessionStorage.getItem("filterMaxPrice"));
-    }else{
+    } else {
       this.filter.budget_max = 10000;
     }
     this.debouncedFetchData = debounce(this.fetchData, 500);
@@ -154,8 +153,8 @@ export default {
           params: {
             search: this.query,
             ordering: this.filter.ordering,
-            budget_min__gt: this.filter.budget_min,
-            budget_max__lt: this.filter.budget_max
+            budget_min__gte: this.filter.budget_min,
+            budget_max__lte: this.filter.budget_max
           }
         })
         .then(response => {
@@ -169,9 +168,9 @@ export default {
     setSorting(index) {
       this.filter.ordering = this.orderingOptions[index];
       this.filter.orderingLabel = this.orderingLabelOptions[index];
-      sessionStorage.setItem("sortByIndex",index);
+      sessionStorage.setItem("sortByIndex", index);
     },
-    resetFilters(){
+    resetFilters() {
       this.filter.budget_min = 0;
       this.filter.budget_max = 10000;
     }

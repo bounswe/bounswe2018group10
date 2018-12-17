@@ -56,12 +56,7 @@
           </b-card>
         </b-col>
         <b-col cols="12" md="9">
-          <b-list-group>
-            <b-list-group-item :key="project.id" v-for="project in projects">
-              <router-link :to="`/project/${project.id}`">{{project.title}}</router-link>
-              <div>{{project.description | striphtml | shortDescription}}</div>
-            </b-list-group-item>
-          </b-list-group>
+          <ProjectListView :projects="projects"/>
         </b-col>
       </b-row>
       <MyFooter/>
@@ -73,12 +68,14 @@
 import NavigationBar from "./NavigationBar.vue";
 import MyFooter from "./MyFooter.vue";
 import debounce from "lodash.debounce";
+import ProjectListView from "./ProjectListView.vue";
 
 export default {
   name: "AllProjects",
   components: {
     NavigationBar,
-    MyFooter
+    MyFooter,
+    ProjectListView
   },
   data() {
     return {
@@ -145,8 +142,8 @@ export default {
         .get(`/project/create/`, {
           params: {
             ordering: this.filter.ordering,
-            budget_min__gt: this.filter.budget_min,
-            budget_max__lt: this.filter.budget_max
+            budget_min__gte: this.filter.budget_min,
+            budget_max__lte: this.filter.budget_max
           }
         })
         .then(response => {

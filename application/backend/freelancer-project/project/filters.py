@@ -7,9 +7,9 @@ class ProjectFilter(django_filters.FilterSet):
     class Meta:
         model = Project
         fields = {
-            'budget_min': ['lt', 'gt'],
-            'budget_max': ['lt', 'gt'],
-            'deadline': ['lt', 'gt' ,'year__lt', 'year__gt'],
+            'budget_min': ['lte', 'gte'],
+            'budget_max': ['lte', 'gte'],
+            'deadline': ['lte', 'gte' ,'year__lte', 'year__gte'],
         }
 
 
@@ -17,5 +17,5 @@ class BidFilter(django_filters.FilterSet):
     class Meta:
         model = Bid
         fields = {
-            'amount': ['lt', 'gt'],
+            'amount': ['lte', 'gte'],
         }
