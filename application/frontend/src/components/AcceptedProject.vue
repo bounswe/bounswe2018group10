@@ -110,8 +110,8 @@
               <b-button
                 v-if="isProjectCreator && milestone.is_done_freelancer && !milestone.is_done_client"
                 variant="primary"
-                @click="acceptMilestone(milestone.id)"
-              >Accept Milestone</b-button>
+                @click="acceptMilestone(milestone.id,milestone.amount)"
+              >Accept Milestone and Pay</b-button>
 
               <b-button
                 v-if="isProjectFreelancer && !milestone.is_done_client"
@@ -254,13 +254,24 @@ export default {
           console.log(err);
         });
     },
-    acceptMilestone(id) {
+    acceptMilestone(id,amount) {
       this.$axios
         .patch(`/acceptedproject/milestone/${id}/`, {
           is_done_client: true
         })
         .then(response => {
-          this.fetchData();
+          this.$axios
+            .post(`/payment/transaction`, {
+              acceptedproject_id: this.projectID,
+              amount: amount
+            })
+            .then(response => {
+              this.fetchData();
+            })
+            .catch(err => {
+              // eslint-disable-next-line
+              console.log(err);
+            });
         })
         .catch(err => {
           // eslint-disable-next-line
