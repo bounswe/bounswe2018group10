@@ -9,6 +9,8 @@ import VoerroTagsInput from '@voerro/vue-tagsinput'
 import './mixins.js'
 import * as VueGoogleMaps from 'vue2-google-maps'
 import './filters.js'
+import VCalendar from 'v-calendar';
+import 'v-calendar/lib/v-calendar.min.css';
 
 Vue.use(VueGoogleMaps, {
   load: {
@@ -35,6 +37,11 @@ Vue.use(VueGoogleMaps, {
 Vue.use(require('vue-moment'));
 
 Vue.component('tags-input', VoerroTagsInput);
+
+Vue.use(VCalendar, {
+  firstDayOfWeek: 2,  // Monday
+  popoverVisibility: "focus"
+});
 
 Vue.config.productionTip = false
 

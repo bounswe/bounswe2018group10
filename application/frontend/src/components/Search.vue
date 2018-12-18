@@ -51,6 +51,21 @@
                   </b-form-group>
                 </b-col>
               </b-form-row>
+              <b-form-row>
+                <b-col>
+                  <b-form-group>
+                    <template slot="label">Deadline between</template>
+                    <v-date-picker mode="range" v-model="filter.date" show-caps>
+                      <b-form-input
+                        type="text"
+                        slot-scope="{ inputValue, updateValue }"
+                        :value="inputValue"
+                        @change="updateValue($event.target.value, { formatInput: true, hidePopover: false })"
+                      ></b-form-input>
+                    </v-date-picker>
+                  </b-form-group>
+                </b-col>
+              </b-form-row>
               <b-button @click="resetFilters" size="sm">Reset filters</b-button>
             </b-form>
           </b-card>
@@ -90,7 +105,11 @@ export default {
         budget_min: 0,
         budget_max: 10000,
         ordering: "id",
-        orderingLabel: "Oldest"
+        orderingLabel: "Oldest",
+        date: {
+          start: null,
+          end: null
+        }
       },
       orderingOptions: [
         "-id",
@@ -119,11 +138,20 @@ export default {
     },
     "filter.budget_max": function(newBudget_max, oldBudget_max) {
       this.debouncedFetchData();
+    },
+    "filter.date": function(newDate, oldDate) {
+      this.fetchData();
     }
   },
   beforeRouteLeave(to, from, next) {
     sessionStorage.setItem("filterMinPrice", this.filter.budget_min);
     sessionStorage.setItem("filterMaxPrice", this.filter.budget_max);
+    if(this.filter.date){
+      if(this.filter.date.start && this.filter.date.end){
+        sessionStorage.setItem("deadlineStart", this.filter.date.start);
+        sessionStorage.setItem("deadlineEnd", this.filter.date.end);
+      }
+    }
     next();
   },
   created() {
@@ -138,6 +166,12 @@ export default {
     } else {
       this.filter.budget_max = 10000;
     }
+    if(sessionStorage.getItem("deadlineStart")){
+      const start = sessionStorage.getItem("deadlineStart");
+      const end = sessionStorage.getItem("deadlineEnd");
+      this.filter.date.start = new Date(start);
+      this.filter.date.end = new Date(end);
+    }
     this.debouncedFetchData = debounce(this.fetchData, 500);
     this.fetchData();
   },
@@ -148,14 +182,23 @@ export default {
   },
   methods: {
     fetchData() {
+      let params = {
+        search: this.query,
+        ordering: this.filter.ordering,
+        budget_min__gte: this.filter.budget_min,
+        budget_max__lte: this.filter.budget_max
+      };
+      if (this.filter.date && this.filter.date.end && this.filter.date.start) {
+        params.deadline__lte = this.$moment(this.filter.date.end).format(
+          "YYYY-MM-DD"
+        );
+        params.deadline__gte = this.$moment(this.filter.date.start).format(
+          "YYYY-MM-DD"
+        );
+      }
       this.$axios
         .get(`/project/create/`, {
-          params: {
-            search: this.query,
-            ordering: this.filter.ordering,
-            budget_min__gte: this.filter.budget_min,
-            budget_max__lte: this.filter.budget_max
-          }
+          params
         })
         .then(response => {
           this.projects = response.data;
@@ -173,6 +216,7 @@ export default {
     resetFilters() {
       this.filter.budget_min = 0;
       this.filter.budget_max = 10000;
+      this.filter.date = null;
     }
   }
 };
