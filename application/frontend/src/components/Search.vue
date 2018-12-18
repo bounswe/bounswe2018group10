@@ -29,7 +29,7 @@
               <b-form-row>
                 <b-col>
                   <b-form-group>
-                    <template slot="label">Minimum Price</template>
+                    <template slot="label"><font-awesome-icon icon="money-bill" fixed-width class="mr-1"/>Minimum Price</template>
                     <b-form-input
                       id="inputMinBudget"
                       type="number"
@@ -54,7 +54,9 @@
               <b-form-row>
                 <b-col>
                   <b-form-group>
-                    <template slot="label">Deadline between</template>
+                    <template slot="label">
+                      <font-awesome-icon icon="calendar-alt" fixed-width/>Deadline between
+                    </template>
                     <v-date-picker mode="range" v-model="filter.date" show-caps>
                       <b-form-input
                         type="text"
@@ -63,6 +65,24 @@
                         @change="updateValue($event.target.value, { formatInput: true, hidePopover: false })"
                       ></b-form-input>
                     </v-date-picker>
+                  </b-form-group>
+                </b-col>
+              </b-form-row>
+              <b-form-row>
+                <b-col>
+                  <b-form-group>
+                    <template slot="label">
+                      <font-awesome-icon icon="tags" fixed-width/>Tags
+                    </template>
+                    <tags-input
+                      input-class="form-control"
+                      :typeahead-max-results="6"
+                      placeholder="Filter tags"
+                      :only-existing-tags="true"
+                      v-model="filter.tags"
+                      :existing-tags="filter.tagOptions"
+                      :typeahead="true"
+                    ></tags-input>
                   </b-form-group>
                 </b-col>
               </b-form-row>
@@ -89,6 +109,7 @@ import NavigationBar from "./NavigationBar.vue";
 import MyFooter from "./MyFooter.vue";
 import debounce from "lodash.debounce";
 import ProjectListView from "./ProjectListView.vue";
+import "@voerro/vue-tagsinput/dist/style.css";
 
 export default {
   name: "Search",
@@ -109,7 +130,9 @@ export default {
         date: {
           start: null,
           end: null
-        }
+        },
+        tagOptions: {},
+        tags: []
       },
       orderingOptions: [
         "-id",
@@ -141,39 +164,46 @@ export default {
     },
     "filter.date": function(newDate, oldDate) {
       this.fetchData();
+    },
+    "filter.tags": function(newTags, oldTags) {
+      this.fetchData();
     }
   },
   beforeRouteLeave(to, from, next) {
     sessionStorage.setItem("filterMinPrice", this.filter.budget_min);
     sessionStorage.setItem("filterMaxPrice", this.filter.budget_max);
-    if(this.filter.date){
-      if(this.filter.date.start && this.filter.date.end){
-        sessionStorage.setItem("deadlineStart", this.filter.date.start);
-        sessionStorage.setItem("deadlineEnd", this.filter.date.end);
+    if (this.filter.date) {
+      if (this.filter.date.start && this.filter.date.end) {
+        sessionStorage.setItem("filterDeadlineStart", this.filter.date.start);
+        sessionStorage.setItem("filterDeadlineEnd", this.filter.date.end);
       }
     }
+    sessionStorage.setItem("filterTag", JSON.stringify(this.filter.tags));
     next();
   },
   created() {
     this.setSorting(Number(sessionStorage.getItem("sortByIndex") || "1"));
-    if (sessionStorage.getItem("filterMinPrice")) {
-      this.filter.budget_min = Number(sessionStorage.getItem("filterMinPrice"));
+    const minPrice = sessionStorage.getItem("filterMinPrice");
+    if (minPrice) {
+      this.filter.budget_min = Number(minPrice);
     } else {
       this.filter.budget_min = 0;
     }
-    if (sessionStorage.getItem("filterMaxPrice")) {
-      this.filter.budget_max = Number(sessionStorage.getItem("filterMaxPrice"));
+    const maxPrice = sessionStorage.getItem("filterMaxPrice");
+    if (maxPrice) {
+      this.filter.budget_max = Number(maxPrice);
     } else {
       this.filter.budget_max = 10000;
     }
-    if(sessionStorage.getItem("deadlineStart")){
-      const start = sessionStorage.getItem("deadlineStart");
-      const end = sessionStorage.getItem("deadlineEnd");
-      this.filter.date.start = new Date(start);
+    const deadlineStart = sessionStorage.getItem("filterDeadlineStart");
+    if (deadlineStart) {
+      const end = sessionStorage.getItem("filterDeadlineEnd");
+      this.filter.date.start = new Date(deadlineStart);
       this.filter.date.end = new Date(end);
     }
     this.debouncedFetchData = debounce(this.fetchData, 500);
     this.fetchData();
+    this.fetchTags();
   },
   beforeRouteUpdate(to, from, next) {
     this.query = to.params.query;
@@ -183,11 +213,16 @@ export default {
   methods: {
     fetchData() {
       let params = {
-        search: this.query,
         ordering: this.filter.ordering,
         budget_min__gte: this.filter.budget_min,
         budget_max__lte: this.filter.budget_max
       };
+      let tagStrings = this.filter.tags.map(
+        index => this.filter.tagOptions[index]
+      );
+      let tagQuery = tagStrings.join(" ");
+      params.search = this.query + " " + tagQuery;
+      console.log(params.search);
       if (this.filter.date && this.filter.date.end && this.filter.date.start) {
         params.deadline__lte = this.$moment(this.filter.date.end).format(
           "YYYY-MM-DD"
@@ -217,6 +252,24 @@ export default {
       this.filter.budget_min = 0;
       this.filter.budget_max = 10000;
       this.filter.date = null;
+      this.filter.tags = [];
+    },
+    fetchTags() {
+      this.$axios
+        .get("/project/tag/")
+        .then(response => {
+          response.data.forEach(element => {
+            this.filter.tagOptions[element.id] = element.title;
+          });
+          const tagJson = sessionStorage.getItem("filterTag");
+          if (tagJson) {
+            this.filter.tags = JSON.parse(tagJson);
+          }
+        })
+        .catch(err => {
+          // eslint-disable-next-line
+          console.log(err);
+        });
     }
   }
 };
