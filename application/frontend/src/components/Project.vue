@@ -5,11 +5,11 @@
     <b-container>
       <b-row class="mb-2">
         <b-col>
-          <h2 class="mb-0">{{project.title}}</h2>
+          <h2 id="title" class="mb-0">{{project.title}}</h2>
         </b-col>
         <b-col cols="auto" class="ml-auto">
           <b-button
-            v-if="isFreelancer && !placedBid"
+            v-show="isFreelancer && !placedBid"
             v-b-toggle.collapse1
             variant="primary"
           >Bid for Project</b-button>
@@ -162,7 +162,7 @@
 
       <b-row class="mb-4">
         <b-col>
-          <b-card class="shadow">
+          <b-card id="project-info" class="shadow">
             <b-row class="text-center">
               <b-col>
                 <strong>Bids</strong>
@@ -187,7 +187,7 @@
 
       <b-row class="mb-4">
         <b-col>
-          <b-card class="shadow" title="Project Description">
+          <b-card id="description" class="shadow" title="Project Description">
             <div class="unique2 ql-snow"><!-- necessary for quill editor styling -->
               <div class="ql-editor" v-html="project.description"></div>
             </div>
@@ -205,15 +205,15 @@
                 v-for="tag in projectTags"
               >{{tag.title}}</b-badge>
             </div>
-            <div v-if="project.file">File:
-              <b-link :href="project.file" :target="'_blank'" :rel="'noopener noreferrer'">
+            <div v-show="project.file">File:
+              <b-link v-if="project.file" :href="project.file" :target="'_blank'" :rel="'noopener noreferrer'">
                 <font-awesome-icon icon="file"/>
                 {{project.file.split('/').pop()}}
               </b-link>
             </div>
-            <div class="mt-2" v-if="position.lat!=0&&position.lng!=0">
+            <div class="mt-2" v-show="position.lat!=0&&position.lng!=0">
               <h6>Location</h6>
-              <div class="embed-responsive">
+              <div class="embed-responsive" v-if="position.lat!=0&&position.lng!=0">
                 <GmapMap :center="position" :zoom="15" style="height: 400px">
                   <GmapMarker
                     :key="index"
@@ -229,9 +229,9 @@
         </b-col>
       </b-row>
 
-      <b-row v-if="isProjectCreator">
+      <b-row v-show="isProjectCreator">
         <b-col>
-          <b-list-group class="shadow">
+          <b-list-group id="bids" class="shadow">
             <b-list-group-item>
               <b-row>
                 <b-col>
@@ -290,7 +290,7 @@
                         :key="index"
                         v-for="(milestone,index) in milestones.filter(m => m.bid_id == bid.id)"
                       >
-                        <hr v-if="index != 0">
+                        <hr v-show="index != 0">
                         <p>
                           <strong>{{"Milestone "+(index+1)}}</strong>
                         </p>

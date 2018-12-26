@@ -90,6 +90,7 @@ const routes = [
 
 // eslint-disable-next-line no-new
 const router = new VueRouter({
+  mode: 'history',
   routes
 })
 
