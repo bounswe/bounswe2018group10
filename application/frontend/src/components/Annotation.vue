@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!-- Text annotation button -->
     <b-button @click="modalShow = !modalShow" id="bubble" variant="dark" :style="bubbleStyle">
       <h5 class="mb-0">
         <strong>
@@ -8,6 +9,21 @@
       </h5>
     </b-button>
 
+    <!-- Image annotation button -->
+    <b-button
+      @click="imageModalShow = !imageModalShow"
+      id="bubbleImage"
+      variant="dark"
+      :style="imageBubbleStyle"
+    >
+      <h5 class="mb-0">
+        <strong>
+          <font-awesome-icon icon="edit" fixed-width/>Annotate
+        </strong>
+      </h5>
+    </b-button>
+
+    <!-- Text annotation modal -->
     <b-modal v-model="modalShow" title="Annotate" @ok="sendTextAnnotation" ok-title="Annotate">
       <p>
         <strong>Text to annotate:</strong>
@@ -18,30 +34,71 @@
       </div>
     </b-modal>
 
+    <!-- Image annotation modal -->
+    <b-modal
+      v-model="imageModalShow"
+      title="Annotate"
+      @ok="sendImageAnnotation"
+      ok-title="Annotate"
+    >
+      <div class="ql-snow">
+        <vue-editor class="unique" v-model="annotationText" placeholder="Write your annotation"></vue-editor>
+      </div>
+    </b-modal>
+
+    <!-- Text annotation popup -->
     <div
-      :id="`anno${rect.id}`"
+      :id="`textanno${rect.id}`"
       :key="rect.id"
       v-for="rect in annotationClientRects"
       :style="rect.style"
     >
-      <b-popover :target="`anno${rect.id}`" triggers="hover click" placement="auto">
-        <template slot="title">Annotation</template>
+      <b-popover :target="`textanno${rect.id}`" triggers="hover click" placement="auto">
+        <template slot="title">
+          <div class="d-flex justify-content-between align-items-center">
+            <router-link
+              class="mr-1"
+              :to="`/profile/${getUserIdFromAnno(textAnnotations[rect.annoIndex])}`"
+            >
+              <strong>{{textAnnotations[rect.annoIndex].creator.name}}</strong>
+            </router-link>
+            <small
+              class="text-muted"
+              v-b-tooltip.hover.bottom="$moment(textAnnotations[rect.annoIndex].created).format('LLLL')"
+            >{{textAnnotations[rect.annoIndex].created | moment("from") }}</small>
+          </div>
+        </template>
         <div>
-          <router-link
-            class="mr-1"
-            :to="`/profile/${getUserIdFromAnno(textAnnotations[rect.annoIndex])}`"
-          >
-            <strong>{{textAnnotations[rect.annoIndex].creator.name}}</strong>
-          </router-link>
-          <div class="unique2 ql-snow" :style="{'max-height':'60vh','overflow-y':'auto'}"><!-- necessary for quill editor styling -->
+          <!-- ql-snow and ql-editor is necessary for quill editor styling -->
+          <div class="unique2 ql-snow" :style="{'max-height':'60vh','overflow-y':'auto'}">
             <div class="ql-editor" v-html="textAnnotations[rect.annoIndex].body.value"></div>
           </div>
         </div>
+      </b-popover>
+    </div>
+
+    <!-- Image annotation popup -->
+    <div :id="`imageanno${rect.id}`" :key="rect.id" v-for="rect in imageRects" :style="rect.style">
+      <b-popover :target="`imageanno${rect.id}`" triggers="hover click" placement="auto">
+        <template slot="title">
+          <div class="d-flex justify-content-between align-items-center">
+            <router-link
+              class="mr-1"
+              :to="`/profile/${getUserIdFromAnno(imageAnnotations[rect.annoIndex])}`"
+            >
+              <strong>{{imageAnnotations[rect.annoIndex].creator.name}}</strong>
+            </router-link>
+            <small
+              class="text-muted"
+              v-b-tooltip.hover.bottom="$moment(imageAnnotations[rect.annoIndex].created).format('LLLL')"
+            >{{imageAnnotations[rect.annoIndex].created | moment("from") }}</small>
+          </div>
+        </template>
         <div>
-          <small
-            class="text-muted"
-            v-b-tooltip.hover.bottom="$moment(textAnnotations[rect.annoIndex].created).format('LLLL')"
-          >{{textAnnotations[rect.annoIndex].created | moment("from") }}</small>
+          <!-- ql-snow and ql-editor is necessary for quill editor styling -->
+          <div class="unique2 ql-snow" :style="{'max-height':'60vh','overflow-y':'auto'}">
+            <div class="ql-editor" v-html="imageAnnotations[rect.annoIndex].body.value"></div>
+          </div>
         </div>
       </b-popover>
     </div>
@@ -50,6 +107,8 @@
 
 <script>
 import { VueEditor } from "vue2-editor";
+import Croppr from "croppr";
+import "croppr/dist/croppr.min.css";
 
 export default {
   name: "Annotation",
@@ -59,40 +118,62 @@ export default {
   data() {
     return {
       modalShow: false,
+      imageModalShow: false,
       annotationText: "",
       textAnnotations: [],
+      imageAnnotations: [],
       annotationClientRects: [],
+      imageRects: [],
       bubbleStyle: {
         visibility: "hidden",
         position: "absolute",
         top: 0,
         left: 0
       },
+      imageBubbleStyle: {
+        visibility: "hidden",
+        position: "absolute",
+        top: 0,
+        left: 0,
+        "z-index": "10"
+      },
+      selectedArea: {
+        x: 0,
+        y: 0,
+        w: 0,
+        h: 0
+      },
+      annoImageSource: "",
       selectedText: "",
       startSelectorXPath: "",
       startSelectorStartOffset: 0,
       startSelectorEndOffset: 0,
       endSelectorXPath: "",
       endSelectorStartOffset: 0,
-      endSelectorEndOffset: 0
+      endSelectorEndOffset: 0,
+      cropprInstance: {}
     };
   },
   created() {
     this.fetchTextAnnotation();
+    this.fetchImageAnnotation();
   },
   watch: {
     $route(to, from) {
+      this.modalShow = false;
+      this.imageModalShow = false;
+      this.bubbleStyle.visibility = "hidden";
+      this.imageBubbleStyle.visibility = "hidden";
       this.textAnnotations = [];
+      this.imageAnnotations = [];
       this.annotationClientRects = [];
+      this.imageRects = [];
       this.fetchTextAnnotation();
+      this.fetchImageAnnotation();
     }
   },
-  /*beforeRouteUpdate(to, from, next) {
-    this.fetchTextAnnotation();
-    next();
-  },*/
   methods: {
-    onTextSelect(e) {
+    mouseup(e) {
       const selectedText = this.getSelectedText();
       if (selectedText && !this.modalShow) {
         if (this.bubbleStyle.visibility != "visible") {
@@ -120,54 +201,37 @@ export default {
           this.endSelectorStartOffset = 0;
           this.endSelectorEndOffset = endOffset;
         }
-        // highlight
-        /*
-        var clientRects = window.getSelection().getRangeAt(0).getClientRects();
-        console.log(clientRects);
-        for(var i=0;i<clientRects.length;i++){
-          var elem = document.createElement('div');
-          elem.innerHTML = "&nbsp;";
-          var rect = clientRects[i];
-          console.log(rect.x);
-          elem.style.cssText = `position:absolute;width:${rect.width}px;height:${rect.height}px;top:${rect.y}px;left:${rect.x}px;opacity:0.3;z-index:100;background:#000`;
-          document.body.appendChild(elem);
-        }*/
-
-        /*
-        console.log(startNode);
-        console.log("Start node xpath: " + this.getXPath(startNode));
-        console.log("Start node offset: " + startOffset);
-        console.log("Start node length: " + startNodeLength);
-        console.log("End node xpath: " + this.getXPath(endNode));
-        console.log("End node offset: " + endOffset);
-        */
-
-        // if the same node from start offset to end offset
-        // if different node start offset to length  and 0 to end offset
-
-        /*
-        var nodes = document.evaluate(
-          "html/body/div[3]/div[2]/div[1]/div[1]/div[3]/div[3]/div[2]/div[1]/div[2]/div[1]/p[1]/text()[1]",
-          document,
-          null,
-          XPathResult.FIRST_ORDERED_NODE_TYPE,
-          null
-        ).singleNodeValue;
-        console.log(nodes);
-        var textFirstPart = nodes.nodeValue.substring(0, startOffset);
-        var textSecondPart = nodes.nodeValue.substring(
-          startOffset,
-          startNodeLength
-        );*/
-        //nodes.nodeValue = textFirstPart + "<honeybadgers-highlight>" + textSecondPart +"</honeybadgers-highlight>";
-
-        //alert("Got selected text " + selectedText);
-
-        //let range = document.createRange();
-
-        //range.setStart(startNode, startOffset);
-        //range.setEnd(endNode, endOffset);
       }
+      const qlEditor = document.querySelector(".ql-editor");
+      if (e.target.nodeName == "IMG" && ( (qlEditor && !qlEditor.contains(e.target)) || (!qlEditor) )) {
+        e.target.classList.add("mycroppr");
+        this.cropprInstance = new Croppr(".mycroppr", {
+          startSize: [50, 50],
+          onCropEnd: data => {
+            this.selectedArea.x = data.x;
+            this.selectedArea.y = data.y;
+            this.selectedArea.w = data.width;
+            this.selectedArea.h = data.height;
+          },
+          onInitialize: instance => {
+            const data = instance.getValue();
+            this.selectedArea.x = data.x;
+            this.selectedArea.y = data.y;
+            this.selectedArea.w = data.width;
+            this.selectedArea.h = data.height;
+          }
+        });
+        this.annoImageSource = document.querySelector(".croppr-image").src;
+        this.renderImageBubble();
+      }
+    },
+    renderImageBubble() {
+      const cropprPos = document
+        .querySelector(".croppr")
+        .getBoundingClientRect();
+      this.imageBubbleStyle.left = cropprPos.left + "px";
+      this.imageBubbleStyle.top = cropprPos.bottom + 2 + "px";
+      this.imageBubbleStyle.visibility = "visible";
     },
     renderBubble(mouseX, mouseY) {
       const offsetWidth = document.getElementById("bubble").offsetWidth;
@@ -229,6 +293,7 @@ export default {
     },
     mousedown(e) {
       const bubble = document.getElementById("bubble");
+      const bubbleImage = document.getElementById("bubbleImage");
       if (bubble.contains(e.target)) {
         // Clicked in box
       } else {
@@ -236,6 +301,19 @@ export default {
         this.bubbleStyle.visibility = "hidden";
         this.bubbleStyle.top = "0px";
         this.bubbleStyle.left = "0px";
+      }
+
+      // when an image has area selection
+      if (document.querySelector(".croppr") !== null) {
+        // destroy croppr instance when clicked outside the image
+        if (
+          !e.target.classList.contains("croppr") &&
+          !bubbleImage.contains(e.target)
+        ) {
+          this.imageBubbleStyle.visibility = "hidden";
+          this.cropprInstance.destroy();
+          document.querySelector(".mycroppr").classList.remove("mycroppr");
+        }
       }
     },
     sendTextAnnotation() {
@@ -273,9 +351,39 @@ export default {
           }
         })
         .then(response => {
-          //this.fetchTextAnnotation();
           this.textAnnotations.push(response.data);
           this.calculateAnnotationClientRects();
+          this.annotationText = "";
+        })
+        .catch(err => {
+          // eslint-disable-next-line
+          console.log(err);
+        });
+    },
+    sendImageAnnotation() {
+      this.$axios
+        .post(`/annotation/imageannotation/`, {
+          type: "Annotation",
+          body: {
+            type: "TextualBody",
+            language: "en",
+            value: this.annotationText
+          },
+          target: {
+            source: this.annoImageSource,
+            scope: window.location.href,
+            selector: {
+              type: "FragmentSelector",
+              conformsTo: "http://www.w3.org/TR/media-frags/",
+              value: `xywh=${this.selectedArea.x},${this.selectedArea.y},${
+                this.selectedArea.w
+              },${this.selectedArea.h}`
+            }
+          }
+        })
+        .then(response => {
+          this.imageAnnotations.push(response.data);
+          this.calculateImgAnnoRects();
           this.annotationText = "";
         })
         .catch(err => {
@@ -291,6 +399,20 @@ export default {
         .then(response => {
           this.textAnnotations = response.data;
           this.calculateAnnotationClientRects();
+        })
+        .catch(err => {
+          // eslint-disable-next-line
+          console.log(err);
+        });
+    },
+    fetchImageAnnotation() {
+      this.$axios
+        .get(
+          `/annotation/imageannotation/?target__scope=${window.location.href}`
+        )
+        .then(response => {
+          this.imageAnnotations = response.data;
+          this.calculateImgAnnoRects();
         })
         .catch(err => {
           // eslint-disable-next-line
@@ -359,6 +481,47 @@ export default {
     },
     getUserIdFromAnno(anno) {
       return anno.creator.id.split("/").slice(-2, -1)[0];
+    },
+    calculateImgAnnoRects() {
+      this.imageRects = [];
+      const images = document.getElementsByTagName("img");
+      let count = 0;
+      for (let i = 0; i < this.imageAnnotations.length; i++) {
+        const imgAnno = this.imageAnnotations[i];
+        const imgElement = this.findImgWithSrc(images, imgAnno.target.source);
+        const imgScaling = imgElement.width / imgElement.naturalWidth;
+        const imgRect = imgElement.getBoundingClientRect();
+        console.log(imgRect);
+        const selectorValueStr = imgAnno.target.selector.value;
+        let selectorValue = selectorValueStr.substring(
+          selectorValueStr.indexOf("=") + 1
+        );
+        selectorValue = selectorValue.split(",").map(Number).map(x => x*imgScaling);
+        let style = {
+          left: imgRect.left + selectorValue[0] + "px",
+          top: imgRect.top + selectorValue[1] + "px",
+          width: selectorValue[2] + "px",
+          height: selectorValue[3] + "px",
+          position: "absolute",
+          border: "4px solid rgba(33,150,243,.4)",
+          //opacity: 0.3,
+          "z-index": 100,
+          //background: "#2196F3"
+        };
+        this.imageRects.push({
+          id: count,
+          annoIndex: i,
+          style: style
+        });
+        count++;
+      }
+    },
+    findImgWithSrc(images, src) {
+      for (let i = 0; i < images.length; i++) {
+        if (images[i].src == src) {
+          return images[i];
+        }
+      }
     }
   }
 };

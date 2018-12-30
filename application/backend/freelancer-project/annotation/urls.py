@@ -8,6 +8,7 @@ from . import views
 router = DefaultRouter()
 
 router.register('textannotation', views.TextAnnotationViewSet)
+router.register('imageannotation', views.ImageAnnotationViewSet)
 
 
 urlpatterns = [

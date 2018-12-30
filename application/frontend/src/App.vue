@@ -15,7 +15,7 @@ export default {
   },
   methods: {
     mouseup(e) {
-      this.$refs.annotation.onTextSelect(e);
+      this.$refs.annotation.mouseup(e);
     },
     mousedown(e) {
       this.$refs.annotation.mousedown(e);

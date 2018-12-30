@@ -22,6 +22,24 @@ class TextAnnotation(models.Model):
         return str(self.id)
 
 
+class ImageAnnotation(models.Model):
+    @staticmethod
+    def context():
+        return "http://www.w3.org/ns/anno.jsonld"
+
+    @staticmethod
+    def type():
+        return "Annotation"
+
+    body = models.ForeignKey('Body', on_delete=models.CASCADE)
+    target = models.ForeignKey('ImageTarget', on_delete=models.CASCADE)
+    created = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey('user.User', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return str(self.id)
+
+
 class Body(models.Model):
     value = models.TextField()
 
@@ -33,6 +51,23 @@ class Body(models.Model):
     def language():
         return "en"
 
+    @staticmethod
+    def format():
+        return "text/html"
+
+    def __str__(self):
+        return str(self.id)
+
+
+class ImageTarget(models.Model):
+    source = models.TextField()
+    scope = models.TextField()
+    selector = models.ForeignKey('FragmentSelector', on_delete=models.CASCADE)
+
+    @staticmethod
+    def type():
+        return "Image"
+
     def __str__(self):
         return str(self.id)
 
@@ -40,6 +75,21 @@ class Body(models.Model):
 class Target(models.Model):
     source = models.TextField()
     selector = models.ForeignKey('Selector', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return str(self.id)
+
+
+class FragmentSelector(models.Model):
+    value = models.TextField()
+
+    @staticmethod
+    def conformsTo():
+        return "http://www.w3.org/TR/media-frags/"
+
+    @staticmethod
+    def type():
+        return "FragmentSelector"
 
     def __str__(self):
         return str(self.id)

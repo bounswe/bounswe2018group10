@@ -24,4 +24,16 @@ class TextAnnotationViewSet(viewsets.ModelViewSet):
         serializer.save(user=self.request.user)
 
 
+class ImageAnnotationViewSet(viewsets.ModelViewSet):
+    serializer_class = serializers.ImageAnnotationSerializer
+    queryset = models.ImageAnnotation.objects.all()
+    filter_backends = (filter.DjangoFilterBackend,)
+    filter_fields = ('target__source', 'target__scope')
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (permissions.UpdateAnnotation, IsAuthenticatedOrReadOnly,)
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+
 

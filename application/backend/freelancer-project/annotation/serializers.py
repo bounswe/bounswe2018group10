@@ -27,11 +27,17 @@ class SelectorSerializer(serializers.ModelSerializer):
         fields = ('type', 'startSelector', 'endSelector',)
 
 
+class FragmentSelectorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.FragmentSelector
+        fields = ('type', 'value', 'conformsTo',)
+
+
 class BodySerializer(serializers.ModelSerializer):
     
     class Meta:
         model = models.Body
-        fields = ('value', 'language', 'type',)
+        fields = ('value', 'language', 'type', 'format')
 
 
 class TargetSerializer(serializers.ModelSerializer):
@@ -40,6 +46,14 @@ class TargetSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Target
         fields = ('source', 'selector', )
+
+
+class ImageTargetSerializer(serializers.ModelSerializer):
+    selector = FragmentSelectorSerializer()
+
+    class Meta:
+        model = models.ImageTarget
+        fields = ('source', 'selector', 'scope', 'type')
 
 
 class TextAnnotationSerializer(serializers.HyperlinkedModelSerializer):
@@ -82,5 +96,42 @@ class TextAnnotationSerializer(serializers.HyperlinkedModelSerializer):
         selector = models.Selector.objects.create(startSelector=start_selector, endSelector=end_selector, **selector_data)
         target = models.Target.objects.create(selector=selector, **target_data)
         body = models.Body.objects.create(**body_data)
-        textannotation = models.TextAnnotation.objects.create(body=body, target=target, **validated_data)
-        return textannotation
+        text_annotation = models.TextAnnotation.objects.create(body=body, target=target, **validated_data)
+        return text_annotation
+
+
+class ImageAnnotationSerializer(serializers.HyperlinkedModelSerializer):
+    body = BodySerializer()
+    target = ImageTargetSerializer()
+    user = user_serializers.HyperlinkedUserSerializer(read_only=True)
+
+    class Meta:
+        model = models.ImageAnnotation
+        fields = ('url', 'id', 'body', 'target', 'type', 'context', 'created', 'user')
+
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        # replace id with url and call it id
+        ret['id'] = ret['url']
+        ret.pop('url')
+        # insert @ to beginning of context
+        ret['@context'] = ret['context']
+        ret.pop('context')
+        # rename user to creator
+        ret['creator'] = ret.pop('user')
+        ret['creator']['nickname'] = ret['creator'].pop('username')
+        ret['creator']['email'] = "mailto:" + ret['creator']['email']
+        ret['creator']['type'] = "Person"
+        ret['creator']['id'] = ret['creator'].pop('url')
+        return ret
+
+    def create(self, validated_data):
+        body_data = validated_data.pop('body')
+        target_data = validated_data.pop('target')
+        selector_data = target_data.pop('selector')
+
+        selector = models.FragmentSelector.objects.create(**selector_data)
+        target = models.ImageTarget.objects.create(selector=selector, **target_data)
+        body = models.Body.objects.create(**body_data)
+        image_annotation = models.ImageAnnotation.objects.create(body=body, target=target, **validated_data)
+        return image_annotation
