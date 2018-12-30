@@ -30,7 +30,13 @@
         {{selectedText}}
       </p>
       <div class="ql-snow">
-        <vue-editor class="unique" v-model="annotationText" placeholder="Write your annotation"></vue-editor>
+        <vue-editor
+          class="unique"
+          useCustomImageHandler
+          @imageAdded="handleImageAdded"
+          v-model="annotationText"
+          placeholder="Write your annotation"
+        ></vue-editor>
       </div>
     </b-modal>
 
@@ -42,7 +48,13 @@
       ok-title="Annotate"
     >
       <div class="ql-snow">
-        <vue-editor class="unique" v-model="annotationText" placeholder="Write your annotation"></vue-editor>
+        <vue-editor
+          class="unique"
+          useCustomImageHandler
+          @imageAdded="handleImageAdded"
+          v-model="annotationText"
+          placeholder="Write your annotation"
+        ></vue-editor>
       </div>
     </b-modal>
 
@@ -203,7 +215,10 @@ export default {
         }
       }
       const qlEditor = document.querySelector(".ql-editor");
-      if (e.target.nodeName == "IMG" && ( (qlEditor && !qlEditor.contains(e.target)) || (!qlEditor) )) {
+      if (
+        e.target.nodeName == "IMG" &&
+        ((qlEditor && !qlEditor.contains(e.target)) || !qlEditor)
+      ) {
         e.target.classList.add("mycroppr");
         this.cropprInstance = new Croppr(".mycroppr", {
           startSize: [50, 50],
@@ -457,7 +472,6 @@ export default {
         range.setEnd(endNode, endOffset);
 
         let clientRects = range.getClientRects();
-        //console.log(clientRects);
         for (let j = 0; j < clientRects.length; j++) {
           let obj = {};
           let rect = clientRects[j];
@@ -491,12 +505,14 @@ export default {
         const imgElement = this.findImgWithSrc(images, imgAnno.target.source);
         const imgScaling = imgElement.width / imgElement.naturalWidth;
         const imgRect = imgElement.getBoundingClientRect();
-        console.log(imgRect);
         const selectorValueStr = imgAnno.target.selector.value;
         let selectorValue = selectorValueStr.substring(
           selectorValueStr.indexOf("=") + 1
         );
-        selectorValue = selectorValue.split(",").map(Number).map(x => x*imgScaling);
+        selectorValue = selectorValue
+          .split(",")
+          .map(Number)
+          .map(x => x * imgScaling);
         let style = {
           left: imgRect.left + selectorValue[0] + "px",
           top: imgRect.top + selectorValue[1] + "px",
@@ -505,7 +521,7 @@ export default {
           position: "absolute",
           border: "4px solid rgba(33,150,243,.4)",
           //opacity: 0.3,
-          "z-index": 100,
+          "z-index": 100
           //background: "#2196F3"
         };
         this.imageRects.push({
@@ -522,6 +538,28 @@ export default {
           return images[i];
         }
       }
+    },
+    handleImageAdded(file, Editor, cursorLocation, resetUploader) {
+      let formData = new FormData();
+      formData.append("url", file);
+
+      this.$axios({
+        url: "/upload/image/",
+        method: "POST",
+        data: formData,
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      })
+        .then(response => {
+          let url = response.data.url;
+          Editor.insertEmbed(cursorLocation, "image", url);
+          resetUploader();
+        })
+        .catch(err => {
+          // eslint-disable-next-line
+          console.log(err);
+        });
     }
   }
 };

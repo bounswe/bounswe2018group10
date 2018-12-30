@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'acceptedProject.apps.AcceptedprojectConfig',
     'payment.apps.PaymentConfig',
     'annotation.apps.AnnotationConfig',
+    'upload.apps.UploadConfig',
     'django_filters',
 ]
 
