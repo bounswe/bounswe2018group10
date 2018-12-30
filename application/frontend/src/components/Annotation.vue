@@ -140,14 +140,15 @@ export default {
         visibility: "hidden",
         position: "absolute",
         top: 0,
-        left: 0
+        left: 0,
+        "z-index": "11"
       },
       imageBubbleStyle: {
         visibility: "hidden",
         position: "absolute",
         top: 0,
         left: 0,
-        "z-index": "10"
+        "z-index": "11"
       },
       selectedArea: {
         x: 0,
@@ -214,7 +215,7 @@ export default {
           this.endSelectorEndOffset = endOffset;
         }
       }
-      const qlEditor = document.querySelector(".ql-editor");
+      const qlEditor = document.querySelector(".ql-container");
       if (
         e.target.nodeName == "IMG" &&
         ((qlEditor && !qlEditor.contains(e.target)) || !qlEditor)
@@ -482,7 +483,7 @@ export default {
           style.left = rect.x + "px";
           style.position = "absolute";
           style.opacity = 0.3;
-          style["z-index"] = 100;
+          style["z-index"] = 10;
           style.background = "#2196F3";
           //style["border-bottom"] = "0.3em solid #2196F3";
           obj.style = style;
@@ -521,7 +522,7 @@ export default {
           position: "absolute",
           border: "4px solid rgba(33,150,243,.4)",
           //opacity: 0.3,
-          "z-index": 100
+          "z-index": 10
           //background: "#2196F3"
         };
         this.imageRects.push({
