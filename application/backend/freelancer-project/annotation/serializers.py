@@ -63,7 +63,7 @@ class TextAnnotationSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = models.TextAnnotation
-        fields = ('url', 'id', 'body', 'target', 'type', 'context', 'created', 'user')
+        fields = ('url', 'id', 'motivation', 'body', 'target', 'type', 'context', 'created', 'user')
 
     def to_representation(self, instance):
         ret = super().to_representation(instance)
@@ -107,7 +107,7 @@ class ImageAnnotationSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = models.ImageAnnotation
-        fields = ('url', 'id', 'body', 'target', 'type', 'context', 'created', 'user')
+        fields = ('url', 'id', 'motivation', 'body', 'target', 'type', 'context', 'created', 'user')
 
     def to_representation(self, instance):
         ret = super().to_representation(instance)

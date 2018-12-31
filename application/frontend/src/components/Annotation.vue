@@ -29,6 +29,10 @@
         <strong>Text to annotate:</strong>
         {{selectedText}}
       </p>
+      <b-form-group label-for="inputMotivation">
+        <template slot="label">Motivation</template>
+        <b-form-select v-model="selectedMotivation" :options="motivationOptions"/>
+      </b-form-group>
       <div class="ql-snow">
         <vue-editor
           class="unique"
@@ -47,6 +51,10 @@
       @ok="sendImageAnnotation"
       ok-title="Annotate"
     >
+      <b-form-group label-for="inputMotivation">
+        <template slot="label">Motivation</template>
+        <b-form-select v-model="selectedMotivation" :options="motivationOptions"/>
+      </b-form-group>
       <div class="ql-snow">
         <vue-editor
           class="unique"
@@ -80,6 +88,7 @@
             >{{textAnnotations[rect.annoIndex].created | moment("from") }}</small>
           </div>
         </template>
+        <p class="text-muted mb-1">Motivation:{{textAnnotations[rect.annoIndex].motivation}}</p>
         <div>
           <!-- ql-snow and ql-editor is necessary for quill editor styling -->
           <div class="unique2 ql-snow" :style="{'max-height':'60vh','overflow-y':'auto'}">
@@ -113,6 +122,7 @@
             >{{imageAnnotations[rect.annoIndex].created | moment("from") }}</small>
           </div>
         </template>
+        <p class="text-muted mb-1">Motivation:{{imageAnnotations[rect.annoIndex].motivation}}</p>
         <div>
           <!-- ql-snow and ql-editor is necessary for quill editor styling -->
           <div class="unique2 ql-snow" :style="{'max-height':'60vh','overflow-y':'auto'}">
@@ -172,6 +182,23 @@ export default {
       },
       annoImageSource: "",
       selectedText: "",
+      selectedMotivation: null,
+      motivationOptions: [
+        { value: null, text: "Select your annotation motivation" },
+        { value: "assessing", text: "assessing" },
+        { value: "bookmarking", text: "bookmarking" },
+        { value: "classifying", text: "classifying" },
+        { value: "commenting", text: "commenting" },
+        { value: "describing", text: "describing" },
+        { value: "editing", text: "editing" },
+        { value: "highlighting", text: "highlighting" },
+        { value: "identifying", text: "identifying" },
+        { value: "linking", text: "linking" },
+        { value: "moderating", text: "moderating" },
+        { value: "questioning", text: "questioning" },
+        { value: "replying", text: "replying" },
+        { value: "tagging", text: "tagging" }
+      ],
       startSelectorXPath: "",
       startSelectorStartOffset: 0,
       startSelectorEndOffset: 0,
@@ -200,6 +227,7 @@ export default {
       this.imageAnnotations = [];
       this.annotationClientRects = [];
       this.imageRects = [];
+      this.selectedMotivation = null;
       this.fetchTextAnnotation();
       this.fetchImageAnnotation();
     }
@@ -352,9 +380,16 @@ export default {
       }
     },
     sendTextAnnotation() {
+      if(!this.selectedMotivation){
+        alert("Please select a motivation.");
+      }
+      if(!this.annotationText){
+        alert("Please enter an annotation text.");
+      }
       this.$axios
         .post(`/annotation/textannotation/`, {
           type: "Annotation",
+          motivation: this.selectedMotivation,
           body: {
             type: "TextualBody",
             language: "en",
@@ -389,6 +424,7 @@ export default {
           this.textAnnotations.push(response.data);
           this.calculateAnnotationClientRects();
           this.annotationText = "";
+          this.selectedMotivation = null;
         })
         .catch(err => {
           // eslint-disable-next-line
@@ -396,9 +432,16 @@ export default {
         });
     },
     sendImageAnnotation() {
+      if(!this.selectedMotivation){
+        alert("Please select a motivation.");
+      }
+      if(!this.annotationText){
+        alert("Please enter an annotation text.");
+      }
       this.$axios
         .post(`/annotation/imageannotation/`, {
           type: "Annotation",
+          motivation: this.selectedMotivation,
           body: {
             type: "TextualBody",
             language: "en",
@@ -420,6 +463,7 @@ export default {
           this.imageAnnotations.push(response.data);
           this.calculateImgAnnoRects();
           this.annotationText = "";
+          this.selectedMotivation = null;
         })
         .catch(err => {
           // eslint-disable-next-line
@@ -537,8 +581,8 @@ export default {
           .map(Number)
           .map(x => x * imgScaling);
         let style = {
-          left: (imgRect.left + window.scrollX + selectorValue[0]) + "px",
-          top: (imgRect.top + window.scrollY + selectorValue[1]) + "px",
+          left: imgRect.left + window.scrollX + selectorValue[0] + "px",
+          top: imgRect.top + window.scrollY + selectorValue[1] + "px",
           width: selectorValue[2] + "px",
           height: selectorValue[3] + "px",
           position: "absolute",

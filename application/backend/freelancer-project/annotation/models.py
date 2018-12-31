@@ -13,6 +13,7 @@ class TextAnnotation(models.Model):
     def type():
         return "Annotation"
 
+    motivation = models.TextField()
     body = models.ForeignKey('Body', on_delete=models.CASCADE)
     target = models.ForeignKey('Target', on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
@@ -31,6 +32,7 @@ class ImageAnnotation(models.Model):
     def type():
         return "Annotation"
 
+    motivation = models.TextField()
     body = models.ForeignKey('Body', on_delete=models.CASCADE)
     target = models.ForeignKey('ImageTarget', on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
