@@ -85,6 +85,13 @@
           <div class="unique2 ql-snow" :style="{'max-height':'60vh','overflow-y':'auto'}">
             <div class="ql-editor" v-html="textAnnotations[rect.annoIndex].body.value"></div>
           </div>
+          <b-button
+            v-if="getUserIdFromAnno(textAnnotations[rect.annoIndex]) == $root.$data.user_id"
+            @click="deleteTextAnno(getIdFromAnno(textAnnotations[rect.annoIndex]))"
+            class="mt-1"
+            size="sm"
+            variant="danger"
+          >Delete</b-button>
         </div>
       </b-popover>
     </div>
@@ -111,6 +118,13 @@
           <div class="unique2 ql-snow" :style="{'max-height':'60vh','overflow-y':'auto'}">
             <div class="ql-editor" v-html="imageAnnotations[rect.annoIndex].body.value"></div>
           </div>
+          <b-button
+            v-if="getUserIdFromAnno(imageAnnotations[rect.annoIndex]) == $root.$data.user_id"
+            @click="deleteImageAnno(getIdFromAnno(imageAnnotations[rect.annoIndex]))"
+            class="mt-1"
+            size="sm"
+            variant="danger"
+          >Delete</b-button>
         </div>
       </b-popover>
     </div>
@@ -250,8 +264,8 @@ export default {
       const cropprPos = document
         .querySelector(".croppr")
         .getBoundingClientRect();
-      this.imageBubbleStyle.left = cropprPos.left + "px";
-      this.imageBubbleStyle.top = cropprPos.bottom + 2 + "px";
+      this.imageBubbleStyle.left = window.scrollX + cropprPos.left + "px";
+      this.imageBubbleStyle.top = window.scrollY + cropprPos.bottom + 2 + "px";
       this.imageBubbleStyle.visibility = "visible";
     },
     renderBubble(mouseX, mouseY) {
@@ -502,6 +516,9 @@ export default {
     getUserIdFromAnno(anno) {
       return anno.creator.id.split("/").slice(-2, -1)[0];
     },
+    getIdFromAnno(anno) {
+      return anno.id.split("/").slice(-2, -1)[0];
+    },
     calculateImgAnnoRects() {
       this.imageRects = [];
       const images = document.getElementsByTagName("img");
@@ -520,8 +537,8 @@ export default {
           .map(Number)
           .map(x => x * imgScaling);
         let style = {
-          left: imgRect.left + selectorValue[0] + "px",
-          top: imgRect.top + selectorValue[1] + "px",
+          left: (imgRect.left + window.scrollX + selectorValue[0]) + "px",
+          top: (imgRect.top + window.scrollY + selectorValue[1]) + "px",
           width: selectorValue[2] + "px",
           height: selectorValue[3] + "px",
           position: "absolute",
@@ -561,6 +578,28 @@ export default {
           let url = response.data.url;
           Editor.insertEmbed(cursorLocation, "image", url);
           resetUploader();
+        })
+        .catch(err => {
+          // eslint-disable-next-line
+          console.log(err);
+        });
+    },
+    deleteTextAnno(id) {
+      this.$axios
+        .delete(`/annotation/textannotation/${id}/`)
+        .then(response => {
+          this.fetchTextAnnotation();
+        })
+        .catch(err => {
+          // eslint-disable-next-line
+          console.log(err);
+        });
+    },
+    deleteImageAnno(id) {
+      this.$axios
+        .delete(`/annotation/imageannotation/${id}/`)
+        .then(response => {
+          this.fetchImageAnnotation();
         })
         .catch(err => {
           // eslint-disable-next-line

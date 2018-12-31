@@ -17,6 +17,8 @@ import Project from '../components/Project.vue'
 import Search from '../components/Search.vue'
 import Settings from '../components/Settings.vue'
 import Deposit from '../components/Deposit.vue'
+import MyTextAnnotations from '../components/MyTextAnnotations.vue'
+import MyImageAnnotations from '../components/MyImageAnnotations.vue'
 
 
 Vue.use(VueRouter)
@@ -85,6 +87,14 @@ const routes = [
   {
     path: '/deposit',
     component: Deposit
+  },
+  {
+    path: '/my-text-annotations',
+    component: MyTextAnnotations
+  },
+  {
+    path: '/my-image-annotations',
+    component: MyImageAnnotations
   }
 ]
 

@@ -16,7 +16,7 @@ class TextAnnotationViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.TextAnnotationSerializer
     queryset = models.TextAnnotation.objects.all()
     filter_backends = (filter.DjangoFilterBackend,)
-    filter_fields = ('target__source',)
+    filter_fields = ('target__source', 'user__id')
     authentication_classes = (TokenAuthentication,)
     permission_classes = (permissions.UpdateAnnotation, IsAuthenticatedOrReadOnly,)
 
@@ -28,7 +28,7 @@ class ImageAnnotationViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.ImageAnnotationSerializer
     queryset = models.ImageAnnotation.objects.all()
     filter_backends = (filter.DjangoFilterBackend,)
-    filter_fields = ('target__source', 'target__scope')
+    filter_fields = ('target__source', 'target__scope', 'user_id')
     authentication_classes = (TokenAuthentication,)
     permission_classes = (permissions.UpdateAnnotation, IsAuthenticatedOrReadOnly,)
 

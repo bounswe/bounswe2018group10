@@ -50,7 +50,14 @@
             </b-row>
 
             <b-row>
-              <b-col></b-col>
+              <b-col>
+                <router-link to="/my-text-annotations">My Text Annotations</router-link>
+              </b-col>
+            </b-row>
+            <b-row>
+              <b-col>
+                <router-link to="/my-image-annotations">My Image Annotations</router-link>
+              </b-col>
             </b-row>
           </b-card>
         </b-col>
