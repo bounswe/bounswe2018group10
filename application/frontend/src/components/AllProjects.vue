@@ -24,7 +24,7 @@
 
       <b-row>
         <b-col cols="12" md="3">
-          <b-card title="Filter">
+          <b-card title="Filter" class="border-0 shadow">
             <b-form>
               <b-form-row>
                 <b-col>

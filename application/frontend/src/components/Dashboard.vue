@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="bg-grey">
       <NavigationBar/>
 
       <b-container>

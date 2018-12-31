@@ -24,7 +24,7 @@
 
       <b-row>
         <b-col cols="12" md="3">
-          <b-card title="Filter">
+          <b-card title="Filter" class="border-0 shadow">
             <b-form>
               <b-form-row>
                 <b-col>
@@ -91,7 +91,7 @@
           </b-card>
         </b-col>
         <b-col cols="12" md="9">
-          <b-list-group>
+          <b-list-group class="border-0 shadow">
             <b-list-group-item v-if="projects.length == 0">
               <p class="mb-0">No project found. 😞</p>
             </b-list-group-item>

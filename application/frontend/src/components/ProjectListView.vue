@@ -1,5 +1,5 @@
 <template>
-  <b-list-group>
+  <b-list-group class="border-0 shadow">
     <b-list-group-item :key="project.id" v-for="project in projects">
       <router-link v-if="!accepted" :to="`/project/${project.id}`">{{project.title}}</router-link>
       <router-link v-if="accepted" :to="`/accepted-project/${project.id}`">{{project.title}}</router-link>

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="bg-grey">
     <NavigationBar/>
 
     <b-container>
@@ -17,6 +17,7 @@
           <ProjectListView v-if="isFreelancer" :projects="freelancerProjects"/>
         </b-col>
       </b-row>
+      <MyFooter/>
     </b-container>
   </div>
 </template>
@@ -24,12 +25,14 @@
 <script>
 import NavigationBar from "./NavigationBar.vue";
 import ProjectListView from "./ProjectListView.vue";
+import MyFooter from "./MyFooter.vue";
 
 export default {
   name: "MyProjects",
   components: {
     NavigationBar,
-    ProjectListView
+    ProjectListView,
+    MyFooter
   },
   data() {
     return {
