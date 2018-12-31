@@ -21,6 +21,9 @@
         <b-nav-item href="#" to="/profile">
           <font-awesome-icon class="mr-1" icon="user" fixed-width/>Profile
         </b-nav-item>
+        <b-nav-item href="#" to="/settings">
+          <font-awesome-icon class="mr-1" icon="cog" fixed-width/>Settings
+        </b-nav-item>
       </b-navbar-nav>
       <!-- Right aligned nav items -->
       <b-navbar-nav class="ml-auto">
@@ -48,12 +51,8 @@
 
         <b-nav-item-dropdown right>
           <template slot="text">
-            <font-awesome-icon icon="cog" fixed-width/>Settings
+            <font-awesome-icon icon="sign-out-alt" fixed-width/>
           </template>
-          <b-dropdown-item to="/wallet">
-            <font-awesome-icon class="mr-1" icon="wallet" fixed-width/>Wallet
-          </b-dropdown-item>
-          <b-dropdown-divider></b-dropdown-divider>
           <b-dropdown-item @click="logout">
             <font-awesome-icon class="mr-1" icon="sign-out-alt" fixed-width/>Log out
           </b-dropdown-item>

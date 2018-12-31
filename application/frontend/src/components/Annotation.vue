@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="showAnno">
     <!-- Text annotation button -->
     <b-button @click="modalShow = !modalShow" id="bubble" variant="dark" :style="bubbleStyle">
       <h5 class="mb-0">
@@ -166,6 +166,11 @@ export default {
       endSelectorEndOffset: 0,
       cropprInstance: {}
     };
+  },
+  computed: {
+    showAnno: function() {
+      return this.$root.$data.annoSetting == "show";
+    }
   },
   created() {
     this.fetchTextAnnotation();

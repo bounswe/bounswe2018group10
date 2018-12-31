@@ -56,7 +56,8 @@ new Vue({
   data: {
     user_id: sessionStorage.getItem('user_id'),
     role: sessionStorage.getItem('role') || 'freelancer',
-    token: sessionStorage.getItem('token')
+    token: sessionStorage.getItem('token'),
+    annoSetting: sessionStorage.getItem('annoSetting') || 'show'
   },
   router,
   render: h => h(App)

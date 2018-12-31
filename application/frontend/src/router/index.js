@@ -15,7 +15,7 @@ import AllProjects from '../components/AllProjects.vue'
 import AcceptedProject from '../components/AcceptedProject.vue'
 import Project from '../components/Project.vue'
 import Search from '../components/Search.vue'
-import Wallet from '../components/Wallet.vue'
+import Settings from '../components/Settings.vue'
 import Deposit from '../components/Deposit.vue'
 
 
@@ -79,8 +79,8 @@ const routes = [
     component: Search
   },
   {
-    path: '/wallet',
-    component: Wallet
+    path: '/settings',
+    component: Settings
   },
   {
     path: '/deposit',
