@@ -180,24 +180,6 @@ def semantic_search(request):
 
 
 
-            '''id = chosen[0].values_list('id', flat=True)[0]
-            user_id = chosen[0].values_list('user_id', flat=True)[0]
-            title = chosen[0].values_list('title', flat=True)[0]
-            description = chosen[0].values_list('description', flat=True)[0]
-            budget_min = chosen[0].values_list('budget_min', flat=True)[0]
-            budget_max = chosen[0].values_list('budget_max', flat=True)[0]
-            deadline = chosen[0].values_list('deadline', flat=True)[0]'''
-
-            '''for x in semantic_list_software:
-                if x is not keyword:
-                    chosen.append(models.Project.objects.filter(tags__title=x).values('id',
-                                                                                      'title',
-                                                                                      'description',
-                                                                                      'budget_min',
-                                                                                      'budget_max',
-                                                                                      'category'))'''
-
-
             json_posts = json_posts.replace("\"", "")
             return Response(json_posts)
 
