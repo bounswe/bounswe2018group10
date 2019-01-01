@@ -16,4 +16,5 @@ router.register('milestone', views.MilestoneViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
+    path('semantic', views.semantic_search),
 ]

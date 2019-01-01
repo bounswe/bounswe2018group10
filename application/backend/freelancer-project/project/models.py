@@ -77,3 +77,6 @@ class Milestone(models.Model):
     def __str__(self):
         return (self.id)
 
+
+class SemanticSearch(models.Model):
+    keyword = models.CharField(max_length=100)
