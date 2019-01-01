@@ -18,7 +18,7 @@ from django.db.models.query import QuerySet
 
 
 class DashboardViewSet(viewsets.ReadOnlyModelViewSet):
-    serializer_class = serializers.DashboardSerializer
+    #serializer_class = serializers.DashboardSerializer
     authentication_classes = (TokenAuthentication,)
     filter_backends = (filters.SearchFilter,)
 
@@ -34,7 +34,9 @@ class DashboardViewSet(viewsets.ReadOnlyModelViewSet):
         profile = ClientProfile.objects.get(user=user)
         if not profile.tags.count():
             # client has no interests
-            return User.objects.all()
+            freelancer_profile = FreelancerProfile.objects.get(user=user)
+            self_id = freelancer_profile.id
+            return (FreelancerProfile.objects.all().exclude(pk=self_id).distinct())
 
         return (FreelancerProfile.objects
                 .filter(tags__in=profile.tags.all())
@@ -49,6 +51,15 @@ class DashboardViewSet(viewsets.ReadOnlyModelViewSet):
         return (Project.objects
                 .filter(tags__in=profile.tags.all())
                 .distinct())
+    def get_serializer_class(self):
+        user = self.request.user
+        role = user.role
+        if role == user.FREELANCER:
+            return serializers.FreelancerDashboardSerializer
+        elif role == user.CLIENT:
+            return serializers.ClientDashboardSerializer
+        else:
+            return None
 
 
 class ProjectViewSet(viewsets.ReadOnlyModelViewSet):
