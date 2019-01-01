@@ -2,6 +2,7 @@ from rest_framework import serializers
 
 from . import models
 from payment import models as payment_models
+from acceptedProject import models as acceptedProject_models
 
 
 class UserSerializer(serializers.ModelSerializer):
