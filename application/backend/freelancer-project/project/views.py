@@ -6,6 +6,11 @@ from rest_framework import filters
 
 from .filters import ProjectFilter, BidFilter
 from django_filters import rest_framework as filter
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
+import json
+
 
 from . import serializers
 from . import models
@@ -78,3 +83,129 @@ class MilestoneViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(user_id=self.request.user)
+
+
+
+
+
+
+@api_view(['GET', 'POST'])
+def semantic_search(request):
+    if request.method == 'GET':
+        return Response('Send Post request', status=status.HTTP_200_OK)
+
+    if request.method != 'POST':
+        return Response('Only POST method is allowed!', status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    else:
+
+        saveable = serializers.SemanticSearchSerializer(data=request.data)
+        if not saveable.is_valid():
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+        websites_it_software = ['Django', 'Java', 'React', 'Vue', 'C']
+        mobile_phones_computing = []
+        translation_languages = []
+        engineering_science = []
+        writing_content = []
+        sales_marketing = []
+        photography = []
+        design_media_architecture = []
+        other = []
+
+        keyword = saveable.validated_data['keyword']
+        if keyword in websites_it_software:
+            chosen = []
+            json_posts = ''
+
+            chosen.append(models.Project.objects.filter(tags__title=keyword).values('id',
+                                                                               'title',
+                                                                               'description',
+                                                                               'budget_min',
+                                                                               'budget_max',
+                                                                               'category'))
+            if json.dumps(list(chosen[0])) == '[]':
+                del chosen[0]
+            else:
+                json_posts = json.dumps(list(chosen[0]))
+                del chosen[0]
+
+
+            chosen.append(models.Project.objects.filter(title__icontains=keyword).exclude(tags__title=keyword)
+                                                                                 .values('id',
+                                                                                         'title',
+                                                                                         'description',
+                                                                                         'budget_min',
+                                                                                         'budget_max',
+                                                                                         'category'))
+            if json.dumps(list(chosen[0])) == '[]':
+                del chosen[0]
+            else:
+                json_posts = json_posts + json.dumps(list(chosen[0]))
+                del chosen[0]
+
+            chosen.append(models.Project.objects.filter(description__icontains=keyword)
+                                                .exclude(tags__title=keyword)
+                                                .exclude(title__icontains=keyword)
+                                                .values('id',
+                                                        'title',
+                                                        'description',
+                                                        'budget_min',
+                                                        'budget_max',
+                                                        'category'))
+            if json.dumps(list(chosen[0])) == '[]':
+                del chosen[0]
+
+            else:
+                json_posts = json_posts + json.dumps(list(chosen[0]))
+                del chosen[0]
+
+            chosen.append(models.Project.objects.filter(category__title='Software')
+                                                .exclude(tags__title=keyword)
+                                                .exclude(title__icontains=keyword)
+                                                .exclude(description__icontains=keyword)
+                                                .values('id',
+                                                        'title',
+                                                        'description',
+                                                        'budget_min',
+                                                        'budget_max',
+                                                        'category'))
+
+            if json.dumps(list(chosen[0])) == '[]':
+                del chosen[0]
+            else:
+                json_posts = json_posts + json.dumps(list(chosen[0]))
+                del chosen[0]
+
+
+
+            '''id = chosen[0].values_list('id', flat=True)[0]
+            user_id = chosen[0].values_list('user_id', flat=True)[0]
+            title = chosen[0].values_list('title', flat=True)[0]
+            description = chosen[0].values_list('description', flat=True)[0]
+            budget_min = chosen[0].values_list('budget_min', flat=True)[0]
+            budget_max = chosen[0].values_list('budget_max', flat=True)[0]
+            deadline = chosen[0].values_list('deadline', flat=True)[0]'''
+
+            '''for x in semantic_list_software:
+                if x is not keyword:
+                    chosen.append(models.Project.objects.filter(tags__title=x).values('id',
+                                                                                      'title',
+                                                                                      'description',
+                                                                                      'budget_min',
+                                                                                      'budget_max',
+                                                                                      'category'))'''
+
+
+            json_posts = json_posts.replace("\"", "")
+            return Response(json_posts)
+
+
+
+
+
+        return Response({'message':'No related answer is found'})
+
+
+

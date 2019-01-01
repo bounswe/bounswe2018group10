@@ -57,3 +57,11 @@ class MilestoneSerializer(serializers.ModelSerializer):
         fields = ('id', 'user_id', 'bid_id', 'description', 'amount', 'created_at', 'updated_at', 'deadline')
 
         extra_kwargs = {'user_id': {'read_only': True}}
+
+
+
+
+class SemanticSearchSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.SemanticSearch
+        fields = ('keyword',)
