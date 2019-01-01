@@ -188,7 +188,8 @@
       <b-row class="mb-4">
         <b-col>
           <b-card id="description" class="shadow" title="Project Description">
-            <div class="unique2 ql-snow"><!-- necessary for quill editor styling -->
+            <div class="unique2 ql-snow">
+              <!-- necessary for quill editor styling -->
               <div class="ql-editor" v-html="project.description"></div>
             </div>
             <!--<p class="card-text">{{project.description}}</p>-->
@@ -206,7 +207,12 @@
               >{{tag.title}}</b-badge>
             </div>
             <div v-show="project.file">File:
-              <b-link v-if="project.file" :href="project.file" :target="'_blank'" :rel="'noopener noreferrer'">
+              <b-link
+                v-if="project.file"
+                :href="project.file"
+                :target="'_blank'"
+                :rel="'noopener noreferrer'"
+              >
                 <font-awesome-icon icon="file"/>
                 {{project.file.split('/').pop()}}
               </b-link>
@@ -324,6 +330,12 @@
           </b-list-group>
         </b-col>
       </b-row>
+
+      <b-row v-show="isProjectCreator">
+        <b-col class="text-center">
+          <b-button class="mt-4" variant="danger" @click="deleteProject">Delete Project</b-button>
+        </b-col>
+      </b-row>
       <MyFooter/>
     </b-container>
   </div>
@@ -332,7 +344,7 @@
 <script>
 import NavigationBar from "./NavigationBar.vue";
 import MyFooter from "./MyFooter.vue";
-import { VueEditor } from 'vue2-editor';
+import { VueEditor } from "vue2-editor";
 
 export default {
   name: "Project",
@@ -367,18 +379,8 @@ export default {
       markers: [],
       ordering: "id",
       orderingLabel: "Oldest",
-      orderingOptions: [
-        "-id",
-        "id",
-        "-amount",
-        "amount"
-      ],
-      orderingLabelOptions: [
-        "Latest",
-        "Oldest",
-        "Highest Bid",
-        "Lowest Bid"
-      ]
+      orderingOptions: ["-id", "id", "-amount", "amount"],
+      orderingLabelOptions: ["Latest", "Oldest", "Highest Bid", "Lowest Bid"]
     };
   },
   created() {
@@ -400,7 +402,7 @@ export default {
     }
   },
   watch: {
-    'ordering' : function(newOrdering, oldOrdering) {
+    ordering: function(newOrdering, oldOrdering) {
       this.fetchBids();
     }
   },
@@ -449,7 +451,7 @@ export default {
           console.log(err);
         });
     },
-    fetchBids(){
+    fetchBids() {
       this.$axios
         .get(`/project/bid/`, {
           params: {
@@ -552,10 +554,12 @@ export default {
               this.$router.push(`/accepted-project/${response.data.id}`);
             })
             .catch(err => {
+              // eslint-disable-next-line
               console.log(err);
             });
         })
         .catch(err => {
+          // eslint-disable-next-line
           console.log(err);
         });
     },
@@ -563,6 +567,17 @@ export default {
       this.ordering = this.orderingOptions[index];
       this.orderingLabel = this.orderingLabelOptions[index];
     },
+    deleteProject() {
+      this.$axios
+        .delete(`/project/create/${this.projectID}/`)
+        .then(response => {
+          this.$router.replace("/dashboard");
+        })
+        .catch(err => {
+          // eslint-disable-next-line
+          console.log(err);
+        });
+    }
   }
 };
 </script>

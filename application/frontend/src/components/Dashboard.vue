@@ -191,7 +191,7 @@ export default {
   methods: {
     fetchData() {
       this.$axios
-        .get(`/project/create/?search=${this.$root.$data.user_id}`)
+        .get(`/project/create/?user_id__id=${this.$root.$data.user_id}`)
         .then(response => {
           this.projects = response.data;
         })
@@ -200,7 +200,7 @@ export default {
           console.log(err);
         });
       this.$axios
-        .get(`/acceptedproject/create/?search=${this.$root.$data.user_id}`)
+        .get(`/acceptedproject/create/?user_id__id=${this.$root.$data.user_id}`)
         .then(response => {
           this.acceptedProjects = response.data;
         })
@@ -258,6 +258,7 @@ export default {
           this.tags = response.data;
         })
         .catch(err => {
+          // eslint-disable-next-line
           console.log(err);
         });
     }
