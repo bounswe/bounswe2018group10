@@ -8,7 +8,7 @@ from acceptedProject import models as acceptedProject_models
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.User
-        fields = ('id', 'email', 'name', 'password', 'username',)
+        fields = ('id', 'email', 'name', 'password', 'username', 'role',)
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
@@ -16,6 +16,7 @@ class UserSerializer(serializers.ModelSerializer):
             email=validated_data['email'],
             name=validated_data['name'],
             username=validated_data['username'],
+            role=validated_data['role'],
         )
 
         user.set_password(validated_data['password'])
