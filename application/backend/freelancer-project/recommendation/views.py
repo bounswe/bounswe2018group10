@@ -32,14 +32,15 @@ class DashboardViewSet(viewsets.ReadOnlyModelViewSet):
 
     def _get_users_for_client(self, user: User):
         profile = ClientProfile.objects.get(user=user)
+        freelancer_profile = FreelancerProfile.objects.get(user=user)
+        self_id = freelancer_profile.id
+
         if not profile.tags.count():
             # client has no interests
-            freelancer_profile = FreelancerProfile.objects.get(user=user)
-            self_id = freelancer_profile.id
             return (FreelancerProfile.objects.all().exclude(pk=self_id).distinct())
 
         return (FreelancerProfile.objects
-                .filter(tags__in=profile.tags.all())
+                .filter(tags__in=profile.tags.all()).exclude(pk=self_id)
                 .distinct())
 
     def _get_projects_for_freelancer(self, user: User):
