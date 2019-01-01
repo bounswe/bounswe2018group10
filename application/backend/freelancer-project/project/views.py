@@ -356,7 +356,6 @@ def semantic_search(request):
 
 
         if json_posts != '':
-            json_posts = json_posts.replace("\"", "")
             return Response(json_posts)
         else:
             return Response({'message':'No related answer is found'})
