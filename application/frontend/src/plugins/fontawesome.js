@@ -30,7 +30,9 @@ import {
     faCog,
     faWallet,
     faHome,
-    faEdit
+    faEdit,
+    faFire,
+    faChartLine
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
@@ -62,6 +64,8 @@ library.add(faEnvelope,
     faCog,
     faWallet,
     faHome,
-    faEdit)
+    faEdit,
+    faFire,
+    faChartLine)
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)

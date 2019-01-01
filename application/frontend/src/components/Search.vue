@@ -29,7 +29,9 @@
               <b-form-row>
                 <b-col>
                   <b-form-group>
-                    <template slot="label"><font-awesome-icon icon="money-bill" fixed-width class="mr-1"/>Minimum Price</template>
+                    <template slot="label">
+                      <font-awesome-icon icon="money-bill" fixed-width class="mr-1"/>Minimum Price
+                    </template>
                     <b-form-input
                       id="inputMinBudget"
                       type="number"
@@ -96,7 +98,7 @@
               <p class="mb-0">No project found. 😞</p>
             </b-list-group-item>
           </b-list-group>
-          <ProjectListView :projects="projects"/>
+          <ProjectListView :projects="projects" :tags="tags"/>
         </b-col>
       </b-row>
       <MyFooter/>
@@ -149,7 +151,8 @@ export default {
         "Lowest Price",
         "Closest Deadline",
         "Farthest Deadline"
-      ]
+      ],
+      tags: []
     };
   },
   watch: {
@@ -240,6 +243,14 @@ export default {
         })
         .catch(err => {
           // eslint-disable-next-line
+          console.log(err);
+        });
+      this.$axios
+        .get("/project/tag/")
+        .then(response => {
+          this.tags = response.data;
+        })
+        .catch(err => {
           console.log(err);
         });
     },
