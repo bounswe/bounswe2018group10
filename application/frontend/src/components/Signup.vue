@@ -101,7 +101,8 @@ export default {
           email: this.form.email,
           password: this.form.password,
           name: this.form.name,
-          username: this.form.username
+          username: this.form.username,
+          role: this.form.selectedRole=="freelancer" ? 0 : 1
         })
         .then(response => {
           this.$root.$data.role = this.form.selectedRole;

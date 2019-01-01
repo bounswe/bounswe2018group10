@@ -101,6 +101,16 @@ export default {
     role: function(newRole, oldRole) {
       this.$root.$data.role = newRole;
       sessionStorage.setItem("role", newRole);
+      this.$axios
+        .patch(`/user/register/${this.$root.$data.user_id}/`, {
+          role: newRole == "freelancer" ? 0 : 1
+        })
+        .then(response => {
+        })
+        .catch(err => {
+          // eslint-disable-next-line
+          console.log(err);
+        });
     }
   },
   methods: {
