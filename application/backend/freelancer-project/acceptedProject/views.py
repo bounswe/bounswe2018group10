@@ -79,10 +79,8 @@ def acceptProject(request):
         accepted_milestone_data.update(acceptedproject_id=accepted)
         models.AcceptedMilestone.objects.create(**accepted_milestone_data)
 
-
     serialized = serializers.AcceptedProjectSerializer(accepted)
     return Response(serialized.data, status=status.HTTP_201_CREATED)
-
 
 
 class AcceptedProjectViewSet(viewsets.ModelViewSet):
