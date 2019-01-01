@@ -49,17 +49,6 @@
             </b-form-group>
           </b-col>
           <b-col cols="12" md="6">
-            <!--
-            <b-form-group label="Name"
-                          label-for="inputName">
-              <b-form-input id="inputName"
-                            type="text"
-                            maxlength="255"
-                            v-model="clientForm.name"
-                            placeholder="Enter name"
-                            required>
-              </b-form-input>
-            </b-form-group>-->
             <b-form-group label="Profile Body" label-for="inputBody">
               <b-form-textarea
                 v-if="isClient"
@@ -80,6 +69,35 @@
                 required
               ></b-form-textarea>
             </b-form-group>
+
+            <b-form-group v-if="isClient">
+              <template slot="label">
+                <font-awesome-icon icon="tags" fixed-width/>Interests
+              </template>
+              <tags-input
+                input-class="form-control"
+                :typeahead-max-results="6"
+                placeholder="Enter your interests"
+                :only-existing-tags="true"
+                v-model="clientForm.tags"
+                :existing-tags="tagOptions"
+                :typeahead="true"
+              ></tags-input>
+            </b-form-group>
+            <b-form-group v-if="isFreelancer">
+              <template slot="label">
+                <font-awesome-icon icon="tags" fixed-width/>Skills
+              </template>
+              <tags-input
+                input-class="form-control"
+                :typeahead-max-results="6"
+                placeholder="Enter your skills"
+                :only-existing-tags="true"
+                v-model="freelancerForm.tags"
+                :existing-tags="tagOptions"
+                :typeahead="true"
+              ></tags-input>
+            </b-form-group>
           </b-col>
         </b-form-row>
 
@@ -95,6 +113,7 @@
 <script>
 import NavigationBar from "./NavigationBar.vue";
 import MyFooter from "./MyFooter.vue";
+import "@voerro/vue-tagsinput/dist/style.css";
 
 export default {
   name: "ProfileEdit",
@@ -107,18 +126,18 @@ export default {
       clientAvatar: require("../assets/blank-profile-picture.svg"),
       freelancerAvatar: require("../assets/blank-profile-picture.svg"),
       clientForm: {
-        //name: "",
         file: null,
-        body: ""
+        body: "",
+        tags: []
       },
       freelancerForm: {
-        //name: "",
         file: null,
-        body: ""
+        body: "",
+        tags: []
       },
       clientProfileId: null,
-      freelancerProfileId: null
-      //firstProfile: false // if it is true the user does not have a profile, we should create a new one
+      freelancerProfileId: null,
+      tagOptions: {}
     };
   },
   created() {
@@ -127,30 +146,45 @@ export default {
   methods: {
     fetchData() {
       this.$axios
-        .get(`/user/clientprofile/?search=${this.$root.$data.user_id}`)
+        .get("/project/tag/")
         .then(response => {
-          let profile = response.data[0];
-          this.clientProfileId = profile.id;
-          //this.form.name = profileData.name;
-          if (profile.avatar) {
-            this.clientAvatar = profile.avatar;
-          }
-          this.clientForm.body = profile.body;
-        })
-        .catch(err => {
-          // eslint-disable-next-line
-          console.log(err);
-        });
-      this.$axios
-        .get(`/user/freelancerprofile/?search=${this.$root.$data.user_id}`)
-        .then(response => {
-          let profile = response.data[0];
-          this.freelancerProfileId = profile.id;
-          //this.form.name = profileData.name;
-          if (profile.avatar) {
-            this.freelancerAvatar = profile.avatar;
-          }
-          this.freelancerForm.body = profile.body;
+          response.data.forEach(element => {
+            this.tagOptions[element.id] = element.title;
+            this.$axios
+              .get(`/user/clientprofile/?search=${this.$root.$data.user_id}`)
+              .then(response => {
+                let profile = response.data[0];
+                this.clientProfileId = profile.id;
+                //this.form.name = profileData.name;
+                if (profile.avatar) {
+                  this.clientAvatar = profile.avatar;
+                }
+                this.clientForm.body = profile.body;
+                this.clientForm.tags = profile.tags.map(t => this.tagOptions[t]);
+              })
+              .catch(err => {
+                // eslint-disable-next-line
+                console.log(err);
+              });
+            this.$axios
+              .get(
+                `/user/freelancerprofile/?search=${this.$root.$data.user_id}`
+              )
+              .then(response => {
+                let profile = response.data[0];
+                this.freelancerProfileId = profile.id;
+                //this.form.name = profileData.name;
+                if (profile.avatar) {
+                  this.freelancerAvatar = profile.avatar;
+                }
+                this.freelancerForm.body = profile.body;
+                this.freelancerForm.tags = profile.tags.map(t => this.tagOptions[t]);
+              })
+              .catch(err => {
+                // eslint-disable-next-line
+                console.log(err);
+              });
+          });
         })
         .catch(err => {
           // eslint-disable-next-line
@@ -168,7 +202,12 @@ export default {
     onClientSubmit() {
       let formData = new FormData();
       //formData.append("name", this.form.name);
+      if(this.clientForm.tags.length == 0){
+        alert("You need to enter some interests.");
+        return;
+      }
       formData.append("body", this.clientForm.body);
+      formData.append("tags", this.clientForm.tags);
       if (this.clientForm.file) {
         formData.append(
           "avatar",
@@ -176,16 +215,6 @@ export default {
           this.clientForm.file.name
         );
       }
-
-      /*let method;
-      let url;
-      if (this.firstProfile) {
-        method = "post";
-        url = "/user/profile/";
-      } else {
-        method = "patch";
-        url = `/user/profile/${this.profileId}/`;
-      }*/
 
       this.$axios({
         method: "patch",
@@ -205,8 +234,13 @@ export default {
     },
     onFreelancerSubmit() {
       let formData = new FormData();
+      if(this.clientForm.tags.length == 0){
+        alert("You need to enter some skills.");
+        return;
+      }
       //formData.append("name", this.form.name);
       formData.append("body", this.freelancerForm.body);
+      formData.append("tags", this.freelancerForm.tags);
       if (this.freelancerForm.file) {
         formData.append(
           "avatar",

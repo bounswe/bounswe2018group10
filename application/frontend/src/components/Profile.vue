@@ -45,13 +45,18 @@
             <!--<p>Rating: {{rating}}</p>-->
           </b-col>
           <b-col cols="12" sm="3">
-            <!--<b-card no-body header="<b>Skills</b>">
+            <b-card v-if="isClient" no-body header="<b>Interests</b>">
               <b-list-group flush>
-                <b-list-group-item href="#">Java</b-list-group-item>
-                <b-list-group-item href="#">Python</b-list-group-item>
-                <b-list-group-item href="#">Javascript</b-list-group-item>
+                <b-list-group-item v-if="client.tags.length == 0">You did entered any interests.</b-list-group-item>
+                <b-list-group-item :to="`/search/${tag}`" :key="index" v-for="(tag,index) in client.tags">{{tag}}</b-list-group-item>
               </b-list-group>
-            </b-card>-->
+            </b-card>
+            <b-card v-if="isFreelancer" no-body header="<b>Skills</b>">
+              <b-list-group flush>
+                <b-list-group-item v-if="freelancer.tags.length == 0">You did not entered any skills.</b-list-group-item>
+                <b-list-group-item :to="`/search/${tag}`" :key="index" v-for="(tag,index) in freelancer.tags">{{tag}}</b-list-group-item>
+              </b-list-group>
+            </b-card>
           </b-col>
         </b-row>
       </b-card>
@@ -173,16 +178,19 @@ export default {
       blankProfilePic: require("../assets/blank-profile-picture.svg"),
       freelancer: {
         body: null,
-        avatar: require("../assets/blank-profile-picture.svg")
+        avatar: require("../assets/blank-profile-picture.svg"),
+        tags: []
       },
       client: {
         body: null,
-        avatar: require("../assets/blank-profile-picture.svg")
+        avatar: require("../assets/blank-profile-picture.svg"),
+        tags: []
       },
       name: "",
       rating: 0,
       clientComments: [],
-      freelancerComments: []
+      freelancerComments: [],
+      tagOptions: {}
     };
   },
   created() {
@@ -191,27 +199,44 @@ export default {
   methods: {
     fetchData() {
       this.$axios
-        .get(`/user/freelancerprofile/?search=${this.$root.$data.user_id}`)
+        .get("/project/tag/")
         .then(response => {
-          let profile = response.data[0];
-          this.freelancer.body = profile.body;
-          if (profile.avatar) {
-            this.freelancer.avatar = profile.avatar;
-          }
-          this.name = profile.user.name;
-        })
-        .catch(err => {
-          // eslint-disable-next-line
-          console.log(err);
-        });
-      this.$axios
-        .get(`/user/clientprofile/?search=${this.$root.$data.user_id}`)
-        .then(response => {
-          let profile = response.data[0];
-          this.client.body = profile.body;
-          if (profile.avatar) {
-            this.client.avatar = profile.avatar;
-          }
+          response.data.forEach(element => {
+            this.tagOptions[element.id] = element.title;
+            this.$axios
+              .get(
+                `/user/freelancerprofile/?search=${this.$root.$data.user_id}`
+              )
+              .then(response => {
+                let profile = response.data[0];
+                this.freelancer.body = profile.body;
+                if (profile.avatar) {
+                  this.freelancer.avatar = profile.avatar;
+                }
+                this.freelancer.tags = profile.tags.map(
+                  t => this.tagOptions[t]
+                );
+                this.name = profile.user.name;
+              })
+              .catch(err => {
+                // eslint-disable-next-line
+                console.log(err);
+              });
+            this.$axios
+              .get(`/user/clientprofile/?search=${this.$root.$data.user_id}`)
+              .then(response => {
+                let profile = response.data[0];
+                this.client.body = profile.body;
+                if (profile.avatar) {
+                  this.client.avatar = profile.avatar;
+                }
+                this.client.tags = profile.tags.map(t => this.tagOptions[t]);
+              })
+              .catch(err => {
+                // eslint-disable-next-line
+                console.log(err);
+              });
+          });
         })
         .catch(err => {
           // eslint-disable-next-line
