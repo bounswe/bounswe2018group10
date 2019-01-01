@@ -1,5 +1,5 @@
 <template>
-  <div class="my-gradient py-sm-4">
+  <div class="my-gradient py-4">
     <b-card class="bg-light-grey narrow-card border-0 shadow">
       <div class="text-center my-4">
         <img src="../assets/logo.svg" width="70" height="70" alt="logo">
@@ -69,7 +69,7 @@ export default {
         })
         .then(response => {
           this.$axios.defaults.headers.common['Authorization'] = `Token ${response.data.token}`;
-          localStorage.setItem('token',`Token ${response.data.token}`);
+          sessionStorage.setItem('token',`Token ${response.data.token}`);
           this.$axios
             .get("/user/register/", {
               params: {
@@ -78,7 +78,7 @@ export default {
             })
             .then(responseForUserID => {
               this.$root.$data.user_id = responseForUserID.data[0].id;
-              localStorage.setItem('user_id',responseForUserID.data[0].id);
+              sessionStorage.setItem('user_id',responseForUserID.data[0].id);
               this.$router.push("/dashboard");
             })
             .catch(err => {

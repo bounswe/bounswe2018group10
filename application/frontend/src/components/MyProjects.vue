@@ -13,18 +13,8 @@
 
       <b-row>
         <b-col>
-          <b-list-group v-if="isClient">
-            <b-list-group-item :key="project.id" v-for="project in projects">
-              <router-link :to="`/project/${project.id}`">{{project.title}}</router-link>
-              <div>{{project.description | striphtml | shortDescription}}</div>
-            </b-list-group-item>
-          </b-list-group>
-          <b-list-group v-if="isFreelancer">
-            <b-list-group-item :key="project.id" v-for="project in freelancerProjects">
-              <router-link :to="`/project/${project.id}`">{{project.title}}</router-link>
-              <div>{{project.description | striphtml | shortDescription}}</div>
-            </b-list-group-item>
-          </b-list-group>
+          <ProjectListView v-if="isClient" :projects="projects"/>
+          <ProjectListView v-if="isFreelancer" :projects="freelancerProjects"/>
         </b-col>
       </b-row>
     </b-container>
@@ -33,11 +23,13 @@
 
 <script>
 import NavigationBar from "./NavigationBar.vue";
+import ProjectListView from "./ProjectListView.vue";
 
 export default {
   name: "MyProjects",
   components: {
-    NavigationBar
+    NavigationBar,
+    ProjectListView
   },
   data() {
     return {
@@ -56,6 +48,7 @@ export default {
           this.projects = response.data;
         })
         .catch(err => {
+          // eslint-disable-next-line
           console.log(err);
         });
       this.$axios
@@ -72,10 +65,12 @@ export default {
               );
             })
             .catch(err => {
+              // eslint-disable-next-line
               console.log(err);
             });
         })
         .catch(err => {
+          // eslint-disable-next-line
           console.log(err);
         });
     }

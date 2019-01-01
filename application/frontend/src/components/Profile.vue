@@ -146,17 +146,20 @@
           </b-list-group>
         </b-col>
       </b-row>
+      <MyFooter/>
     </b-container>
   </div>
 </template>
 
 <script>
 import NavigationBar from "./NavigationBar.vue";
+import MyFooter from "./MyFooter.vue";
 
 export default {
   name: "Profile",
   components: {
-    NavigationBar
+    NavigationBar,
+    MyFooter
   },
   data() {
     return {

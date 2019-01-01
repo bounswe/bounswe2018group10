@@ -1,5 +1,5 @@
 <template>
-  <div class="my-gradient py-sm-4">
+  <div class="my-gradient py-4">
     <b-card class="bg-light-grey narrow-card border-0 shadow">
       <div class="text-center my-4">
         <img src="../assets/logo.svg" width="70" height="70" alt="logo">
@@ -105,9 +105,9 @@ export default {
         })
         .then(response => {
           this.$root.$data.role = this.form.selectedRole;
-          localStorage.setItem("role", this.form.selectedRole);
+          sessionStorage.setItem("role", this.form.selectedRole);
           this.$root.$data.user_id = response.data.id;
-          localStorage.setItem("user_id", response.data.id);
+          sessionStorage.setItem("user_id", response.data.id);
           this.$axios
             .post("/user/login/", {
               username: this.form.email,
@@ -117,7 +117,7 @@ export default {
               this.$axios.defaults.headers.common["Authorization"] = `Token ${
                 responseForLogin.data.token
               }`;
-              localStorage.setItem(
+              sessionStorage.setItem(
                 "token",
                 `Token ${responseForLogin.data.token}`
               );

@@ -20,4 +20,4 @@ class UpdateAcceptedMilestone(permissions.BasePermission):
         if request.method in permissions.SAFE_METHODS:
             return True
 
-        return obj.user_id.id == request.user.id
+        return obj.user_id.id == request.user.id or obj.acceptedproject_id.user_id.id == request.user.id
