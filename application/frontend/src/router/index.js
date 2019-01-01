@@ -15,6 +15,7 @@ import AllProjects from '../components/AllProjects.vue'
 import AcceptedProject from '../components/AcceptedProject.vue'
 import Project from '../components/Project.vue'
 import Search from '../components/Search.vue'
+import SemanticSearch from '../components/SemanticSearch.vue'
 import Settings from '../components/Settings.vue'
 import Deposit from '../components/Deposit.vue'
 import MyTextAnnotations from '../components/MyTextAnnotations.vue'
@@ -79,6 +80,10 @@ const routes = [
   {
     path: '/search/:query',
     component: Search
+  },
+  {
+    path: '/semantic-search/:query',
+    component: SemanticSearch
   },
   {
     path: '/settings',

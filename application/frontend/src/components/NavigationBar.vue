@@ -38,6 +38,17 @@
           </b-input-group>
         </b-nav-form>
 
+        <b-nav-form @submit="onSemanticSubmit">
+          <b-input-group>
+            <b-form-input required v-model="semanticQuery" size="sm" type="text" placeholder="Keyword for semantic search"/>
+            <b-input-group-append>
+              <b-button size="sm" class="my-sm-0 mr-sm-3" variant="secondary" type="submit">
+                <font-awesome-icon icon="search"/>
+              </b-button>
+            </b-input-group-append>
+          </b-input-group>
+        </b-nav-form>
+
         <b-nav-form class="mr-1">
           <b-form-radio-group
             buttons
@@ -72,7 +83,8 @@ export default {
         { text: "Client", value: "client" },
         { text: "Freelancer", value: "freelancer" }
       ],
-      query: ""
+      query: "",
+      semanticQuery: ""
     };
   },
   created() {
@@ -101,6 +113,10 @@ export default {
     onSubmit(evt) {
       evt.preventDefault();
       this.$router.push("/search/" + this.query);
+    },
+    onSemanticSubmit(evt) {
+      evt.preventDefault();
+      this.$router.push("/semantic-search/" + this.semanticQuery);
     }
   }
 };
