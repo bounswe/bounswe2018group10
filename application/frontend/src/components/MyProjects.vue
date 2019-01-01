@@ -13,8 +13,8 @@
 
       <b-row>
         <b-col>
-          <ProjectListView v-if="isClient" :projects="projects"/>
-          <ProjectListView v-if="isFreelancer" :projects="freelancerProjects"/>
+          <ProjectListView v-if="isClient" :projects="projects" :tags="tags"/>
+          <ProjectListView v-if="isFreelancer" :projects="freelancerProjects" :tags="tags"/>
         </b-col>
       </b-row>
       <MyFooter/>
@@ -37,7 +37,8 @@ export default {
   data() {
     return {
       projects: [],
-      freelancerProjects: []
+      freelancerProjects: [],
+      tags: []
     };
   },
   created() {
@@ -46,7 +47,7 @@ export default {
   methods: {
     fetchData() {
       this.$axios
-        .get(`/project/create/?search=${this.$root.$data.user_id}`)
+        .get(`/project/create/?user_id__id=${this.$root.$data.user_id}`)
         .then(response => {
           this.projects = response.data;
         })
@@ -74,6 +75,14 @@ export default {
         })
         .catch(err => {
           // eslint-disable-next-line
+          console.log(err);
+        });
+      this.$axios
+        .get("/project/tag/")
+        .then(response => {
+          this.tags = response.data;
+        })
+        .catch(err => {
           console.log(err);
         });
     }
