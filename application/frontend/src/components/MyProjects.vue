@@ -83,6 +83,7 @@ export default {
           this.tags = response.data;
         })
         .catch(err => {
+          // eslint-disable-next-line
           console.log(err);
         });
     }

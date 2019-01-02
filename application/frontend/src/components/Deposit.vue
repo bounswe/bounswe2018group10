@@ -116,6 +116,7 @@ export default {
           this.wallet = response.data[0];
         })
         .catch(err => {
+          // eslint-disable-next-line
           console.log(err);
         });
     },

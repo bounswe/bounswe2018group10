@@ -104,6 +104,7 @@ export default {
           this.balance = response.data[0].budget;
         })
         .catch(err => {
+          // eslint-disable-next-line
           console.log(err);
         });
     }
