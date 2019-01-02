@@ -15,8 +15,11 @@ import AllProjects from '../components/AllProjects.vue'
 import AcceptedProject from '../components/AcceptedProject.vue'
 import Project from '../components/Project.vue'
 import Search from '../components/Search.vue'
-import Wallet from '../components/Wallet.vue'
+import SemanticSearch from '../components/SemanticSearch.vue'
+import Settings from '../components/Settings.vue'
 import Deposit from '../components/Deposit.vue'
+import MyTextAnnotations from '../components/MyTextAnnotations.vue'
+import MyImageAnnotations from '../components/MyImageAnnotations.vue'
 
 
 Vue.use(VueRouter)
@@ -79,17 +82,30 @@ const routes = [
     component: Search
   },
   {
-    path: '/wallet',
-    component: Wallet
+    path: '/semantic-search/:query',
+    component: SemanticSearch
+  },
+  {
+    path: '/settings',
+    component: Settings
   },
   {
     path: '/deposit',
     component: Deposit
+  },
+  {
+    path: '/my-text-annotations',
+    component: MyTextAnnotations
+  },
+  {
+    path: '/my-image-annotations',
+    component: MyImageAnnotations
   }
 ]
 
 // eslint-disable-next-line no-new
 const router = new VueRouter({
+  mode: 'history',
   routes
 })
 

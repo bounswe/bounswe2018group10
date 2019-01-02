@@ -26,5 +26,7 @@ urlpatterns = [
     path('api/v1/comment/', include('comment.urls')),
     path('api/v1/acceptedproject/', include('acceptedProject.urls')),
     path('api/v1/payment/', include('payment.urls')),
+    path('api/v1/annotation/', include('annotation.urls')),
+    path('api/v1/upload/', include('upload.urls')),
     path('api/v1/recommend/', include('recommendation.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

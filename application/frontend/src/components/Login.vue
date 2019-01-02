@@ -79,6 +79,8 @@ export default {
             .then(responseForUserID => {
               this.$root.$data.user_id = responseForUserID.data[0].id;
               sessionStorage.setItem('user_id',responseForUserID.data[0].id);
+              this.$root.$data.role = responseForUserID.data[0].role == 0 ? "freelancer" : "client";
+              sessionStorage.setItem('role',this.$root.$data.role);
               this.$router.push("/dashboard");
             })
             .catch(err => {

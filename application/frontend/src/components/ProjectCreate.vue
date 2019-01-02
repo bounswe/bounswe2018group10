@@ -40,6 +40,8 @@
                 <div class="ql-snow">
                   <vue-editor
                     class="unique"
+                    useCustomImageHandler
+                    @imageAdded="handleImageAdded"
                     v-model="form.description"
                     placeholder="Describe your project"
                   ></vue-editor>
@@ -397,6 +399,28 @@ export default {
     },
     clearFiles() {
       this.$refs.fileinput.reset();
+    },
+    handleImageAdded(file, Editor, cursorLocation, resetUploader) {
+      let formData = new FormData();
+      formData.append("url", file);
+
+      this.$axios({
+        url: "/upload/image/",
+        method: "POST",
+        data: formData,
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      })
+        .then(response => {
+          let url = response.data.url;
+          Editor.insertEmbed(cursorLocation, "image", url);
+          resetUploader();
+        })
+        .catch(err => {
+          // eslint-disable-next-line
+          console.log(err);
+        });
     }
   }
 };

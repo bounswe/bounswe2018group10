@@ -62,23 +62,23 @@
         <b-col>
           <b-card class="shadow" title="Project Milestones">
             <div :key="index" v-for="(milestone,index) in milestones">
-              <hr v-if="index != 0">
+              <hr v-show="index != 0">
               <b-row>
                 <b-col>
                   <h5>
                     <strong class="mr-2">Milestone {{(index+1)}}</strong>
                     <span
-                      v-if="milestone.is_done_client && milestone.is_done_freelancer"
+                      v-show="milestone.is_done_client && milestone.is_done_freelancer"
                       class="badge badge-success"
                     >
                       <font-awesome-icon icon="check"/>Completed
                     </span>
                     <span
-                      v-if="!milestone.is_done_client && !milestone.is_done_freelancer"
+                      v-show="!milestone.is_done_client && !milestone.is_done_freelancer"
                       class="badge badge-secondary"
                     >Not Completed</span>
                     <span
-                      v-if="!milestone.is_done_client && milestone.is_done_freelancer"
+                      v-show="!milestone.is_done_client && milestone.is_done_freelancer"
                       class="badge badge-secondary"
                     >Freelancer Submitted</span>
                   </h5>
@@ -108,13 +108,13 @@
               </div>
 
               <b-button
-                v-if="isProjectCreator && milestone.is_done_freelancer && !milestone.is_done_client"
+                v-show="isProjectCreator && milestone.is_done_freelancer && !milestone.is_done_client"
                 variant="primary"
                 @click="acceptMilestone(milestone.id,milestone.amount)"
               >Accept Milestone and Pay</b-button>
 
               <b-button
-                v-if="isProjectFreelancer && !milestone.is_done_client"
+                v-show="isProjectFreelancer && !milestone.is_done_client"
                 v-b-modal="`modal${index}`"
                 variant="primary"
               >Complete</b-button>

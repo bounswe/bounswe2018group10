@@ -116,6 +116,7 @@ export default {
           this.wallet = response.data[0];
         })
         .catch(err => {
+          // eslint-disable-next-line
           console.log(err);
         });
     },
@@ -126,7 +127,7 @@ export default {
           budget: Number(this.form.amount) + Number(this.wallet.budget)
         })
         .then(response => {
-          this.$router.push("/wallet");
+          this.$router.push("/settings");
         })
         .catch(err => {
           // eslint-disable-next-line

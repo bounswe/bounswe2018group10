@@ -24,7 +24,7 @@
 
       <b-row>
         <b-col cols="12" md="3">
-          <b-card title="Filter">
+          <b-card title="Filter" class="border-0 shadow">
             <b-form>
               <b-form-row>
                 <b-col>
@@ -56,7 +56,7 @@
           </b-card>
         </b-col>
         <b-col cols="12" md="9">
-          <ProjectListView :projects="projects"/>
+          <ProjectListView :projects="projects" :tags="tags"/>
         </b-col>
       </b-row>
       <MyFooter/>
@@ -102,35 +102,36 @@ export default {
         "Lowest Price",
         "Closest Deadline",
         "Farthest Deadline"
-      ]
+      ],
+      tags: []
     };
   },
   watch: {
-    'filter.ordering' : function(newOrdering, oldOrdering) {
+    "filter.ordering": function(newOrdering, oldOrdering) {
       this.fetchData();
     },
-    'filter.budget_min' : function(newBudget_min, oldBudget_max) {
+    "filter.budget_min": function(newBudget_min, oldBudget_max) {
       this.debouncedFetchData();
     },
-    'filter.budget_max' : function(newBudget_max, oldBudget_max) {
+    "filter.budget_max": function(newBudget_max, oldBudget_max) {
       this.debouncedFetchData();
     }
   },
   beforeRouteLeave(to, from, next) {
-    sessionStorage.setItem("filterMinPrice",this.filter.budget_min);
+    sessionStorage.setItem("filterMinPrice", this.filter.budget_min);
     sessionStorage.setItem("filterMaxPrice", this.filter.budget_max);
     next();
   },
   created() {
     this.setSorting(Number(sessionStorage.getItem("sortByIndex") || "1"));
-    if(sessionStorage.getItem("filterMinPrice")){
+    if (sessionStorage.getItem("filterMinPrice")) {
       this.filter.budget_min = Number(sessionStorage.getItem("filterMinPrice"));
-    }else{
+    } else {
       this.filter.budget_min = 0;
     }
-    if(sessionStorage.getItem("filterMaxPrice")){
+    if (sessionStorage.getItem("filterMaxPrice")) {
       this.filter.budget_max = Number(sessionStorage.getItem("filterMaxPrice"));
-    }else{
+    } else {
       this.filter.budget_max = 10000;
     }
     this.debouncedFetchData = debounce(this.fetchData, 500);
@@ -153,13 +154,21 @@ export default {
           // eslint-disable-next-line
           console.log(err);
         });
+      this.$axios
+        .get("/project/tag/")
+        .then(response => {
+          this.tags = response.data;
+        })
+        .catch(err => {
+          console.log(err);
+        });
     },
     setSorting(index) {
       this.filter.ordering = this.orderingOptions[index];
       this.filter.orderingLabel = this.orderingLabelOptions[index];
-      sessionStorage.setItem("sortByIndex",index);
+      sessionStorage.setItem("sortByIndex", index);
     },
-    resetFilters(){
+    resetFilters() {
       this.filter.budget_min = 0;
       this.filter.budget_max = 10000;
     }

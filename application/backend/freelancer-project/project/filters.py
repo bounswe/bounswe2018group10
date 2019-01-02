@@ -10,6 +10,7 @@ class ProjectFilter(django_filters.FilterSet):
             'budget_min': ['lte', 'gte'],
             'budget_max': ['lte', 'gte'],
             'deadline': ['lte', 'gte' ,'year__lte', 'year__gte'],
+            'user_id__id': ['exact']
         }
 
 

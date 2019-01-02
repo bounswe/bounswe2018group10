@@ -5,11 +5,11 @@
     <b-container>
       <b-row class="mb-2">
         <b-col>
-          <h2 class="mb-0">{{project.title}}</h2>
+          <h2 id="title" class="mb-0">{{project.title}}</h2>
         </b-col>
         <b-col cols="auto" class="ml-auto">
           <b-button
-            v-if="isFreelancer && !placedBid"
+            v-show="isFreelancer && !placedBid"
             v-b-toggle.collapse1
             variant="primary"
           >Bid for Project</b-button>
@@ -162,7 +162,7 @@
 
       <b-row class="mb-4">
         <b-col>
-          <b-card class="shadow">
+          <b-card id="project-info" class="shadow">
             <b-row class="text-center">
               <b-col>
                 <strong>Bids</strong>
@@ -187,8 +187,9 @@
 
       <b-row class="mb-4">
         <b-col>
-          <b-card class="shadow" title="Project Description">
-            <div class="unique2 ql-snow"><!-- necessary for quill editor styling -->
+          <b-card id="description" class="shadow" title="Project Description">
+            <div class="unique2 ql-snow">
+              <!-- necessary for quill editor styling -->
               <div class="ql-editor" v-html="project.description"></div>
             </div>
             <!--<p class="card-text">{{project.description}}</p>-->
@@ -205,15 +206,20 @@
                 v-for="tag in projectTags"
               >{{tag.title}}</b-badge>
             </div>
-            <div v-if="project.file">File:
-              <b-link :href="project.file" :target="'_blank'" :rel="'noopener noreferrer'">
+            <div v-show="project.file">File:
+              <b-link
+                v-if="project.file"
+                :href="project.file"
+                :target="'_blank'"
+                :rel="'noopener noreferrer'"
+              >
                 <font-awesome-icon icon="file"/>
                 {{project.file.split('/').pop()}}
               </b-link>
             </div>
-            <div class="mt-2" v-if="position.lat!=0&&position.lng!=0">
+            <div class="mt-2" v-show="position.lat!=0&&position.lng!=0">
               <h6>Location</h6>
-              <div class="embed-responsive">
+              <div class="embed-responsive" v-if="position.lat!=0&&position.lng!=0">
                 <GmapMap :center="position" :zoom="15" style="height: 400px">
                   <GmapMarker
                     :key="index"
@@ -229,9 +235,9 @@
         </b-col>
       </b-row>
 
-      <b-row v-if="isProjectCreator">
+      <b-row v-show="isProjectCreator">
         <b-col>
-          <b-list-group class="shadow">
+          <b-list-group id="bids" class="shadow">
             <b-list-group-item>
               <b-row>
                 <b-col>
@@ -290,7 +296,7 @@
                         :key="index"
                         v-for="(milestone,index) in milestones.filter(m => m.bid_id == bid.id)"
                       >
-                        <hr v-if="index != 0">
+                        <hr v-show="index != 0">
                         <p>
                           <strong>{{"Milestone "+(index+1)}}</strong>
                         </p>
@@ -324,6 +330,27 @@
           </b-list-group>
         </b-col>
       </b-row>
+
+      <b-row v-if="similarProjects.length > 0">
+        <b-col>
+          <h4 class="mt-4 pt-4">Similar Projects</h4>
+        </b-col>
+        <!--<b-col cols="auto">
+            <router-link to="/my-projects">View all</router-link>
+        </b-col>-->
+      </b-row>
+
+      <b-row class="mb-4">
+        <b-col>
+          <ProjectCardView :projects="similarProjects.slice(-8).reverse()" :tags="tags"/>
+        </b-col>
+      </b-row>
+
+      <b-row v-show="isProjectCreator">
+        <b-col class="text-center">
+          <b-button class="mt-4" variant="danger" @click="deleteProject">Delete Project</b-button>
+        </b-col>
+      </b-row>
       <MyFooter/>
     </b-container>
   </div>
@@ -332,13 +359,15 @@
 <script>
 import NavigationBar from "./NavigationBar.vue";
 import MyFooter from "./MyFooter.vue";
-import { VueEditor } from 'vue2-editor';
+import { VueEditor } from "vue2-editor";
+import ProjectCardView from "./ProjectCardView.vue";
 
 export default {
   name: "Project",
   components: {
     NavigationBar,
-    MyFooter
+    MyFooter,
+    ProjectCardView
   },
   data() {
     return {
@@ -367,18 +396,10 @@ export default {
       markers: [],
       ordering: "id",
       orderingLabel: "Oldest",
-      orderingOptions: [
-        "-id",
-        "id",
-        "-amount",
-        "amount"
-      ],
-      orderingLabelOptions: [
-        "Latest",
-        "Oldest",
-        "Highest Bid",
-        "Lowest Bid"
-      ]
+      orderingOptions: ["-id", "id", "-amount", "amount"],
+      orderingLabelOptions: ["Latest", "Oldest", "Highest Bid", "Lowest Bid"],
+      similarProjects: [],
+      tags: []
     };
   },
   created() {
@@ -400,7 +421,7 @@ export default {
     }
   },
   watch: {
-    'ordering' : function(newOrdering, oldOrdering) {
+    ordering: function(newOrdering, oldOrdering) {
       this.fetchBids();
     }
   },
@@ -448,8 +469,24 @@ export default {
         .catch(err => {
           console.log(err);
         });
+      this.$axios
+        .get(`/project/tag/`)
+        .then(response => {
+          this.tags = response.data;
+          this.$axios
+            .get(`/recommend/project/${this.projectID}/`)
+            .then(response => {
+              this.similarProjects = response.data;
+            })
+            .catch(err => {
+              console.log(err);
+            });
+        })
+        .catch(err => {
+          console.log(err);
+        });
     },
-    fetchBids(){
+    fetchBids() {
       this.$axios
         .get(`/project/bid/`, {
           params: {
@@ -552,10 +589,12 @@ export default {
               this.$router.push(`/accepted-project/${response.data.id}`);
             })
             .catch(err => {
+              // eslint-disable-next-line
               console.log(err);
             });
         })
         .catch(err => {
+          // eslint-disable-next-line
           console.log(err);
         });
     },
@@ -563,6 +602,17 @@ export default {
       this.ordering = this.orderingOptions[index];
       this.orderingLabel = this.orderingLabelOptions[index];
     },
+    deleteProject() {
+      this.$axios
+        .delete(`/project/create/${this.projectID}/`)
+        .then(response => {
+          this.$router.replace("/dashboard");
+        })
+        .catch(err => {
+          // eslint-disable-next-line
+          console.log(err);
+        });
+    }
   }
 };
 </script>

@@ -33,6 +33,12 @@ class UserSerializer(serializers.ModelSerializer):
         return user
 
 
+class HyperlinkedUserSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = models.User
+        fields = ('url','id', 'email', 'name', 'username',)
+
+
 class ClientProfileSerializer(serializers.ModelSerializer):
     user_info = serializers.SerializerMethodField()
 

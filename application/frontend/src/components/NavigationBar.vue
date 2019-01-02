@@ -21,12 +21,26 @@
         <b-nav-item href="#" to="/profile">
           <font-awesome-icon class="mr-1" icon="user" fixed-width/>Profile
         </b-nav-item>
+        <b-nav-item href="#" to="/settings">
+          <font-awesome-icon class="mr-1" icon="cog" fixed-width/>Settings
+        </b-nav-item>
       </b-navbar-nav>
       <!-- Right aligned nav items -->
       <b-navbar-nav class="ml-auto">
         <b-nav-form @submit="onSubmit">
           <b-input-group>
             <b-form-input required v-model="query" size="sm" type="text" placeholder="Search"/>
+            <b-input-group-append>
+              <b-button size="sm" class="my-sm-0 mr-sm-3" variant="secondary" type="submit">
+                <font-awesome-icon icon="search"/>
+              </b-button>
+            </b-input-group-append>
+          </b-input-group>
+        </b-nav-form>
+
+        <b-nav-form @submit="onSemanticSubmit">
+          <b-input-group>
+            <b-form-input required v-model="semanticQuery" size="sm" type="text" placeholder="Keyword for semantic search"/>
             <b-input-group-append>
               <b-button size="sm" class="my-sm-0 mr-sm-3" variant="secondary" type="submit">
                 <font-awesome-icon icon="search"/>
@@ -48,12 +62,8 @@
 
         <b-nav-item-dropdown right>
           <template slot="text">
-            <font-awesome-icon icon="cog" fixed-width/>Settings
+            <font-awesome-icon icon="sign-out-alt" fixed-width/>
           </template>
-          <b-dropdown-item to="/wallet">
-            <font-awesome-icon class="mr-1" icon="wallet" fixed-width/>Wallet
-          </b-dropdown-item>
-          <b-dropdown-divider></b-dropdown-divider>
           <b-dropdown-item @click="logout">
             <font-awesome-icon class="mr-1" icon="sign-out-alt" fixed-width/>Log out
           </b-dropdown-item>
@@ -73,7 +83,8 @@ export default {
         { text: "Client", value: "client" },
         { text: "Freelancer", value: "freelancer" }
       ],
-      query: ""
+      query: "",
+      semanticQuery: ""
     };
   },
   created() {
@@ -90,6 +101,17 @@ export default {
     role: function(newRole, oldRole) {
       this.$root.$data.role = newRole;
       sessionStorage.setItem("role", newRole);
+      this.$axios
+        .patch(`/user/register/${this.$root.$data.user_id}/`, {
+          role: newRole == "freelancer" ? 0 : 1
+        })
+        .then(response => {
+          this.$root.$emit('rolechange');
+        })
+        .catch(err => {
+          // eslint-disable-next-line
+          console.log(err);
+        });
     }
   },
   methods: {
@@ -102,6 +124,10 @@ export default {
     onSubmit(evt) {
       evt.preventDefault();
       this.$router.push("/search/" + this.query);
+    },
+    onSemanticSubmit(evt) {
+      evt.preventDefault();
+      this.$router.push("/semantic-search/" + this.semanticQuery);
     }
   }
 };
