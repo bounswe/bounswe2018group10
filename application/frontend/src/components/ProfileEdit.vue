@@ -234,7 +234,7 @@ export default {
     },
     onFreelancerSubmit() {
       let formData = new FormData();
-      if(this.clientForm.tags.length == 0){
+      if(this.freelancerForm.tags.length == 0){
         alert("You need to enter some skills.");
         return;
       }
