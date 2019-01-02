@@ -9,10 +9,14 @@ import VoerroTagsInput from '@voerro/vue-tagsinput'
 import './mixins.js'
 import * as VueGoogleMaps from 'vue2-google-maps'
 import './filters.js'
+import VCalendar from 'v-calendar';
+import 'v-calendar/lib/v-calendar.min.css'
 import VueAwesomeSwiper from 'vue-awesome-swiper'
 import 'swiper/dist/css/swiper.css';
 
 Vue.use(VueAwesomeSwiper);
+
+
 
 Vue.use(VueGoogleMaps, {
   load: {
@@ -40,6 +44,11 @@ Vue.use(require('vue-moment'));
 
 Vue.component('tags-input', VoerroTagsInput);
 
+Vue.use(VCalendar, {
+  firstDayOfWeek: 2,  // Monday
+  popoverVisibility: "focus"
+});
+
 Vue.config.productionTip = false
 
 const axiosConfig = {
@@ -51,9 +60,9 @@ Vue.prototype.$axios = axios.create(axiosConfig);
 
 new Vue({
   data: {
-    user_id: localStorage.getItem('user_id'),
-    role: localStorage.getItem('role') || 'freelancer',
-    token: localStorage.getItem('token')
+    user_id: sessionStorage.getItem('user_id'),
+    role: sessionStorage.getItem('role') || 'freelancer',
+    token: sessionStorage.getItem('token')
   },
   router,
   render: h => h(App)

@@ -78,7 +78,7 @@ export default {
   },
   created() {
     if (!this.$axios.defaults.headers.common["Authorization"]) {
-      const token = localStorage.getItem("token");
+      const token = sessionStorage.getItem("token");
       if (token) {
         this.$axios.defaults.headers.common["Authorization"] = token;
       } else {
@@ -89,14 +89,14 @@ export default {
   watch: {
     role: function(newRole, oldRole) {
       this.$root.$data.role = newRole;
-      localStorage.setItem("role", newRole);
+      sessionStorage.setItem("role", newRole);
     }
   },
   methods: {
     logout() {
       delete this.$axios.defaults.headers.common["Authorization"];
-      localStorage.removeItem("token");
-      localStorage.removeItem("user_id");
+      sessionStorage.removeItem("token");
+      sessionStorage.removeItem("user_id");
       this.$router.push("/");
     },
     onSubmit(evt) {

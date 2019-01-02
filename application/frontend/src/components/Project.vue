@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-light">
+  <div class="bg-grey">
     <NavigationBar/>
 
     <b-container>
@@ -163,7 +163,7 @@
       <b-row class="mb-4">
         <b-col>
           <b-card class="shadow">
-            <b-row>
+            <b-row class="text-center">
               <b-col>
                 <strong>Bids</strong>
                 <div>{{bids.length}}</div>
@@ -229,28 +229,30 @@
         </b-col>
       </b-row>
 
-      <b-row v-if="isProjectCreator" class="mb-4">
+      <b-row v-if="isProjectCreator">
         <b-col>
           <b-list-group class="shadow">
             <b-list-group-item>
               <b-row>
                 <b-col>
                   <h5 class="mb-0">Bids ({{bids.length}})</h5>
-                  <!--<strong>Freelancer</strong>-->
                 </b-col>
-                <!--<b-col>
-                  <strong>Description</strong>
+                <b-col cols="auto">
+                  <b-dropdown right size="sm">
+                    <template slot="text">Show: {{orderingLabel}} first</template>
+                    <b-dropdown-item-button @click="setSorting(2)">Highest bid</b-dropdown-item-button>
+                    <b-dropdown-item-button @click="setSorting(3)">Lowest bid</b-dropdown-item-button>
+                    <b-dropdown-divider></b-dropdown-divider>
+                    <b-dropdown-item-button @click="setSorting(0)">Newest bid</b-dropdown-item-button>
+                    <b-dropdown-item-button @click="setSorting(1)">Oldest bid</b-dropdown-item-button>
+                  </b-dropdown>
                 </b-col>
-                <b-col>
-                  <strong>Bid</strong>
-                </b-col>
-                <b-col cols="2"></b-col>-->
               </b-row>
             </b-list-group-item>
             <b-list-group-item v-show="!bids.length">
               <p class="mb-0">There are no bids placed on this project.</p>
             </b-list-group-item>
-            <b-list-group-item :key="index" v-for="(bid,index) in bids">
+            <b-list-group-item :key="bid.id" v-for="bid in bids">
               <b-row>
                 <b-col class="clearfix" cols="12" md="3" lg="2">
                   <b-img
@@ -274,7 +276,7 @@
                   </p>
                   <b-btn
                     v-show="milestones.filter(m => m.bid_id == bid.id).length > 0"
-                    v-b-toggle="`collapse${index}`"
+                    v-b-toggle="`collapse${bid.id}`"
                     variant="secondary"
                     size="sm"
                   >
@@ -282,7 +284,7 @@
                     <span class="when-closed">Show</span>
                     Milestones
                   </b-btn>
-                  <b-collapse :id="`collapse${index}`" class="mt-2">
+                  <b-collapse :id="`collapse${bid.id}`" class="mt-2">
                     <b-card>
                       <div
                         :key="index"
@@ -322,75 +324,21 @@
           </b-list-group>
         </b-col>
       </b-row>
-
-      <!--<b-row class="mb-4">
-        <b-col>
-          <b-list-group class="shadow">
-            <b-list-group-item>
-              <b-row>
-                <b-col>
-                  <h5 class="mb-0">Comments (1)</h5>
-                </b-col>
-              </b-row>
-            </b-list-group-item>
-            <b-list-group-item>
-              <b-form>
-                <b-form-row>
-                  <b-col>
-                    <b-form-group label=""
-                                  label-for="inputComment">
-                      <b-form-textarea id="inputComment"
-                                       v-model="newCommentText"
-                                       placeholder="Write your comment here"
-                                       :rows="2"
-                                       :max-rows="8"
-                                       required>
-                      </b-form-textarea>
-                    </b-form-group> 
-                  </b-col>
-                </b-form-row>
-
-                <b-button type="submit" variant="primary">Submit Comment</b-button>
-              </b-form>
-            </b-list-group-item>
-            <b-list-group-item :key="index" v-for="(comment,index) in comments">
-              <b-row>
-                <b-col md=2 lg=1>
-                  <b-img left :src="comment.picture" fluid rounded width="96" class="m-1"/>
-                </b-col>
-                <b-col md=10 lg=11>
-                  <b-row>
-                    <b-col>
-                      <strong>{{comment.name}}</strong>
-                    </b-col>
-                  </b-row>
-                  <b-row>
-                    <b-col>
-                      <p class="mb-0">{{comment.text}}</p>
-                    </b-col>
-                  </b-row>
-                  <b-row>
-                    <b-col>
-                      <small class="text-muted">{{comment.date}}</small>
-                    </b-col>
-                  </b-row>
-                </b-col>
-              </b-row>
-            </b-list-group-item>
-          </b-list-group>
-        </b-col>
-      </b-row>-->
+      <MyFooter/>
     </b-container>
   </div>
 </template>
 
 <script>
 import NavigationBar from "./NavigationBar.vue";
+import MyFooter from "./MyFooter.vue";
+import { VueEditor } from 'vue2-editor';
 
 export default {
   name: "Project",
   components: {
-    NavigationBar
+    NavigationBar,
+    MyFooter
   },
   data() {
     return {
@@ -416,7 +364,21 @@ export default {
       bids: [],
       milestones: [],
       position: { lat: 0, lng: 0 },
-      markers: []
+      markers: [],
+      ordering: "id",
+      orderingLabel: "Oldest",
+      orderingOptions: [
+        "-id",
+        "id",
+        "-amount",
+        "amount"
+      ],
+      orderingLabelOptions: [
+        "Latest",
+        "Oldest",
+        "Highest Bid",
+        "Lowest Bid"
+      ]
     };
   },
   created() {
@@ -435,6 +397,11 @@ export default {
     },
     placedBid: function() {
       return this.bids.some(bid => bid.user_id == this.$root.$data.user_id);
+    }
+  },
+  watch: {
+    'ordering' : function(newOrdering, oldOrdering) {
+      this.fetchBids();
     }
   },
   methods: {
@@ -472,23 +439,27 @@ export default {
         .catch(err => {
           console.log(err);
         });
+      this.fetchBids();
+      this.$axios
+        .get(`/project/milestone/`)
+        .then(response => {
+          this.milestones = response.data;
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    fetchBids(){
       this.$axios
         .get(`/project/bid/`, {
           params: {
-            search: this.projectID
+            search: this.projectID,
+            ordering: this.ordering
           }
         })
         .then(response => {
           let bids = response.data;
           this.bids = bids;
-        })
-        .catch(err => {
-          console.log(err);
-        });
-      this.$axios
-        .get(`/project/milestone/`)
-        .then(response => {
-          this.milestones = response.data;
         })
         .catch(err => {
           console.log(err);
@@ -587,7 +558,11 @@ export default {
         .catch(err => {
           console.log(err);
         });
-    }
+    },
+    setSorting(index) {
+      this.ordering = this.orderingOptions[index];
+      this.orderingLabel = this.orderingLabelOptions[index];
+    },
   }
 };
 </script>

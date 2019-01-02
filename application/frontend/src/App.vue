@@ -13,3 +13,10 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 </style>
+
+<style>
+.bg-grey {
+  background-color: #efefef;
+  min-height: 100vh;
+}
+</style>

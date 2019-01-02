@@ -87,17 +87,20 @@
           <font-awesome-icon icon="save" fixed-width/>Save changes
         </b-button>
       </b-form>
+      <MyFooter/>
     </b-container>
   </div>
 </template>
 
 <script>
 import NavigationBar from "./NavigationBar.vue";
+import MyFooter from "./MyFooter.vue";
 
 export default {
   name: "ProfileEdit",
   components: {
-    NavigationBar
+    NavigationBar,
+    MyFooter
   },
   data() {
     return {

@@ -6,8 +6,10 @@
         <b-button v-if="isClient" class="mr-2" variant="primary" to="/project-create">
           <font-awesome-icon icon="plus" fixed-width />Create Project
         </b-button>
-        <b-button variant="primary" to="/my-projects">My Projects</b-button>
-        <b-button variant="primary" to="/my-accepted-projects">My Accepted Projects</b-button>
+        <b-button class="mr-2" variant="primary" to="/my-projects">My Projects</b-button>
+        <b-button class="mr-2" variant="primary" to="/my-accepted-projects">My Accepted Projects</b-button>
+        <b-button variant="primary" to="/all-projects">All Projects</b-button>
+
         <h2>Current Projects</h2>
           <b-card-group class="h-25">
 
@@ -55,18 +57,21 @@
             </swiper>
 
           </b-card-group>
-        </b-row>
+        
+        <MyFooter/>
       </b-container>
   </div>
 </template>
 
 <script>
-import NavigationBar from './NavigationBar.vue'
+import NavigationBar from './NavigationBar.vue';
+import MyFooter from "./MyFooter.vue";
 
 export default {
   name: "Dashboard",
   components: {
-    NavigationBar
+    NavigationBar,
+    MyFooter
   },
   data () {
     return {
@@ -125,14 +130,6 @@ export default {
           console.log(err);
         });
     }
-  },
-  computed: {
-    swiper() {
-      //return this.$refs.mySwiper.swiper
-    }
-  },
-  mounted() {
-    //this.swiper.slideTo(3, 1000, false)
   }
 };
 </script>

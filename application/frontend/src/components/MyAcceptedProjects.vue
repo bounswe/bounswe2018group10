@@ -13,18 +13,8 @@
 
       <b-row>
         <b-col>
-          <b-list-group v-if="isClient">
-            <b-list-group-item :key="project.id" v-for="project in projects">
-              <router-link :to="`/accepted-project/${project.id}`">{{project.title}}</router-link>
-              <div>{{project.description | striphtml | shortDescription}}</div>
-            </b-list-group-item>
-          </b-list-group>
-          <b-list-group v-if="isFreelancer">
-            <b-list-group-item :key="project.id" v-for="project in freelancerProjects">
-              <router-link :to="`/accepted-project/${project.id}`">{{project.title}}</router-link>
-              <div>{{project.description | striphtml | shortDescription}}</div>
-            </b-list-group-item>
-          </b-list-group>
+          <ProjectListView v-if="isClient" :projects="projects" :accepted="true"/>
+          <ProjectListView v-if="isFreelancer" :projects="freelancerProjects" :accepted="true"/>
         </b-col>
       </b-row>
     </b-container>
@@ -33,11 +23,13 @@
 
 <script>
 import NavigationBar from "./NavigationBar.vue";
+import ProjectListView from "./ProjectListView.vue"
 
 export default {
   name: "MyAcceptedProjects",
   components: {
-    NavigationBar
+    NavigationBar,
+    ProjectListView
   },
   data() {
     return {
@@ -51,21 +43,29 @@ export default {
   methods: {
     fetchData() {
       this.$axios
-        .get(`/acceptedproject/create/?search=${this.$root.$data.user_id}`)
+        .get(`/acceptedproject/create/`, {
+          params: {
+            user_id__id: this.$root.$data.user_id
+          }
+        })
         .then(response => {
           this.projects = response.data;
         })
         .catch(err => {
+          // eslint-disable-next-line
           console.log(err);
         });
       this.$axios
-        .get(`/acceptedproject/create/`)
+        .get(`/acceptedproject/create/`, {
+          params: {
+            freelancer_id__id: this.$root.$data.user_id
+          }
+        })
         .then(response => {
-          this.freelancerProjects = response.data.filter(
-            proj => proj.freelancer_id == this.$root.$data.user_id
-          );
+          this.freelancerProjects = response.data;
         })
         .catch(err => {
+          // eslint-disable-next-line
           console.log(err);
         });
     }

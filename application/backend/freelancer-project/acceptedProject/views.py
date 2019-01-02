@@ -79,10 +79,8 @@ def acceptProject(request):
         accepted_milestone_data.update(acceptedproject_id=accepted)
         models.AcceptedMilestone.objects.create(**accepted_milestone_data)
 
-
     serialized = serializers.AcceptedProjectSerializer(accepted)
     return Response(serialized.data, status=status.HTTP_201_CREATED)
-
 
 
 class AcceptedProjectViewSet(viewsets.ModelViewSet):
@@ -93,7 +91,7 @@ class AcceptedProjectViewSet(viewsets.ModelViewSet):
     #filter_backends = (filters.SearchFilter,)
     #search_fields = ('title', '=user_id__id', '=freelancer_id__id')
     filter_backends = (filter.DjangoFilterBackend,)
-    filter_fields = ('deadline', 'price', 'user_id', 'freelancer_id')
+    filter_fields = ('deadline', 'price', 'user_id__id', 'freelancer_id__id')
 
     def perform_create(self, serializer):
         serializer.save(user_id=self.request.user)
