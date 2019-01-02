@@ -1,6 +1,6 @@
 <template>
   <b-row>
-    <b-col class="mb-4">
+    <b-col>
       <swiper class="pl-4 pr-4 pb-4 pt-2">
         <swiper-slide v-for="project in projects" :key="project.id">
           <b-card class="border-0 shadow" :title="project.title">

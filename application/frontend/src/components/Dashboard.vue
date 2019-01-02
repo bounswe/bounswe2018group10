@@ -29,7 +29,7 @@
                 </b-card>
               </b-col>
             </b-row>
-            <ProjectCardView :projects="acceptedProjects.slice(-10).reverse()" :accepted="true"/>
+            <ProjectCardView :projects="acceptedProjects.slice(-8).reverse()" :accepted="true"/>
           </b-col>
         </b-row>
 
@@ -54,7 +54,7 @@
                 </b-card>
               </b-col>
             </b-row>
-            <ProjectCardView :projects="projects.slice(-10).reverse()" :tags="tags"/>
+            <ProjectCardView :projects="projects.slice(-8).reverse()" :tags="tags"/>
           </b-col>
         </b-row>
 
@@ -107,7 +107,7 @@
                 </b-card>
               </b-col>
             </b-row>
-            <ProjectCardView :projects="recommendedProjects.slice(-10).reverse()" :tags="tags"/>
+            <ProjectCardView :projects="recommendedProjects.slice(-8).reverse()" :tags="tags"/>
           </b-col>
         </b-row>
 
@@ -130,7 +130,7 @@
               </b-col>
             </b-row>
             <ProjectCardView
-              :projects="acceptedFreelancerProjects.slice(-10).reverse()"
+              :projects="acceptedFreelancerProjects.slice(-8).reverse()"
               :accepted="true"
             />
           </b-col>
@@ -156,7 +156,7 @@
                 </b-card>
               </b-col>
             </b-row>
-            <ProjectCardView :projects="freelancerProjects.slice(-10).reverse()" :tags="tags"/>
+            <ProjectCardView :projects="freelancerProjects.slice(-8).reverse()" :tags="tags"/>
           </b-col>
         </b-row>
 
@@ -180,7 +180,7 @@
                 </b-card>
               </b-col>
             </b-row>
-            <ProjectCardView :projects="newProjects.slice(-10).reverse()" :tags="tags"/>
+            <ProjectCardView :projects="newProjects.slice(-8).reverse()" :tags="tags"/>
           </b-col>
         </b-row>
 
@@ -204,7 +204,7 @@
                 </b-card>
               </b-col>
             </b-row>
-            <ProjectCardView :projects="newProjects.slice(-10).reverse()" :tags="tags"/>
+            <ProjectCardView :projects="newProjects.slice(-8).reverse()" :tags="tags"/>
           </b-col>
         </b-row>
       </div>
