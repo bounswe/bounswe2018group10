@@ -106,6 +106,7 @@ export default {
           role: newRole == "freelancer" ? 0 : 1
         })
         .then(response => {
+          this.$root.$emit('rolechange');
         })
         .catch(err => {
           // eslint-disable-next-line

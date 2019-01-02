@@ -331,6 +331,21 @@
         </b-col>
       </b-row>
 
+      <b-row v-if="similarProjects.length > 0">
+        <b-col>
+          <h4 class="mt-4">Similar Projects</h4>
+        </b-col>
+        <!--<b-col cols="auto">
+            <router-link to="/my-projects">View all</router-link>
+        </b-col>-->
+      </b-row>
+
+      <b-row class="mb-4">
+        <b-col>
+          <ProjectCardView :projects="similarProjects.slice(-4).reverse()" :tags="tags"/>
+        </b-col>
+      </b-row>
+
       <b-row v-show="isProjectCreator">
         <b-col class="text-center">
           <b-button class="mt-4" variant="danger" @click="deleteProject">Delete Project</b-button>
@@ -345,12 +360,14 @@
 import NavigationBar from "./NavigationBar.vue";
 import MyFooter from "./MyFooter.vue";
 import { VueEditor } from "vue2-editor";
+import ProjectCardView from "./ProjectCardView.vue";
 
 export default {
   name: "Project",
   components: {
     NavigationBar,
-    MyFooter
+    MyFooter,
+    ProjectCardView
   },
   data() {
     return {
@@ -380,7 +397,9 @@ export default {
       ordering: "id",
       orderingLabel: "Oldest",
       orderingOptions: ["-id", "id", "-amount", "amount"],
-      orderingLabelOptions: ["Latest", "Oldest", "Highest Bid", "Lowest Bid"]
+      orderingLabelOptions: ["Latest", "Oldest", "Highest Bid", "Lowest Bid"],
+      similarProjects: [],
+      tags: []
     };
   },
   created() {
@@ -446,6 +465,22 @@ export default {
         .get(`/project/milestone/`)
         .then(response => {
           this.milestones = response.data;
+        })
+        .catch(err => {
+          console.log(err);
+        });
+      this.$axios
+        .get(`/project/tag/`)
+        .then(response => {
+          this.tags = response.data;
+          this.$axios
+            .get(`/recommend/project/${this.projectID}/`)
+            .then(response => {
+              this.similarProjects = response.data;
+            })
+            .catch(err => {
+              console.log(err);
+            });
         })
         .catch(err => {
           console.log(err);

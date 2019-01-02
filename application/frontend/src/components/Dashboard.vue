@@ -57,9 +57,60 @@
             <ProjectCardView :projects="projects.slice(-4).reverse()" :tags="tags"/>
           </b-col>
         </b-row>
+
+        <b-row>
+          <b-col>
+            <h2>Recommended Freelancers</h2>
+          </b-col>
+          <!--<b-col cols="auto">
+            <router-link to="/my-projects">View all</router-link>
+          </b-col>-->
+        </b-row>
+
+        <b-row class="mb-4">
+          <b-col>
+            <b-row>
+              <b-col>
+                <b-card
+                  v-if="recommendedFreelancers.length == 0"
+                  class="text-center border-0 shadow"
+                >
+                  <p class="card-text">We do not have any recommended freelancer for you.</p>
+                </b-card>
+              </b-col>
+            </b-row>
+            <FreelancerCardView
+              :freelancers="recommendedFreelancers.slice(-4).reverse()"
+              :tags="tags"
+              :blankAvatar="blankAvatar"
+            />
+          </b-col>
+        </b-row>
       </div>
 
       <div v-if="isFreelancer">
+        <b-row>
+          <b-col>
+            <h2>Recommended Projects</h2>
+          </b-col>
+          <!--<b-col cols="auto">
+            <router-link to="/my-projects">View all</router-link>
+          </b-col>-->
+        </b-row>
+
+        <b-row class="mb-4">
+          <b-col>
+            <b-row>
+              <b-col>
+                <b-card v-if="recommendedProjects.length == 0" class="text-center border-0 shadow">
+                  <p class="card-text">We do not have any recommended project for you.</p>
+                </b-card>
+              </b-col>
+            </b-row>
+            <ProjectCardView :projects="recommendedProjects.slice(-4).reverse()" :tags="tags"/>
+          </b-col>
+        </b-row>
+
         <b-row>
           <b-col>
             <h2>My Ongoing Projects</h2>
@@ -167,13 +218,15 @@
 import NavigationBar from "./NavigationBar.vue";
 import MyFooter from "./MyFooter.vue";
 import ProjectCardView from "./ProjectCardView.vue";
+import FreelancerCardView from "./FreelancerCardView.vue";
 
 export default {
   name: "Dashboard",
   components: {
     NavigationBar,
     MyFooter,
-    ProjectCardView
+    ProjectCardView,
+    FreelancerCardView
   },
   data() {
     return {
@@ -182,44 +235,84 @@ export default {
       acceptedProjects: [],
       acceptedFreelancerProjects: [],
       newProjects: [],
-      tags: []
+      tags: [],
+      recommendedProjects: [],
+      recommendedFreelancers: [],
+      blankAvatar: require("../assets/blank-profile-picture.svg")
     };
   },
   created() {
     this.fetchData();
   },
+  mounted() {
+    this.$root.$on("rolechange", this.changeRecommendation);
+  },
   methods: {
     fetchData() {
       this.$axios
-        .get(`/project/create/?user_id__id=${this.$root.$data.user_id}`)
+        .get("/project/tag/")
         .then(response => {
-          this.projects = response.data;
-        })
-        .catch(err => {
-          // eslint-disable-next-line
-          console.log(err);
-        });
-      this.$axios
-        .get(`/acceptedproject/create/?user_id__id=${this.$root.$data.user_id}`)
-        .then(response => {
-          this.acceptedProjects = response.data;
-        })
-        .catch(err => {
-          // eslint-disable-next-line
-          console.log(err);
-        });
-      this.$axios
-        .get(`/project/bid/`)
-        .then(response => {
-          let projectList = response.data
-            .filter(bid => bid.user_id == this.$root.$data.user_id)
-            .map(bidList => bidList.project_id);
+          this.tags = response.data;
+          this.changeRecommendation();
+          this.$axios
+            .get(`/project/create/?user_id__id=${this.$root.$data.user_id}`)
+            .then(response => {
+              this.projects = response.data;
+            })
+            .catch(err => {
+              // eslint-disable-next-line
+              console.log(err);
+            });
+          this.$axios
+            .get(
+              `/acceptedproject/create/?user_id__id=${this.$root.$data.user_id}`
+            )
+            .then(response => {
+              this.acceptedProjects = response.data;
+            })
+            .catch(err => {
+              // eslint-disable-next-line
+              console.log(err);
+            });
+          this.$axios
+            .get(`/project/bid/`)
+            .then(response => {
+              let projectList = response.data
+                .filter(bid => bid.user_id == this.$root.$data.user_id)
+                .map(bidList => bidList.project_id);
+              this.$axios
+                .get(`/project/create/`)
+                .then(response => {
+                  this.freelancerProjects = response.data.filter(proj =>
+                    projectList.includes(proj.id)
+                  );
+                })
+                .catch(err => {
+                  // eslint-disable-next-line
+                  console.log(err);
+                });
+            })
+            .catch(err => {
+              // eslint-disable-next-line
+              console.log(err);
+            });
+          this.$axios
+            .get(`/acceptedproject/create/`, {
+              params: {
+                freelancer_id__id: this.$root.$data.user_id
+              }
+            })
+            .then(response => {
+              this.acceptedFreelancerProjects = response.data;
+            })
+            .catch(err => {
+              // eslint-disable-next-line
+              console.log(err);
+            });
           this.$axios
             .get(`/project/create/`)
             .then(response => {
-              this.freelancerProjects = response.data.filter(proj =>
-                projectList.includes(proj.id)
-              );
+              this.newProjects = response.data;
             })
             .catch(err => {
               // eslint-disable-next-line
@@ -230,37 +323,29 @@ export default {
           // eslint-disable-next-line
           console.log(err);
         });
-      this.$axios
-        .get(`/acceptedproject/create/`, {
-          params: {
-            freelancer_id__id: this.$root.$data.user_id
-          }
-        })
-        .then(response => {
-          this.acceptedFreelancerProjects = response.data;
-        })
-        .catch(err => {
-          // eslint-disable-next-line
-          console.log(err);
-        });
-      this.$axios
-        .get(`/project/create/`)
-        .then(response => {
-          this.newProjects = response.data;
-        })
-        .catch(err => {
-          // eslint-disable-next-line
-          console.log(err);
-        });
-      this.$axios
-        .get("/project/tag/")
-        .then(response => {
-          this.tags = response.data;
-        })
-        .catch(err => {
-          // eslint-disable-next-line
-          console.log(err);
-        });
+    },
+    changeRecommendation() {
+      if (this.$root.$data.role == "freelancer") {
+        this.$axios
+          .get("/recommend/dashboard/")
+          .then(response => {
+            this.recommendedProjects = response.data;
+          })
+          .catch(err => {
+            // eslint-disable-next-line
+            console.log(err);
+          });
+      } else {
+        this.$axios
+          .get("/recommend/dashboard/")
+          .then(response => {
+            this.recommendedFreelancers = response.data;
+          })
+          .catch(err => {
+            // eslint-disable-next-line
+            console.log(err);
+          });
+      }
     }
   }
 };
