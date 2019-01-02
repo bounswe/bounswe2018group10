@@ -14,7 +14,40 @@ import 'v-calendar/lib/v-calendar.min.css'
 import VueAwesomeSwiper from 'vue-awesome-swiper'
 import 'swiper/dist/css/swiper.css';
 
-Vue.use(VueAwesomeSwiper);
+Vue.use(VueAwesomeSwiper, {
+  slidesPerView: 7,
+  spaceBetween: 10,
+  pagination: {
+    el: '.swiper-pagination',
+    clickable: true
+  },
+  navigation: {
+    nextEl: '.swiper-button-next',
+    prevEl: '.swiper-button-prev'
+  },
+  breakpoints: {
+    2100: {
+      slidesPerView: 6
+    },
+    1800: {
+      slidesPerView: 5
+    },
+    1500: {
+      slidesPerView: 4
+    },
+    1200: {
+      slidesPerView: 3
+    },
+    900: {
+      slidesPerView: 2
+    },
+    600: {
+      slidesPerView: 1
+    }
+  },
+  watchOverflow: true,
+  //freeMode: true
+});
 
 
 
@@ -26,13 +59,13 @@ Vue.use(VueGoogleMaps, {
     //// version
     v: '3.34',
   },
- 
+
   //// If you intend to programmatically custom event listener code
   //// (e.g. `this.$refs.gmap.$on('zoom_changed', someFunc)`)
   //// instead of going through Vue templates (e.g. `<GmapMap @zoom_changed="someFunc">`)
   //// you might need to turn this on.
   // autobindAllEvents: false,
- 
+
   //// If you want to manually install components, e.g.
   //// import {GmapMarker} from 'vue2-google-maps/src/components/marker'
   //// Vue.component('GmapMarker', GmapMarker)

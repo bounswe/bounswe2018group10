@@ -333,7 +333,7 @@
 
       <b-row v-if="similarProjects.length > 0">
         <b-col>
-          <h4 class="mt-4">Similar Projects</h4>
+          <h4 class="mt-4 pt-4">Similar Projects</h4>
         </b-col>
         <!--<b-col cols="auto">
             <router-link to="/my-projects">View all</router-link>
@@ -342,7 +342,7 @@
 
       <b-row class="mb-4">
         <b-col>
-          <ProjectCardView :projects="similarProjects.slice(-4).reverse()" :tags="tags"/>
+          <ProjectCardView :projects="similarProjects.slice(-8).reverse()" :tags="tags"/>
         </b-col>
       </b-row>
 
