@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
+from project.models import Tag
 
 
 # Create your models here.
@@ -50,6 +51,12 @@ class User(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['name']
 
+    def is_client(self):
+        return self.role == self.CLIENT
+
+    def is_freelancer(self):
+        return self.role == self.FREELANCER
+
     def get_full_name(self):
         return self.name
 
@@ -68,6 +75,7 @@ class FreelancerProfile(models.Model):
     body = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     rating = models.FloatField(default=0)
+    tags = models.ManyToManyField(Tag, related_name='freelancers')
 
     def __str__(self):
         return self.user.username
@@ -81,6 +89,7 @@ class ClientProfile(models.Model):
     body = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     rating = models.FloatField(default=0)
+    tags = models.ManyToManyField(Tag, related_name='clients')
 
     def __str__(self):
         return self.user.username
