@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'annotation.apps.AnnotationConfig',
     'upload.apps.UploadConfig',
     'django_filters',
+    'tastypie',
 ]
 
 MIDDLEWARE = [

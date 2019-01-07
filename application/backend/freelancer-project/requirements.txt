@@ -1,6 +1,13 @@
+coverage==3.6
+defusedxml==0.4.1
 Django==2.1.2
 django-cors-headers==2.4.0
 django-filter==2.0.0
+django-tastypie==0.14.2
 djangorestframework==3.8.2
+lxml==3.2.3
 Pillow==5.3.0
+python-dateutil==2.7.5
+python-mimeparse==1.6.0
 pytz==2018.5
+six==1.12.0
