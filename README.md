@@ -1,11 +1,10 @@
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-no-red.svg)](https://bitbucket.org/lbesson/ansi-colors)
 # HoneyBadgers :honey_pot:
 #### BOUN-CmpE 352/451 Project
 <p align="center">
 <a href = "https://github.com/bounswe/bounswe2018group10/wiki"><img 
 <img src="./resources/honey_badgers.png" width="200" height="200"></a>
 </p>
-
-[honeybadgers.com](http://18.130.93.29:8080)
 
 ## :rocket: Freelancer | Collaboration Platform
 
