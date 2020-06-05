@@ -1,6 +1,6 @@
 coverage==3.6
 defusedxml==0.4.1
-Django==2.1.2
+Django==2.2.13
 django-cors-headers==2.4.0
 django-filter==2.0.0
 django-tastypie==0.14.2
