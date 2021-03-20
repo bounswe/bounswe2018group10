@@ -4,7 +4,7 @@ click==6.7
 Flask==0.12.3
 idna==2.6
 itsdangerous==0.24
-Jinja2==2.10
+Jinja2==2.11.3
 MarkupSafe==1.0
 oauthlib==2.0.7
 PySocks==1.6.8
