@@ -8,7 +8,7 @@ Jinja2==2.10
 MarkupSafe==1.0
 oauthlib==2.0.7
 PySocks==1.6.8
-PyYAML==3.12
+PyYAML==5.4
 requests==2.20.0
 requests-oauthlib==0.8.0
 six==1.11.0
